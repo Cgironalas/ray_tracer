@@ -23,6 +23,7 @@ static long double Ymin = -100;
 
 //Others
 static long double Ia = 0.002;
+static time_t t;
 
 struct Color { 
 	long double r;
@@ -80,9 +81,10 @@ void saveFile(){
 	fprintf(file, "%s\n", "P3");
 	fprintf(file, "%i %i\n", Hres, Vres);
 	fprintf(file, "%i\n", 255);
+	srand((unsigned) time(&t));
 	for (i = 0; i < Hres; i++){
 		for (j = 0; j < Vres; j++){
-			int R = (int) Framebuffer[i][j].r / 255;
+			int R = (int) Framebuffer[i][j].r / 255;//rand() % 255;//
 			int G = (int) Framebuffer[i][j].g / 255;
 			int B = (int) Framebuffer[i][j].b / 255;
 			fprintf(file, "%i %i %i   ", R, G, B);
