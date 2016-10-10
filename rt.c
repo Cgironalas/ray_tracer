@@ -50,10 +50,12 @@ struct Intersection {
 	long double Xi;
 	long double Yi;
 	long double Zi;
-	struct Object * obj;
+	long double distance;
+	struct Object * object;
 };
 
 static struct Light *Lights;
+static struct Object *Objects;
 static struct Color BACKGROUND = {0.6, 0.6, 0.6};
 static struct Color Framebuffer[1366][768];
 
@@ -62,28 +64,66 @@ long double min(long double a, long double b){
     else { return b; }
 }
 
+void getSceneObjects(){
+
+}
+
 void saveFile(){
-	int i;
-	int j;
+	int i, j;
+	FILE *file;
+	file = fopen("scene.ppm", "w");
+	if(file == NULL){
+		printf("Error creating/opening file!\n");
+		exit(1);
+	}
+
+	fprintf(file, "%s\n", "P3");
+	fprintf(file, "%i %i\n", Hres, Vres);
+	fprintf(file, "%i\n", 255);
 	for (i = 0; i < Hres; i++){
 		for (j = 0; j < Vres; j++){
-
+			int R = (int) Framebuffer[i][j].r / 255;
+			int G = (int) Framebuffer[i][j].g / 255;
+			int B = (int) Framebuffer[i][j].b / 255;
+			fprintf(file, "%i %i %i   ", R, G, B);
 		}
+		fprintf(file, "\n");
 	}
+	fclose(file);
 }
 
 struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
-	return NULL;
+	struct Intersection * intersection;
+	long double tmin;
+
+	intersection = NULL;
+	tmin = 100000;
+
+	int k;
+	int nObjects = sizeof(Objects)/sizeof(Objects[0]);
+	for(k = 0; k < nObjects; k++){
+		//intersection = calcIntesection(Objects[k]->function, a);
+		if(intersection){
+			tmin = intersection->distance;
+		}
+	}
+	return (intersection);
 }
 
 long double getAtunuationFactor(){
 	return 0;
 }
 
+//DONE
 long double pointProduct(struct Vector a, struct Vector b){
-	return 0;
+	long double pp = 0;
+	pp += (a.x * b.x);
+	pp += (a.y * b.y);
+	pp += (a.z * b.z);
+	return pp;
 }
 
+//DONE
 struct Color colorXintensity(long double I, struct Color color){
 	struct Color newColor;
 	
@@ -94,6 +134,7 @@ struct Color colorXintensity(long double I, struct Color color){
 	return newColor;
 }
 
+//DONE
 struct Color getColor(struct Vector a, struct Vector b){
 	struct Color color;
 	struct Intersection * intersection;
@@ -106,16 +147,18 @@ struct Color getColor(struct Vector a, struct Vector b){
 		int k;
 		int nLights = sizeof(Lights)/sizeof(Lights[0]);
 		
-		struct Object * Q;
-		Q = intersection->obj;
-		struct Vector N; //= normal unitaria a Q en punto (Xi, Yi, Zi)
+		struct Object * Q = intersection->object;
+		struct Vector N; //= normal unitaria a Q en punto (Xi, Yi, Zi) AQUI
 		long double I = 0.0;
-
+		
+		long double Fatt;
+		struct Vector L;
 		for(k = 0; k < nLights; k++){
-			struct Vector L; // = getUnitaryVector();
-			if(pointProduct(N, L) > 0.0){
-				long double Fatt = getAtunuationFactor();
-				I = I + (pointProduct(N, L) * Q->Kd *Fatt * Lights[k].Ip);
+			//L = getUnitaryVector(k); AQUI
+			long double pp = pointProduct(N, L);
+			if(pp > 0.0){
+				Fatt = getAtunuationFactor();
+				I = I + (pp * Q->Kd * Fatt * Lights[k].Ip);
 			}
 		}
 
@@ -126,28 +169,23 @@ struct Color getColor(struct Vector a, struct Vector b){
 	return (color);
 }
 
+//DONE
 int main(int argc, char *arcgv[]){
 	int i, j;
 
-	long double Xw;
-	long double Yw;
-	long double Zw = 0;
-	
 	long double L;
-
-	long double Xd;
-	long double Yd;
-	long double Zd;
+	long double Xw, Yw;
+	long double Zw = 0;
+	long double Xd, Yd, Zd;
 
 	struct Color color;
-	
-	struct Vector anchor = {Xe, Ye, Ze};
 	struct Vector direction;
+	struct Vector anchor = {Xe, Ye, Ze};
 	
 	for (i = 0; i < Hres; i++){
 		for (j = 0; j < Vres; j++){
-			Xw = (long double) ((i + (1 / 2)) * (Xmax - Xmin))/Hres + Xmin;
-			Yw = (long double) ((i + (1 / 2)) * (Ymax - Ymin))/Vres + Ymin;
+			Xw = (long double) ((i + (1/2)) * (Xmax - Xmin))/Hres + Xmin;
+			Yw = (long double) ((i + (1/2)) * (Ymax - Ymin))/Vres + Ymin;
 			
 			L = sqrt(pow(Xw - Xe, 2) + pow(Yw - Ye, 2) + pow(Zw - Ze, 2));
 
