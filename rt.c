@@ -46,7 +46,11 @@ struct Light{
 };
 
 struct Object {
-	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector);
+	long double Xc;
+	long double Yc;
+	long double Zc;
+	long double otherData;
+	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
 	long double Kd;
 	long double Ka;
 	struct Color color;
@@ -69,6 +73,10 @@ static struct Color Framebuffer[768][1366];
 long double min(long double a, long double b){
     if(a < b) { return a; }
     else { return b; }
+}
+long double max(long double a, long double b){
+	if(a > b) { return a; }
+	else { return b; }
 }
 
 
@@ -124,7 +132,7 @@ struct Vector normalize(struct Vector *vector){
 
 //Leer archivos con la escena
 void getSceneObjects(){
-
+	//Pendiente
 }
 
 //Guarda el framebuffer en una imagen ppm
@@ -185,12 +193,56 @@ struct Color colorXintensity(long double I, struct Color color){
 
 
 //////////////Ray Tracer Stuff
-struct Intersection * sphereIntersection(struct Vector a, struct Vector b){
 
+//Interseccion con esferas
+//Pendiente
+struct Intersection * sphereIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	struct Intersection * intersection;
+	long double t, t1, t2;
+
+	long double Xdif = anchor.x - object.Xc;
+	long double Ydif = anchor.y - object.Yc;
+	long double Zdif = anchor.z - object.Zc;
+
+	long double B = 2 * ((direction.x * Xdif) + (direction.y * Ydif) + (direction.z * Zdif));
+	long double C = pow(Xdif, 2) + pow(Ydif, 2) + pow(Zdif, 2) + object.otherData;
+
+	long double discriminant = pow(B, 2) - (4 * C);
+
+	if(discriminant >= 0){
+		long double root = sqrt(discriminant);
+		B *= -1;
+		t1 = (B + sqrt(discriminant))/2;
+		t2 = (B - sqrt(discriminant))/2;
+
+		if(t1 > e){
+			if(t2 > e){
+				t = min(t1, t2);
+			}else{
+				t = t1;
+			}
+		}else{
+			if(t2 > e){
+				t = t2;
+			}else{
+				return NULL;
+			}
+		}
+
+		intersection->distance = t;
+		intersection->object = &object;
+		intersection->Xi = anchor.x + t * direction.x;
+		intersection->Yi = anchor.y + t * direction.y;
+		intersection->Zi = anchor.z + t * direction.z;
+	}else{
+		return NULL;
+	}
 }
 
-struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
+//Revisar
+struct Intersection * getFirstIntersection(struct Vector anchor, struct Vector direction){
 	struct Intersection * intersection;
+	struct Intersection * tempIntersection;
 	long double tmin;
 
 	intersection = NULL;
@@ -199,16 +251,16 @@ struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
 	int k;
 	int objectsAmount = sizeof(Objects)/sizeof(Objects[0]);
 	for(k = 0; k < objectsAmount; k++){
-		intersection = Objects[k].intersectionFuncion (a, b);
-		if(intersection && intersection->distance > e){
-			tmin = intersection->distance;
+		tempIntersection = Objects[k].intersectionFuncion (anchor, direction, Objects[k]);
+		if(tempIntersection && tempIntersection->distance > e && tempIntersection->distance < tmin){
+			tmin = tempIntersection->distance;
+			intersection = tempIntersection;
 		}
 	}
 	return (intersection);
 }
 
-
-//DONE
+//Pendiente
 //Funcion de que color del profe
 struct Color getColor(struct Vector anchor, struct Vector direction){
 	struct Color color;
@@ -265,10 +317,13 @@ int main(int argc, char *arcgv[]){
 	struct Vector direction;
 	struct Vector anchor = {Xe, Ye, Ze};
 	
+	long double Xdif = Xmax - Xmin;
+	long double Ydif = Ymax - Ymin;
+
 	for (i = 0; i < Vres; i++){
 		for (j = 0; j < Hres; j++){
-			Xw = (long double) ((i + (1/2)) * (Xmax - Xmin))/Hres + Xmin;
-			Yw = (long double) ((i + (1/2)) * (Ymax - Ymin))/Vres + Ymin;
+			Xw = (long double) ((i + (1/2)) * Xdif)/Hres + Xmin;
+			Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
 
 			Xd = Xw - Xe;
 			Yd = Yw - Ye;
