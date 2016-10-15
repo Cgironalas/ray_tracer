@@ -23,6 +23,7 @@ static long double Ymin = -100;
 
 //Others
 static long double Ia = 0.002;
+static long double e = 0.005;
 static time_t t;
 
 struct Color { 
@@ -31,7 +32,7 @@ struct Color {
 	long double b;
 };
 
-struct Vector{
+struct Vector{//Aqui podria ir un valor que sea de norma, por si es necesario usarlo varias veces
 	long double x;
 	long double y;
 	long double z;
@@ -62,8 +63,8 @@ struct Intersection {
 
 static struct Light *Lights;
 static struct Object *Objects;
-static struct Color BACKGROUND = {0.6, 0.6, 0.6};
-static struct Color Framebuffer[1366][768];
+static struct Color BACKGROUND = {0.3, 0.3, 0.3};
+static struct Color Framebuffer[768][1366];
 
 long double min(long double a, long double b){
     if(a < b) { return a; }
@@ -145,11 +146,11 @@ void saveFile(){
 	//srand((unsigned) time(&t));
 	//FOR parra recorrer el framebuffer escribiendo el color de cada pixel en el PPM
 	//El formato es para que "se vea como matriz" en el PPM
-	for (i = 0; i < Hres; i++){
-		for (j = 0; j < Vres; j++){
-			int R = (int) Framebuffer[i][j].r / 255;//rand() % 255;//
-			int G = (int) Framebuffer[i][j].g / 255;
-			int B = (int) Framebuffer[i][j].b / 255;
+	for (i = 0; i < Vres; i++){
+		for (j = 0; j < Hres; j++){
+			int R = (int) 255 * Framebuffer[i][j].r;//rand() % 255;//
+			int G = (int) 255 * Framebuffer[i][j].g;
+			int B = (int) 255 * Framebuffer[i][j].b;
 			fprintf(file, "%i %i %i   ", R, G, B);
 		}
 		fprintf(file, "\n");
@@ -184,6 +185,10 @@ struct Color colorXintensity(long double I, struct Color color){
 
 
 //////////////Ray Tracer Stuff
+struct Intersection * sphereIntersection(struct Vector a, struct Vector b){
+
+}
+
 struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
 	struct Intersection * intersection;
 	long double tmin;
@@ -195,7 +200,7 @@ struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
 	int objectsAmount = sizeof(Objects)/sizeof(Objects[0]);
 	for(k = 0; k < objectsAmount; k++){
 		intersection = Objects[k].intersectionFuncion (a, b);
-		if(intersection){
+		if(intersection && intersection->distance > e){
 			tmin = intersection->distance;
 		}
 	}
@@ -205,11 +210,11 @@ struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
 
 //DONE
 //Funcion de que color del profe
-struct Color getColor(struct Vector a, struct Vector b){
+struct Color getColor(struct Vector anchor, struct Vector direction){
 	struct Color color;
 	struct Intersection * intersection;
 
-	intersection = getFirstIntersection(a, b);
+	intersection = getFirstIntersection(anchor, direction);
 
 	if(!intersection){
 		color = BACKGROUND;
@@ -217,20 +222,25 @@ struct Color getColor(struct Vector a, struct Vector b){
 		int k;
 		int lightsAmount = sizeof(Lights)/sizeof(Lights[0]);
 		
-		struct Object * Q = intersection->object;
-		struct Vector * N = intersection->normalVector(); //= normal unitaria a Q en punto (Xi, Yi, Zi) AQUI
+		struct Object *Q = intersection->object;
+		struct Vector *N = intersection->normalVector(); //normal unitaria a Q en punto (Xi, Yi, Zi) AQUI
+		
 		long double I = 0.0;
 		
 		long double Fatt;
 		struct Vector *L;
-		long double normL = getNorm(L);
 		for(k = 0; k < lightsAmount; k++){
-			//L = getUnitaryVector(k); AQUI
-			long double pp = pointProduct(N, L);
-			long double Dl = 0.0;
-			if(pp > 0.0){
-				Fatt = getAtunuationFactor(Lights[k], Dl);
-				I = I + (pp * Q->Kd * Fatt * Lights[k].Ip);
+			struct Vector intresectionPoint;
+			struct Intersection * obstacle = NULL;
+			//obstacle = getFirstIntersection({intersection.Xi, intersection.Yi, intersection.Zi},L);
+			if(!obstacle){
+				//L = getUnitaryVector(k); AQUI
+				long double pp = pointProduct(N, L);
+				long double distanceToLight = getNorm(L);
+				if(pp > 0.0){
+					Fatt = getAtunuationFactor(Lights[k], distanceToLight);
+					I = I + (pp * Q->Kd * Fatt * Lights[k].Ip);
+				}
 			}
 		}
 
@@ -248,26 +258,27 @@ int main(int argc, char *arcgv[]){
 	long double L;
 	long double Xw, Yw;
 	long double Zw = 0;
+
 	long double Xd, Yd, Zd;
 
 	struct Color color;
 	struct Vector direction;
 	struct Vector anchor = {Xe, Ye, Ze};
 	
-	for (i = 0; i < Hres; i++){
-		for (j = 0; j < Vres; j++){
+	for (i = 0; i < Vres; i++){
+		for (j = 0; j < Hres; j++){
 			Xw = (long double) ((i + (1/2)) * (Xmax - Xmin))/Hres + Xmin;
 			Yw = (long double) ((i + (1/2)) * (Ymax - Ymin))/Vres + Ymin;
-			
-			L = sqrt(pow(Xw - Xe, 2) + pow(Yw - Ye, 2) + pow(Zw - Ze, 2));
 
-			Xd = (long double) (Xw - Xe) / L;
-			Yd = (long double) (Yw - Ye) / L;
-			Zd = (long double) (Zw - Ze) / L;
+			Xd = Xw - Xe;
+			Yd = Yw - Ye;
+			Zd = Zw - Ze;
 
-			direction.x = Xd;
-			direction.y = Yd;
-			direction.z = Zd;
+			L = sqrt(pow(Xd, 2) + pow(Yd, 2) + pow(Zd, 2));
+
+			direction.x = Xd / L;
+			direction.y = Yd / L;
+			direction.z = Zd / L;
 
 			color = getColor(anchor, direction);
 
