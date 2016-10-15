@@ -38,16 +38,21 @@ struct Vector{
 };
 
 struct Light{
+	long double c1;
+	long double c2;
+	long double c3;
 	long double Ip;
 };
 
 struct Object {
+	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector);
 	long double Kd;
 	long double Ka;
 	struct Color color;
 };
 
 struct Intersection {
+	struct Vector *(*normalVector)();
 	long double Xi;
 	long double Yi;
 	long double Zi;
@@ -65,10 +70,63 @@ long double min(long double a, long double b){
     else { return b; }
 }
 
+
+//////////////Vectors
+//DONE
+//Producto punto entre dos vectores
+long double pointProduct(struct Vector *a, struct Vector *	b){
+	long double pp = 0;
+
+	pp += (a->x * b->x);
+	pp += (a->y * b->y);
+	pp += (a->z * b->z);
+	
+	return pp;
+}
+
+//No recuerdo si esta es la formula correcta////////////////////
+//Producto cruz entre dos vectores
+struct Vector crossProduct(struct Vector a, struct Vector b){
+	struct Vector newVector;
+
+	newVector.x = (long double) (a.y * b.z) - (a.z * b.y);
+	newVector.y = (long double) (a.z * b.x) - (a.x * b.z);
+	newVector.z = (long double) (a.x * b.y) - (a.y * b.x);
+
+	return newVector;
+}
+
+//DONE
+//Regresa la norma de un vector
+long double getNorm(struct Vector *vector){
+	long double norm = sqrt(pow(vector->x ,2) + pow(vector->y ,2) + pow(vector->z ,2));
+	return norm;
+}
+
+//DONE
+//Regresa un vector normalizado
+struct Vector normalize(struct Vector *vector){
+	long double norm = getNorm(vector);
+	struct Vector unitVector;
+
+	unitVector.x = vector->x / norm;
+	unitVector.y = vector->y / norm;
+	unitVector.z = vector->z / norm;
+
+	return unitVector;
+}
+//////////////END Vectors
+
+
+
+//////////////Files
+
+//Leer archivos con la escena
 void getSceneObjects(){
 
 }
 
+//Guarda el framebuffer en una imagen ppm
 void saveFile(){
 	int i, j;
 	FILE *file;
@@ -78,10 +136,15 @@ void saveFile(){
 		exit(1);
 	}
 
+	//Formato necesario para un PPM
 	fprintf(file, "%s\n", "P3");
 	fprintf(file, "%i %i\n", Hres, Vres);
 	fprintf(file, "%i\n", 255);
-	srand((unsigned) time(&t));
+
+
+	//srand((unsigned) time(&t));
+	//FOR parra recorrer el framebuffer escribiendo el color de cada pixel en el PPM
+	//El formato es para que "se vea como matriz" en el PPM
 	for (i = 0; i < Hres; i++){
 		for (j = 0; j < Vres; j++){
 			int R = (int) Framebuffer[i][j].r / 255;//rand() % 255;//
@@ -93,39 +156,20 @@ void saveFile(){
 	}
 	fclose(file);
 }
+//////////////END Files
 
-struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
-	struct Intersection * intersection;
-	long double tmin;
 
-	intersection = NULL;
-	tmin = 100000;
+//////////////Ilumination models
 
-	int k;
-	int nObjects = sizeof(Objects)/sizeof(Objects[0]);
-	for(k = 0; k < nObjects; k++){
-		//intersection = calcIntesection(Objects[k]->function, a);
-		if(intersection){
-			tmin = intersection->distance;
-		}
-	}
-	return (intersection);
-}
-
-long double getAtunuationFactor(){
-	return 0;
+//DONE
+//Calcula el factor de atenuacion de una luz
+long double getAtunuationFactor(struct Light light, long double distance){
+	long double value = (long double) 1 / (light.c1 + (light.c2 * distance) + (light.c3 * pow(distance, 2)));
+	return min(1.0, value);
 }
 
 //DONE
-long double pointProduct(struct Vector a, struct Vector b){
-	long double pp = 0;
-	pp += (a.x * b.x);
-	pp += (a.y * b.y);
-	pp += (a.z * b.z);
-	return pp;
-}
-
-//DONE
+//Regresa el color base de un objeto al que se le aplica la intensidad de iluminacion difusa
 struct Color colorXintensity(long double I, struct Color color){
 	struct Color newColor;
 	
@@ -135,8 +179,32 @@ struct Color colorXintensity(long double I, struct Color color){
 
 	return newColor;
 }
+//////////////END Ilumination models
+
+
+
+//////////////Ray Tracer Stuff
+struct Intersection * getFirstIntersection(struct Vector a, struct Vector b){
+	struct Intersection * intersection;
+	long double tmin;
+
+	intersection = NULL;
+	tmin = 100000;
+
+	int k;
+	int objectsAmount = sizeof(Objects)/sizeof(Objects[0]);
+	for(k = 0; k < objectsAmount; k++){
+		intersection = Objects[k].intersectionFuncion (a, b);
+		if(intersection){
+			tmin = intersection->distance;
+		}
+	}
+	return (intersection);
+}
+
 
 //DONE
+//Funcion de que color del profe
 struct Color getColor(struct Vector a, struct Vector b){
 	struct Color color;
 	struct Intersection * intersection;
@@ -147,19 +215,21 @@ struct Color getColor(struct Vector a, struct Vector b){
 		color = BACKGROUND;
 	}else{
 		int k;
-		int nLights = sizeof(Lights)/sizeof(Lights[0]);
+		int lightsAmount = sizeof(Lights)/sizeof(Lights[0]);
 		
 		struct Object * Q = intersection->object;
-		struct Vector N; //= normal unitaria a Q en punto (Xi, Yi, Zi) AQUI
+		struct Vector * N = intersection->normalVector(); //= normal unitaria a Q en punto (Xi, Yi, Zi) AQUI
 		long double I = 0.0;
 		
 		long double Fatt;
-		struct Vector L;
-		for(k = 0; k < nLights; k++){
+		struct Vector *L;
+		long double normL = getNorm(L);
+		for(k = 0; k < lightsAmount; k++){
 			//L = getUnitaryVector(k); AQUI
 			long double pp = pointProduct(N, L);
+			long double Dl = 0.0;
 			if(pp > 0.0){
-				Fatt = getAtunuationFactor();
+				Fatt = getAtunuationFactor(Lights[k], Dl);
 				I = I + (pp * Q->Kd * Fatt * Lights[k].Ip);
 			}
 		}
@@ -206,3 +276,4 @@ int main(int argc, char *arcgv[]){
 	}
 	saveFile();
 }
+//////////////END Ray Tracer Stuff
