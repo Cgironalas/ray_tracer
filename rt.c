@@ -2,138 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
-#include "malloc.h"
 #include <time.h>
-
-//Image resolution
-static int Hres = 1366;
-static int Vres = 768;
-
-//Eye
-static long double Xe = 0;
-static long double Ye = 0;
-static long double Ze = -200;
-
-//Window
-static long double Xmax = 100;
-static long double Ymax = 100;
-static long double Xmin = -100;
-static long double Ymin = -100;
-
-//Others
-static long double Ia = 0.002;
-static long double e = 0.005;
-static time_t t;
-
-struct Color { 
-	long double r;
-	long double g;
-	long double b;
-};
-
-struct Vector{//Aqui podria ir un valor que sea de norma, por si es necesario usarlo varias veces
-	long double x;
-	long double y;
-	long double z;
-};
-
-struct Light{
-	long double c1;
-	long double c2;
-	long double c3;
-	long double Ip;
-};
-
-struct Object {
-	long double Xc;
-	long double Yc;
-	long double Zc;
-	long double otherData;
-	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
-	long double Kd;
-	long double Ka;
-	struct Color color;
-};
-
-struct Intersection {
-	struct Vector *(*normalVector)();
-	long double Xi;
-	long double Yi;
-	long double Zi;
-	long double distance;
-	struct Object * object;
-};
-
-static struct Light *Lights;
-static struct Object *Objects;
-static struct Color BACKGROUND = {0.3, 0.3, 0.3};
-static struct Color Framebuffer[768][1366];
-
-long double min(long double a, long double b){
-    if(a < b) { return a; }
-    else { return b; }
-}
-long double max(long double a, long double b){
-	if(a > b) { return a; }
-	else { return b; }
-}
+#include "TDA_LDE.h"
+#include "structures.h"
+#include "vectors.h"
+#include "colorLighting.h"
+#include "malloc.h"
+#include "fileReader.h"
 
 
-//////////////Vectors
-//DONE
-//Producto punto entre dos vectores
-long double pointProduct(struct Vector *a, struct Vector *	b){
-	long double pp = 0;
-
-	pp += (a->x * b->x);
-	pp += (a->y * b->y);
-	pp += (a->z * b->z);
-	
-	return pp;
-}
-
-//No recuerdo si esta es la formula correcta////////////////////
-//Producto cruz entre dos vectores
-struct Vector crossProduct(struct Vector a, struct Vector b){
-	struct Vector newVector;
-
-	newVector.x = (long double) (a.y * b.z) - (a.z * b.y);
-	newVector.y = (long double) (a.z * b.x) - (a.x * b.z);
-	newVector.z = (long double) (a.x * b.y) - (a.y * b.x);
-
-	return newVector;
-}
-
-//DONE
-//Regresa la norma de un vector
-long double getNorm(struct Vector *vector){
-	long double norm = sqrt(pow(vector->x ,2) + pow(vector->y ,2) + pow(vector->z ,2));
-	return norm;
-}
-
-//DONE
-//Regresa un vector normalizado
-struct Vector normalize(struct Vector *vector){
-	long double norm = getNorm(vector);
-	struct Vector unitVector;
-
-	unitVector.x = vector->x / norm;
-	unitVector.y = vector->y / norm;
-	unitVector.z = vector->z / norm;
-
-	return unitVector;
-}
-//////////////END Vectors
-
-
-
-//////////////Files
-
-//Leer archivos con la escena
-void getSceneObjects(){
-	//Pendiente
-}
 
 //Guarda el framebuffer en una imagen ppm
 void saveFile(){
@@ -168,34 +45,13 @@ void saveFile(){
 //////////////END Files
 
 
-//////////////Ilumination models
-
-//DONE
-//Calcula el factor de atenuacion de una luz
-long double getAtunuationFactor(struct Light light, long double distance){
-	long double value = (long double) 1 / (light.c1 + (light.c2 * distance) + (light.c3 * pow(distance, 2)));
-	return min(1.0, value);
-}
-
-//DONE
-//Regresa el color base de un objeto al que se le aplica la intensidad de iluminacion difusa
-struct Color colorXintensity(long double I, struct Color color){
-	struct Color newColor;
-	
-	newColor.r = I * color.r;
-	newColor.g = I * color.g;
-	newColor.b = I * color.b;
-
-	return newColor;
-}
-//////////////END Ilumination models
 
 
-
-//////////////Ray Tracer Stuff
+/////////////Ray Tracer Stuff
 
 //Interseccion con esferas
 //Pendiente
+/*
 struct Intersection * sphereIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	struct Intersection * intersection;
 	long double t, t1, t2;
@@ -205,7 +61,7 @@ struct Intersection * sphereIntersection(struct Vector anchor, struct Vector dir
 	long double Zdif = anchor.z - object.Zc;
 
 	long double B = 2 * ((direction.x * Xdif) + (direction.y * Ydif) + (direction.z * Zdif));
-	long double C = pow(Xdif, 2) + pow(Ydif, 2) + pow(Zdif, 2) + object.otherData;
+	long double C = pow(Xdif, 2) + pow(Ydif, 2) + pow(Zdif, 2) + object.otherData[0];
 
 	long double discriminant = pow(B, 2) - (4 * C);
 
@@ -246,7 +102,7 @@ struct Intersection * getFirstIntersection(struct Vector anchor, struct Vector d
 	long double tmin;
 
 	intersection = NULL;
-	tmin = 100000;
+	tmin = 100000; //Rango de visión máxima
 
 	int k;
 	int objectsAmount = sizeof(Objects)/sizeof(Objects[0]);
@@ -302,9 +158,20 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 	}
 	return (color);
 }
+*/
+
+
+void initRayTracer(){
+
+}
+
+
 
 //DONE
-int main(int argc, char *arcgv[]){
+int main(int argc, char *argv[]){
+	deleteListObjects(Objects);
+	deleteListLights(Lights);
+
 	int i, j;
 
 	long double L;
@@ -316,7 +183,7 @@ int main(int argc, char *arcgv[]){
 	struct Color color;
 	struct Vector direction;
 	struct Vector anchor = {Xe, Ye, Ze};
-	
+	/*
 	long double Xdif = Xmax - Xmin;
 	long double Ydif = Ymax - Ymin;
 
@@ -339,7 +206,44 @@ int main(int argc, char *arcgv[]){
 
 			Framebuffer[i][j] = color;
 		}
-	}
+	}*/
+	//getSceneObjects();
+	Ia = 0.002;
+	
+	long double valuesLight[7];
+	long double valuesSphere[10];
+	valuesLight[0] = 20.0; //Xp
+	valuesLight[1] = 20.0; //Yp
+	valuesLight[2] = 30.0; //Zp
+	valuesLight[3] = 0.0; //c1
+	valuesLight[4] = 0.3; //c2
+	valuesLight[5] = 0.0; //c3
+	valuesLight[6] = 0.7; //Ip
+
+	valuesSphere[0] = 50.0; //Xc
+	valuesSphere[1] = 50.0; //Yc
+	valuesSphere[2] = 50.0; //Zc 
+	valuesSphere[3] = 10.0; //radio  as OtherDAta
+	valuesSphere[4] = 0.4; //Kd
+	valuesSphere[5] = 0.4; //Ka
+	valuesSphere[6] = 0.2; //Kn
+	valuesSphere[7] = 0.6171; //R
+	valuesSphere[8] = 1.0; //G
+	valuesSphere[9] = 0.2929; //B  
+	
+	/*Verde HEX 9EFF4B*/
+
+
+	createObjectFromData(valuesLight,1); //Luz
+	createObjectFromData(valuesSphere,2); //Esfera
+	/*
 	saveFile();
+	double long *value;
+	char valueString[] = "20.0,20.0,30.0";
+	value=obtainPointFromString(valueString);
+	printf("%LF %LF %LF", value[0], value[1],value[2]);
+	free(value);*/
+	deleteListObjects(Objects);
+	deleteListLights(Lights);
 }
 //////////////END Ray Tracer Stuff

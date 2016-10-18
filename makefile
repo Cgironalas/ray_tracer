@@ -1,17 +1,19 @@
 CC=gcc
 
-SOURCE= rt.c
 OUTPUT=rt
-OBJECT=rt.o
+OBJECT=rt.o structures.o vectors.o  colorLighting.o TDA_LDE.o fileReader.o
 LDFLAGS= -lglut -lGL -lGLU -lm
 CFLAGS = -I/usr/include/GL
 
 
+
+#Se compila cada archivo objeto de cada archivo fuente c y dependencias/headers
+%.o: %.c 
+	$(CC) -c $(LDFLAGS) $< 
+
+
 $(OUTPUT): $(OBJECT)
 	$(CC) $(OBJECT) -o $(OUTPUT) $(LDFLAGS) $(CFLAGS) 
-
-$(OBJECT): $(SOURCE)
-	$(CC) -c $(SOURCE) -o rt.o $(LDFLAGS)
 
 clean:
 	rm -f *.o
