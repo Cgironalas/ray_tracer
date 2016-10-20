@@ -7,26 +7,24 @@
 #include <time.h>
 
 //Image resolution
-static int Hres = 1366;
-static int Vres = 768;
+static int Hres = 1008;
+static int Vres = 1008;
 
 //Eye
-static long double Xe = 0;
-static long double Ye = 0;
-static long double Ze = -200;
+static long double Xe = 200;
+static long double Ye = 200;
+static long double Ze = -1500;
 
 //Window
-static long double Xmax = 100;
-static long double Ymax = 100;
-static long double Xmin = -100;
-static long double Ymin = -100;
+static long double Xmax = 400;
+static long double Ymax = 400;
+static long double Xmin = 0;
+static long double Ymin = 0;
 
 //Others
-static long double Ia = 0.5;
+static long double Ia = 0.6;
 static long double e = 0.005;
 static time_t t;
-
-static int cont = 0;
 
 struct Color { 
 	long double r;
@@ -61,7 +59,6 @@ struct Object {
 	struct Color color;
 };
 
-
 struct Intersection {
 	//struct Vector *(*normalVector)();
 	long double Xi;
@@ -71,10 +68,10 @@ struct Intersection {
 	struct Object object;
 };
 
-static struct Light *Lights;
+static struct Light Lights[1];
 static struct Object Objects[1];
 static struct Color BACKGROUND = {0.3, 0.3, 0.3};
-static struct Color Framebuffer[1366][768];
+static struct Color Framebuffer[1008][1008];
 static struct Intersection tempIntersect;
 
 long double min(long double a, long double b){
@@ -140,6 +137,7 @@ struct Vector normalize(struct Vector vector){
 //Leer archivos con la escena
 void getSceneObjects(){
 	//Pendiente
+	//
 }
 
 //Guarda el framebuffer en una imagen ppm
@@ -225,7 +223,6 @@ struct Intersection *sphereIntersection(struct Vector anchor, struct Vector dire
 		t1 = (B + root)/2;
 		t2 = (B - root)/2;
 
-
 		if(t1 > e){
 			if(t2 > e){
 				t = min(t1, t2);
@@ -242,15 +239,15 @@ struct Intersection *sphereIntersection(struct Vector anchor, struct Vector dire
 		
 
 		tempIntersect.distance = t;
-		printf("%LF\n", direction.y);
+		//printf("%LF\n", direction.y);
 
 		tempIntersect.object = object;
 
-		tempIntersect.Xi = anchor.x + t * direction.x;
-		tempIntersect.Yi = anchor.y + t * direction.y;
-		tempIntersect.Zi = anchor.z + t * direction.z;
+		tempIntersect.Xi = anchor.x + (t * direction.x);
+		tempIntersect.Yi = anchor.y + (t * direction.y);
+		tempIntersect.Zi = anchor.z + (t * direction.z);
 
-		printf("%LF %LF %LF \n", tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi);
+		//printf("%LF %LF %LF \n", tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi);
 		return &tempIntersect;
 	}else{
 		return NULL;
@@ -304,8 +301,6 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 	if(!tempIntersection){
 		color = BACKGROUND;
 	}else{
-		printf("heyoo");
-
 		intersection.Xi = tempIntersection->Xi;
 		intersection.Yi = tempIntersection->Yi;
 		intersection.Zi = tempIntersection->Zi;
@@ -313,16 +308,15 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		intersection.object = tempIntersection->object;
 
 		int k;
-		int lightsAmount = sizeof(Lights)/sizeof(Lights[0]);
+		int lightsAmount = 1;//sizeof(Lights)/sizeof(Lights[0]);
 		
 		struct Object Q = intersection.object;
 		struct Vector N = sphereNormal(intersection.object,intersection.Xi, intersection.Yi, intersection.Zi); 
 		
-
 		long double I = 0.0;
-		
 		long double Fatt;
 		struct Vector L;
+
 		for(k = 0; k < lightsAmount; k++){
 			struct Vector intresectionPoint;
 			//struct Intersection obstacle = NULL;
@@ -330,7 +324,6 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			if(1 == 1){
 				struct Vector luz = {Lights[k].Xp-intersection.Xi, Lights[k].Yp-intersection.Yi, Lights[k].Zp-intersection.Zi};
 				L = normalize(luz);
-
 
 				long double pp = pointProduct(N, L);
 				long double distanceToLight = getNorm(L);
@@ -367,31 +360,40 @@ int main(int argc, char *arcgv[]){
 
 
 	//Esfera ad hoc
-	struct Object esfera1;
-	esfera1.Xc = 0;
-	esfera1.Yc = 0;
-	esfera1.Zc = 30;
-	esfera1.otherData = 10;
+	struct Object sphere1;
+	sphere1.Xc = 200;
+	sphere1.Yc = 200;
+	sphere1.Zc = 650;
+	sphere1.otherData = 200;
 	
 
-	esfera1.Kd = 1;
-	esfera1.Ka = 1;
+	sphere1.Kd = 0.8;
+	sphere1.Ka = 0.4;
 
-	esfera1.color.r = 1;
-	esfera1.color.g = 0;	
-	esfera1.color.b = 0;
+	sphere1.color.r = 1;
+	sphere1.color.g = 0;	
+	sphere1.color.b = 0;
 
-	Objects[0] = esfera1;
+	Objects[0] = sphere1;
 
-	for (i = 0; i < Hres; i++){
-		for (j = 0; j < Vres; j++){
-			Xw = (long double) ((i + (1/2)) * Xdif)/Hres + Xmin;
-			Yw = (long double) ((j + (1/2)) * Ydif)/Vres + Ymin;
+	struct Light light1;
+	light1.Xp = -200;
+	light1.Yp = 300;
+	light1.Zp = -1000;
+	light1.Ip = 1;
+	light1.c1 = 1;
+	light1.c2 = 0;
+	light1.c3 = 0;
+	Lights[0] = light1;
+
+	for (i = 0; i < Vres; i++){
+		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
+		Yd = Yw - Ye;
+		for (j = 0; j < Hres; j++){
+			Xw = (long double) ((j + (1/2)) * Xdif)/Hres + Xmin;
 
 			Xd = Xw - Xe;
-			Yd = Yw - Ye;
 			Zd = Zw - Ze;
-
 
 			L = sqrt(pow(Xd, 2) + pow(Yd, 2) + pow(Zd, 2));
 		
