@@ -263,7 +263,7 @@ struct Intersection *sphereIntersection(struct Vector anchor, struct Vector dire
 }
 
 //DONE
-//Sacar la normal de una esfera en un punto dado por un vector
+//Sacar la normal normalizada de una esfera en un punto dado por un vector
 struct Vector sphereNormal(struct Object object, struct Vector vector){
 	struct Vector normal;
 	
@@ -324,7 +324,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		struct Vector L;
 		struct Vector intersectVector = {intersection.Xi, intersection.Yi, intersection.Zi};
 		struct Vector N = Q.normalVector(Q, intersectVector);
-		struct Vector R = {2 * N.x, 2 * N.y, 2 * N.z};
+		struct Vector R;
 
 
 		long double Fatt;
@@ -336,11 +336,13 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			struct Vector light = {Lights[k].Xp - intersection.Xi, Lights[k].Yp - intersection.Yi, Lights[k].Zp - intersection.Zi};
 			L = normalize(light);
 			
-			struct Vector another = {N.x - L.x, N.y - L.y, N.z - L.z};
-			R = crossProduct(R, another);
-			R.x = R.x - L.x;
-			R.y = R.y - L.y;
-			R.z = R.z - L.z;
+			long double a = pointProduct(N, L);
+			//struct Vector another = {N.x - L.x, N.y - L.y, N.z - L.z};
+			//R = crossProduct(R, another);
+			R.x = (2 * N.x * a) - L.x;
+			R.y = (2 * N.y * a) - L.y;
+			R.z = (2 * N.z * a) - L.z;
+			R = normalize(R);
 
 			obstacle = getFirstIntersection(intersectVector, L);
 			if(obstacle.distance < e){
@@ -368,19 +370,6 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 
 //DONE
 int main(int argc, char *arcgv[]){
-	int i, j;
-
-	long double L;
-	long double Xw, Yw;
-	long double Xd, Yd, Zd;
-
-	struct Color color;
-	
-	struct Vector direction;
-	
-	long double Xdif = Xmax - Xmin;
-	long double Ydif = Ymax - Ymin;
-
 	//Esfera ad hoc
 	struct Object sphere1;
 	sphere1.Xc = 200;
@@ -422,6 +411,21 @@ int main(int argc, char *arcgv[]){
 	light1.c3 = 0;
 	Lights[0] = light1;
 
+
+	int i, j;
+
+	long double L;
+	long double Xw, Yw;
+	long double Xd, Yd, Zd;
+
+	struct Color color;
+	
+	struct Vector direction;
+	
+	long double Xdif = Xmax - Xmin;
+	long double Ydif = Ymax - Ymin;
+
+	
 	Zd = -eye.z;
 	for (i = 0; i < Vres; i++){
 		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
@@ -436,9 +440,13 @@ int main(int argc, char *arcgv[]){
 			direction.y = Yd / L;
 			direction.z = Zd / L;
 
+			direction = normalize(direction);
+
 			V.x = -direction.x;
 			V.y = -direction.y;
 			V.z = -direction.z;
+
+			V = normalize(V);
 
 			color = getColor(eye, direction);
 
