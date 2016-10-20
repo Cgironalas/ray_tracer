@@ -17,7 +17,7 @@ static long double Xmin = 0;
 static long double Ymin = 0;
 
 //Others
-static long double Ia = 0.2;
+static long double Ia = 0.6;
 static long double e = 0.05;
 static time_t t;
 
@@ -189,7 +189,7 @@ void saveFile(){
 //DONE
 //Calcula el factor de atenuacion de una luz
 long double getAtunuationFactor(struct Light light, long double distance){
-	long double value = (long double) 1 / (light.c1 + (light.c2 * distance) + (light.c3 * pow(distance, 2)));
+	long double value = 1 / (light.c1 + (light.c2 * distance) + (light.c3 * pow(distance, 2)));
 	return min(1.0, value);
 }
 
@@ -353,7 +353,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			obstacle = getFirstIntersection(intersectVector, L);
 			if(obstacle.distance < e){
 				long double pp = pointProduct(N, L);
-				long double distanceToLight = getNorm(L);
+				long double distanceToLight = getNorm(light);
 				Fatt = getAtunuationFactor(Lights[k], distanceToLight);
 				if(pp > 0.0){
 					I = I + (pp * Q.Kd * Fatt * Lights[k].Ip);
@@ -783,9 +783,6 @@ void howManyObjectsLights(){
 
 //DONE
 int main(int argc, char *arcgv[]){
-	//Esfera ad hoc
-
-
 	howManyObjectsLights();
 	printf("Luces %i \n", numberLights);
 	printf("Objetos %i \n", numberObjects);
@@ -794,47 +791,6 @@ int main(int argc, char *arcgv[]){
 	printf("Ip de Luz 0 %LF \n", Objects[0].other);
 	printf("RAdio de esfera 0 %LF \n", Objects[0].other);
 	printf("Color R de esfera 0 %LF \n", Objects[0].color.r);
-	/*struct Object sphere1;
-	sphere1.Xc = 200;
-	sphere1.Yc = 200;
-	sphere1.Zc = 650;
-	sphere1.other = 200;
-
-	sphere1.color.r = 1;
-	sphere1.color.g = 0;	
-	sphere1.color.b = 0;
-	
-	sphere1.Kd = 0.8;
-	sphere1.Ka = 0.4;
-	sphere1.Kn = 0.8;
-	sphere1.Ks = 0.3;
-	sphere1.normalVector = sphereNormal;
-	sphere1.intersectionFuncion = sphereIntersection;
-
-	Objects[0] = sphere1;
-
-	sphere1.Xc = 100;
-	sphere1.Yc = 200;
-	sphere1.Zc = 100;
-	sphere1.other = 60;
-
-	sphere1.color.r = 0;
-	sphere1.color.g = 0;	
-	sphere1.color.b = 1;
-
-	Objects[1] = sphere1;
-
-	struct Light light1;
-	light1.Xp = -200;
-	light1.Yp = 300;
-	light1.Zp = -1000;
-	light1.Ip = 1;
-	light1.c1 = 1;
-	light1.c2 = 0;
-	light1.c3 = 0;
-	Lights[0] = light1;
-
-	*/
 	int i, j;
 
 	long double L;
@@ -848,7 +804,6 @@ int main(int argc, char *arcgv[]){
 	long double Xdif = Xmax - Xmin;
 	long double Ydif = Ymax - Ymin;
 
-	
 	Zd = -eye.z;
 	for (i = 0; i < Vres; i++){
 		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
@@ -879,6 +834,5 @@ int main(int argc, char *arcgv[]){
 	saveFile();
 	free(Objects);
 	free(Lights);
-
 }
 //////////////END Ray Tracer Stuff
