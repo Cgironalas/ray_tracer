@@ -17,7 +17,7 @@ static long double Xmin = 0;
 static long double Ymin = 0;
 
 //Others
-static long double Ia = 0.6;
+static long double Ia = 0.2;
 static long double e = 0.05;
 static time_t t;
 
@@ -49,7 +49,9 @@ struct Object {
 	long double Zc;
 	long double Kd;
 	long double Ka;
-	long double otherData;
+	long double Kn;
+	long double Ks;
+	long double other;
 	struct Color color;
 	struct Vector (*normalVector)();
 	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
@@ -66,6 +68,7 @@ struct Intersection {
 static struct Light Lights[1];
 static struct Object Objects[2];
 
+static struct Vector V;
 static struct Intersection tempIntersect;
 
 static struct Vector eye = {200,200,-1500};
@@ -186,12 +189,22 @@ long double getAtunuationFactor(struct Light light, long double distance){
 
 //DONE
 //Regresa el color base de un objeto al que se le aplica la intensidad de iluminacion difusa
-struct Color colorXintensity(long double I, struct Color color){
+struct Color difusseColor(long double I, struct Color color){
 	struct Color newColor;
 	
 	newColor.r = I * color.r;
 	newColor.g = I * color.g;
 	newColor.b = I * color.b;
+
+	return newColor;
+}
+
+struct Color specularHighlight(long double E, struct Color color){
+	struct Color newColor;
+
+	newColor.r = color.r + (E * (1 - color.r));
+	newColor.g = color.g + (E * (1 - color.g));
+	newColor.b = color.b + (E * (1 - color.b));
 
 	return newColor;
 }
@@ -211,7 +224,7 @@ struct Intersection *sphereIntersection(struct Vector anchor, struct Vector dire
 	long double Zdif = anchor.z - object.Zc;
 
 	long double B = 2 * ((direction.x * Xdif) + (direction.y * Ydif) + (direction.z * Zdif));
-	long double C = pow(Xdif, 2) + pow(Ydif, 2) + pow(Zdif, 2) - pow(object.otherData,2);
+	long double C = pow(Xdif, 2) + pow(Ydif, 2) + pow(Zdif, 2) - pow(object.other,2);
 
 	long double discriminant = pow(B, 2) - (4 * C);
 
@@ -311,27 +324,44 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		struct Vector L;
 		struct Vector intersectVector = {intersection.Xi, intersection.Yi, intersection.Zi};
 		struct Vector N = Q.normalVector(Q, intersectVector);
+		struct Vector R = {2 * N.x, 2 * N.y, 2 * N.z};
+
 
 		long double Fatt;
 		long double I = 0.0;
+		long double E = 0.0;
 
 		for(k = 0; k < lightsAmount; k++){
 			struct Intersection obstacle;
 			struct Vector light = {Lights[k].Xp - intersection.Xi, Lights[k].Yp - intersection.Yi, Lights[k].Zp - intersection.Zi};
 			L = normalize(light);
+			
+			struct Vector another = {N.x - L.x, N.y - L.y, N.z - L.z};
+			R = crossProduct(R, another);
+			R.x = R.x - L.x;
+			R.y = R.y - L.y;
+			R.z = R.z - L.z;
+
 			obstacle = getFirstIntersection(intersectVector, L);
 			if(obstacle.distance < e){
 				long double pp = pointProduct(N, L);
 				long double distanceToLight = getNorm(L);
+				Fatt = getAtunuationFactor(Lights[k], distanceToLight);
 				if(pp > 0.0){
-					Fatt = getAtunuationFactor(Lights[k], distanceToLight);
 					I = I + (pp * Q.Kd * Fatt * Lights[k].Ip);
+				}
+				long double pp2 = pointProduct(R, V);
+				if(pp2 > 0.0){
+					E = E + (pow(pp2, Q.Kn) * Q.Ks * Lights[k].Ip * Fatt);
 				}
 			}
 		}
 		I = I + Ia * Q.Ka;
 		I = min(1.0, I);
-		color = colorXintensity(I, Q.color);
+		color = difusseColor(I, Q.color);
+
+		E = min(1.0, E);
+		color = specularHighlight(E, color);
 	}
 	return (color);
 }
@@ -345,6 +375,7 @@ int main(int argc, char *arcgv[]){
 	long double Xd, Yd, Zd;
 
 	struct Color color;
+	
 	struct Vector direction;
 	
 	long double Xdif = Xmax - Xmin;
@@ -355,16 +386,16 @@ int main(int argc, char *arcgv[]){
 	sphere1.Xc = 200;
 	sphere1.Yc = 200;
 	sphere1.Zc = 650;
-	sphere1.otherData = 200;
-	
-
-	sphere1.Kd = 0.8;
-	sphere1.Ka = 0.4;
+	sphere1.other = 200;
 
 	sphere1.color.r = 1;
 	sphere1.color.g = 0;	
 	sphere1.color.b = 0;
 	
+	sphere1.Kd = 0.8;
+	sphere1.Ka = 0.4;
+	sphere1.Kn = 0.8;
+	sphere1.Ks = 0.3;
 	sphere1.normalVector = sphereNormal;
 	sphere1.intersectionFuncion = sphereIntersection;
 
@@ -373,11 +404,7 @@ int main(int argc, char *arcgv[]){
 	sphere1.Xc = 100;
 	sphere1.Yc = 200;
 	sphere1.Zc = 100;
-	sphere1.otherData = 60;
-	
-
-	sphere1.Kd = 0.8;
-	sphere1.Ka = 0.4;
+	sphere1.other = 60;
 
 	sphere1.color.r = 0;
 	sphere1.color.g = 0;	
@@ -408,6 +435,10 @@ int main(int argc, char *arcgv[]){
 			direction.x = Xd / L;
 			direction.y = Yd / L;
 			direction.z = Zd / L;
+
+			V.x = -direction.x;
+			V.y = -direction.y;
+			V.z = -direction.z;
 
 			color = getColor(eye, direction);
 
