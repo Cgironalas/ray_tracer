@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
 #include "malloc.h"
 #include <time.h>
 
@@ -19,7 +18,6 @@ static long double Ymin = 0;
 //Others
 static long double Ia = 0.6;
 static long double e = 0.05;
-static time_t t;
 
 struct Color { 
 	long double r;
@@ -53,6 +51,7 @@ struct Object {
 	long double Ks;
 	long double other;
 	struct Color color;
+	struct Vector *points;
 	struct Vector (*normalVector)();
 	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
 };
@@ -81,7 +80,6 @@ static struct Color BACKGROUND = {0.3, 0.3, 0.3};
 
 static char* escenaFile = "escena1.txt";
 
-
 long double min(long double a, long double b){
     if(a < b) { return a; }
     else { return b; }
@@ -91,12 +89,7 @@ long double max(long double a, long double b){
 	else { return b; }
 }
 
-
-
-
-
-
-
+//////////////Vectors
 
 //DONE
 //Producto punto entre dos vectores
@@ -147,8 +140,6 @@ struct Vector normalize(struct Vector vector){
 
 //////////////Files
 
-
-
 //DONE
 //Guarda el framebuffer en una imagen ppm
 void saveFile(){
@@ -184,7 +175,7 @@ void saveFile(){
 
 
 
-//////////////Ilumination models
+//////////////Ilumination
 
 //DONE
 //Calcula el factor de atenuacion de una luz
@@ -205,6 +196,8 @@ struct Color difusseColor(long double I, struct Color color){
 	return newColor;
 }
 
+//DONE
+//Regresa el color difuso co reflexion especular
 struct Color specularHighlight(long double E, struct Color color){
 	struct Color newColor;
 
@@ -214,7 +207,7 @@ struct Color specularHighlight(long double E, struct Color color){
 
 	return newColor;
 }
-//////////////END Ilumination models
+//////////////END Ilumination
 
 
 
@@ -277,9 +270,65 @@ struct Vector sphereNormal(struct Object object, struct Vector vector){
 	normal.y = vector.y - object.Yc;
 	normal.z = vector.z - object.Zc;
 
-	normal = normalize(normal);
-
 	return normal;
+}
+
+//CHECK
+struct Vector polygonNormal(struct Object object, struct Vector vector){
+	struct Vector point0 = object.points[0];
+	struct Vector point1 = object.points[1];
+	struct Vector point2 = object.points[2];
+
+	struct Vector vector1 = {point1.x - point0.x, point1.y - point0.y, point1.z - point0.z};
+	struct Vector vector2 = {point2.x - point1.x, point2.y - point1.y, point2.z - point1.z};
+	struct Vector normal = crossProduct(vector1, vector2);
+	return normal;
+}
+
+//CHECK
+long double whatsTheD(struct Object object){
+	long double theD = 0;
+	struct Vector point = object.points[0];
+
+	theD -= object.Xc * point.x;
+	theD -= object.Yc * point.y;
+	theD -= object.Zc * point.z;
+
+	return theD;
+}
+
+//PENDING
+struct Intersection *polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	struct Vector normal = polygonNormal(object, anchor);
+
+	object.Xc = normal.x;
+	object.Yc = normal.y;
+	object.Zc = normal.z;
+	object.other = whatsTheD(object);
+
+	long double L = getNorm(normal);
+	object.Xc /= L;
+	object.Yc /= L;
+	object.Zc /= L;
+	object.other /= L;
+
+	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc));
+	long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
+
+	if(denominator = 0){
+		return NULL;
+	}else{
+		long double t = numerator / denominator;
+		tempIntersect.distance = t;
+		tempIntersect.object = object;
+		tempIntersect.Xi = anchor.x + (t * direction.x);
+		tempIntersect.Yi = anchor.y + (t * direction.y);
+		tempIntersect.Zi = anchor.z + (t * direction.z);
+
+		//PENDING: hacer lo de revisar con intersecciones 2D
+
+		return NULL;
+	}
 }
 
 //DONE
@@ -310,7 +359,7 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	return intersection;
 }
 
-//Pendiente
+//DONE
 //Funcion de que color del profe
 struct Color getColor(struct Vector anchor, struct Vector direction){
 	struct Color color;
@@ -329,7 +378,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 
 		struct Vector L;
 		struct Vector intersectVector = {intersection.Xi, intersection.Yi, intersection.Zi};
-		struct Vector N = Q.normalVector(Q, intersectVector);
+		struct Vector N = normalize(Q.normalVector(Q, intersectVector));
 		struct Vector R;
 
 
@@ -373,8 +422,9 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 	}
 	return (color);
 }
-/**-------------LECTURA ARCHIVOS-------------------------**/
 
+
+/**-------------LECTURA ARCHIVOS-------------------------**/
 void createObjectFromData(long double *data, int whichObjectCreate){
 	/*whichObjectCreate indica qué objeto crear
 		SI está en 1, crea luces
@@ -603,13 +653,6 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 	return values;
 }
 
-
-
-
-
-
-
-
 //Leer archivos con la escena
 //TO-FIX
 void getSceneObjects(){
@@ -776,10 +819,7 @@ void howManyObjectsLights(){
 	Objects = malloc(sizeof(struct Object)*numberObjects);
 	Lights= malloc(sizeof(struct Light)*numberLights);
 }
-
 /**------------------FIN LECTURA ARCHIVOS-------------------------**/
-
-
 
 //DONE
 int main(int argc, char *arcgv[]){
@@ -808,6 +848,7 @@ int main(int argc, char *arcgv[]){
 	for (i = 0; i < Vres; i++){
 		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
 		Yd = Yw - eye.x;
+		
 		for (j = 0; j < Hres; j++){
 			Xw = (long double) ((j + (1/2)) * Xdif)/Hres + Xmin;
 			Xd = Xw - eye.y;
