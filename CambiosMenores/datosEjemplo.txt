@@ -1,0 +1,36 @@
+/* Escena */
+Ia 
+/* Luces*/
+Luz_N
+Xp, Yp, Zp
+c1
+c2
+c3
+Ip
+Luz_N
+Xp, Yp, Zp
+c1
+c2
+c3
+Ip
+/* Esferas */
+Esfera_N
+Xc, Yc, Zc
+R
+Kd
+Ka
+Kn
+Ks
+R,G,B
+Esfera_2
+Esfera_N
+Xc, Yc, Zc
+R
+Kd
+Ka
+Kn
+Ks
+R,G,B
+/* Poligonos */
+/* Cilindros */
+/* Conos */
