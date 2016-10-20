@@ -51,8 +51,8 @@ struct Object {
 	long double Ka;
 	long double otherData;
 	struct Color color;
-	//struct Vector *(*normalVector)();
-	//struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
+	struct Vector (*normalVector)();
+	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
 };
 
 struct Intersection {
@@ -82,8 +82,9 @@ long double max(long double a, long double b){
 }
 
 
-
+//DONE
 //////////////Vectors
+
 //DONE
 //Producto punto entre dos vectores
 long double pointProduct(struct Vector a, struct Vector b){
@@ -96,7 +97,7 @@ long double pointProduct(struct Vector a, struct Vector b){
 	return pp;
 }
 
-//No recuerdo si esta es la formula correcta////////////////////
+//DONE
 //Producto cruz entre dos vectores
 struct Vector crossProduct(struct Vector a, struct Vector b){
 	struct Vector newVector;
@@ -200,8 +201,8 @@ struct Color colorXintensity(long double I, struct Color color){
 
 //////////////Ray Tracer Stuff
 
-//Interseccion con esferas
 //DONE
+//Interseccion con esferas
 struct Intersection *sphereIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	long double t, t1, t2;
 
@@ -248,19 +249,22 @@ struct Intersection *sphereIntersection(struct Vector anchor, struct Vector dire
 	}
 }
 
-struct Vector sphereNormal(struct Object object, long double Xi, long double Yi, long double Zi) {
+//DONE
+//Sacar la normal de una esfera en un punto dado por un vector
+struct Vector sphereNormal(struct Object object, struct Vector vector){
 	struct Vector normal;
 	
-	normal.x = Xi - object.Xc;
-	normal.y = Yi - object.Yc;
-	normal.z = Zi - object.Zc;
+	normal.x = vector.x - object.Xc;
+	normal.y = vector.y - object.Yc;
+	normal.z = vector.z - object.Zc;
 
 	normal = normalize(normal);
 
 	return normal;
 }
 
-//Revisar
+//DONE
+//Funcion que pide la primer interseccion de un rayo dado.
 struct Intersection getFirstIntersection(struct Vector anchor, struct Vector direction){
 	int k;
 	long double tmin;
@@ -273,7 +277,7 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 
 	int objectsAmount = sizeof(Objects)/sizeof(Objects[0]);
 	for(k = 0; k < objectsAmount; k++){
-		tempIntersection = sphereIntersection (anchor, direction, Objects[k]);
+		tempIntersection = Objects[k].intersectionFuncion(anchor, direction, Objects[k]);
 		if(tempIntersection != NULL && tempIntersection->distance > e && tempIntersection->distance < tmin){
 			tmin = tempIntersection->distance;
 			intersection.Xi = tempIntersection->Xi;
@@ -302,19 +306,19 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		int k;
 		int lightsAmount = sizeof(Lights)/sizeof(Lights[0]);
 		
-		struct Vector L;
 		struct Object Q = intersection.object;
+
+		struct Vector L;
 		struct Vector intersectVector = {intersection.Xi, intersection.Yi, intersection.Zi};
-		struct Vector N = sphereNormal(Q, intersection.Xi, intersection.Yi, intersection.Zi); 
-		
+		struct Vector N = Q.normalVector(Q, intersectVector);
+
 		long double Fatt;
 		long double I = 0.0;
 
 		for(k = 0; k < lightsAmount; k++){
-			struct Vector intresectionPoint;
 			struct Intersection obstacle;
-			struct Vector luz = {Lights[k].Xp - intersection.Xi, Lights[k].Yp - intersection.Yi, Lights[k].Zp - intersection.Zi};
-			L = normalize(luz);
+			struct Vector light = {Lights[k].Xp - intersection.Xi, Lights[k].Yp - intersection.Yi, Lights[k].Zp - intersection.Zi};
+			L = normalize(light);
 			obstacle = getFirstIntersection(intersectVector, L);
 			if(obstacle.distance < e){
 				long double pp = pointProduct(N, L);
@@ -360,6 +364,9 @@ int main(int argc, char *arcgv[]){
 	sphere1.color.r = 1;
 	sphere1.color.g = 0;	
 	sphere1.color.b = 0;
+	
+	sphere1.normalVector = sphereNormal;
+	sphere1.intersectionFuncion = sphereIntersection;
 
 	Objects[0] = sphere1;
 
