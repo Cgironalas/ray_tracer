@@ -1,0 +1,32 @@
+/* Escena */
+0.002
+/* Luces*/
+Luz1
+-200,300.0,-1000.0
+1.0
+1.0
+0.0
+0.0
+/* Esferas */
+Esfera1 
+200.0,200.0,650.0
+200.0
+0.8
+0.4
+0.1
+(1.0,0.0,0.0)
+Esfera2
+50.0,80.0,50.0
+10.0
+0.4
+0.4
+0.2
+(0.6,0.3,0.8)
+/* Poligonos */
+Poligono1
+Poligono2
+/* Cilindros */
+Cilindro1
+/* Conos */
+Cubo1
+Cubo2
