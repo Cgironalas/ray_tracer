@@ -25,6 +25,17 @@ struct Color {
 	long double b;
 };
 
+struct Point2D{
+	long double u;
+	long double v;
+};
+
+struct Point3D{
+	long double x;
+	long double y;
+	long double z;
+};
+
 struct Vector{
 	long double x;
 	long double y;
@@ -49,9 +60,11 @@ struct Object {
 	long double Ka;
 	long double Kn;
 	long double Ks;
+	int pointAmount;
 	long double other;
 	struct Color color;
-	struct Vector *points;
+	struct Point2D *points2D;
+	struct Point3D *points3D;
 	struct Vector (*normalVector)();
 	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
 };
@@ -274,10 +287,10 @@ struct Vector sphereNormal(struct Object object, struct Vector vector){
 }
 
 //CHECK
-struct Vector polygonNormal(struct Object object, struct Vector vector){
-	struct Vector point0 = object.points[0];
-	struct Vector point1 = object.points[1];
-	struct Vector point2 = object.points[2];
+struct Vector polygonNormal(struct Object object, void *vector){
+	struct Point3D point0 = object.points3D[0];
+	struct Point3D point1 = object.points3D[1];
+	struct Point3D point2 = object.points3D[2];
 
 	struct Vector vector1 = {point1.x - point0.x, point1.y - point0.y, point1.z - point0.z};
 	struct Vector vector2 = {point2.x - point1.x, point2.y - point1.y, point2.z - point1.z};
@@ -288,7 +301,7 @@ struct Vector polygonNormal(struct Object object, struct Vector vector){
 //CHECK
 long double whatsTheD(struct Object object){
 	long double theD = 0;
-	struct Vector point = object.points[0];
+	struct Point3D point = object.points3D[0];
 
 	theD -= object.Xc * point.x;
 	theD -= object.Yc * point.y;
@@ -297,9 +310,8 @@ long double whatsTheD(struct Object object){
 	return theD;
 }
 
-//PENDING
-struct Intersection *polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
-	struct Vector normal = polygonNormal(object, anchor);
+struct Object getABCD(struct Object object){
+	struct Vector normal = polygonNormal(object, NULL);
 
 	object.Xc = normal.x;
 	object.Yc = normal.y;
@@ -310,8 +322,18 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 	object.Xc /= L;
 	object.Yc /= L;
 	object.Zc /= L;
-	object.other /= L;
+	object.other /= L;	
+	return object;//Probar esto, sino regresar un array con ABCD
+}
 
+int getSign(long double v){
+	if(v >= 0){ return 1; }
+	else{ return 0; }
+}
+
+//PENDING
+//Julian dice cargar los puntos que se usan u, v, desde la lectura del archivo, ahi calcular ABC y con eso hacer de pichazo el array
+struct Intersection *polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc));
 	long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
 
@@ -326,8 +348,33 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 		tempIntersect.Zi = anchor.z + (t * direction.z);
 
 		//PENDING: hacer lo de revisar con intersecciones 2D
+		int NC = 0;
+		int NV = object.pointAmount;
+		int SH = getSign(object.points2D[0].v);
+		int NSH;
+		int a = 0;
+		int b = (a+1)%NV;
 
-		return NULL;
+		for (a; a < NV-1; ++a){
+			NSH = getSign(object.points2D[b].v);
+			if(SH != NSH){
+				if(object.points2D[a].u > 0 && object.points2D[b].u > 0){
+					++NC;
+				}else{
+					if(object.points2D[a].u > 0 || object.points2D[b].u > 0){
+						if(object.points2D[a].u - (object.points2D[a].v * ((object.points2D[b].u - object.points2D[a].u)/(object.points2D[b].v - object.points2D[a].v)))){
+							++NC;
+						}
+					}
+				}
+			}
+			SH = NSH;
+			++b;
+		}
+		if (NC%2 == 0)
+			return NULL;
+		else 
+			return &tempIntersect;
 	}
 }
 
