@@ -53,7 +53,6 @@ struct Object {
 	long double other;
 	struct Color color;
 	struct Vector *points;
-	int numberVertexes;
 	struct Vector (*normalVector)();
 	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
 };
@@ -441,6 +440,14 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 	switch(whichObjectCreate){
 		case 1:
 			{
+				printf("Insertando Luz...\n");
+				struct Object polygon;
+				struct Color colorPolygon;
+
+				printf("Pos luz (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+				printf("c1: %LF, c2: %LF, c3 %LF \n", data[3],data[4],data[5]);
+				printf("Ip luz: %LF \n", data[6]);
+
 				struct Light luz;
 				luz.Xp=data[0];
 				luz.Yp=data[1];
@@ -452,12 +459,23 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 
 				Lights[lightIndex]=luz;
 				lightIndex++;
+
 				printf("Luz insertado");
 				return;
 				/*Lo hago como si fuera una pila y ustedes no pueden detenerme.*/
 				}
 	case 2:
 			{
+				printf("Insertando Esfera...");
+				struct Object polygon;
+				struct Color colorPolygon;
+				printf("Pos esfera (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+				printf("Radio esfera: %LF \n", data[3]);
+				printf("Esfera Kd: %LF \n", data[3]);
+				printf("Esfera Ka: %LF \n", data[4]);
+				printf("Esfera Kn: %LF \n", data[5]);
+				printf("Esfera Ks: %LF \n", data[6]);
+				printf("Color esfera (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
 				struct Object esfera;
 				esfera.Xc=data[0];
 				esfera.Yc=data[1];
@@ -475,7 +493,6 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				colorSphere.b = data[10];
 				esfera.color=colorSphere;
 				Objects[objectIndex]=esfera;
-				printf("Radio de esfera %i : %LF \n",objectIndex, Objects[objectIndex].other);
 				objectIndex++;
 				
 				/*Lo hago como si fuera una pila y ustedes no pueden detenerme.*/
@@ -486,7 +503,13 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				printf("Insertando polígono...");
 				struct Object polygon;
 				struct Color colorPolygon;
+				printf("Color r: %LF \n", data[0]);
 				printf("Color g: %LF \n", data[1]);
+				printf("Color b: %LF \n", data[2]);
+				printf("Poligono Kd: %LF \n", data[3]);
+				printf("Poligono Ka: %LF \n", data[4]);
+				printf("Poligono Kn: %LF \n", data[5]);
+				printf("Poligono Ks: %LF \n", data[6]);
 				colorPolygon.r = data[0];
 				colorPolygon.g = data[1];
 				colorPolygon.b = data[2];
@@ -497,11 +520,11 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				polygon.Ks = data[6];
 				//7 Elementos insertados por el momento
 				int numVertexesPolygon = (quantityData-7) / 3;
-				polygon.numberVertexes = numVertexesPolygon;
 				polygon.points = malloc(sizeof(struct Vector)*numVertexesPolygon);
 				int vertexPolygonIndex = 0;
 				for (int i =0; i+7 < quantityData;){
 					struct Vector vertex;
+					printf("Vertice (%LF, %LF, %Lf) \n", data[7+i],  data[7+i+1],  data[7+i+2] );
 					vertex.x = data[7+i];
 					i++;
 					vertex.y = data[7+i];
@@ -512,7 +535,6 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 					vertexPolygonIndex++;
 				}
 				Objects[objectIndex] = polygon;
-				printf("RGB de poligono 1: %LF %LF %LF \n", Objects[objectIndex].color.r, Objects[objectIndex].color.g, Objects[objectIndex].color.b);
 				objectIndex++;
 
 			}
@@ -568,6 +590,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 						values[1] = positionLight[1];
 						values[2] = positionLight[2];
 						//memcpy(values, positionLight, 3);
+						//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
 						(*counterValueSegment)++;
 						*numberValuesRead = 3;
 						free (positionLight);
@@ -600,6 +623,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 					values[0] = positionSphere[0];
 					values[1] = positionSphere[1];
 					values[2] = positionSphere[2];
+
 					free (positionSphere);
 					*numberValuesRead = 3;
 					(*counterValueSegment)++;
@@ -623,7 +647,9 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 				values[0] = rgbColors[0];
 				values[1] = rgbColors[1];
 				values[2] = rgbColors[2];
+
 				free (rgbColors);
+				//printf("Color esfera leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
 				*numberValuesRead = 3;
 				(*counterValueSegment)=0;
 				//printf("counterValueSegment tras asignar RGB %i \n",(*counterValueSegment));
@@ -770,7 +796,6 @@ void getSceneObjects(){
 			//printf("state %i \n" ,state);
 			//printf("counterValueSegment %i \n", counterValueSegment);
 			long double *valuesReadTemp = readValueFromLine(state, &counterValueSegment, temporalBuffer, &numberValuesRead);
-			
 			if (valuesReadTemp == NULL){ //Se devolvió NULL
 				//printf("readValueFromLine devolvió NULL \n");
 				continue;
@@ -784,10 +809,11 @@ void getSceneObjects(){
 			for (i = 0; i < numberValuesRead; i++){
 				
 				valuesRead[indexValuesRead+i] = valuesReadTemp[i];
-				//printf("Valor devuelto por readValueFromLine: %LF \n", valuesReadTemp[i]);
-				indexValuesRead+=1;
+				//printf("Valor asignado a  readValueFromLine[%i]: %LF \n",i+indexValuesRead, valuesReadTemp[i+indexValuesRead]);
+				
 
 			}
+			indexValuesRead+=numberValuesRead;
 			/*if(numberValuesRead>0)
 			{
 				free(valuesReadTemp);
@@ -795,7 +821,7 @@ void getSceneObjects(){
 			/*SI counterValueSegment vuelve como un 0, quiere decir que ya
 			 se leyeron los datos de dicho objeto/luz, ergo, se crea.*/
 			if (counterValueSegment == 0){
-				printf("Creando objeto...\n");
+				//printf("Creando objeto...\n");
 				createObjectFromData(valuesRead, currentTypeObjectReading, indexValuesRead);
 				indexValuesRead=0;
 			}
@@ -817,23 +843,19 @@ void howManyObjectsLights(){
 
 			if (strstr(temporalBuffer, "Luz_")!=NULL){
 				numberLights++;
-				printf("%s", temporalBuffer);
+				//printf("%s", temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer,"Esfera_")!=NULL){
 				numberObjects++;
-				printf("%s", temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Poligono_")!=NULL){
 				numberObjects++;
-				printf("%s", temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Cono_")!=NULL){
 				numberObjects++;
-				printf("%s", temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Cilindro_")!=NULL){
 				numberObjects++;
-				printf("%s", temporalBuffer);
 				continue;
 			}
 
