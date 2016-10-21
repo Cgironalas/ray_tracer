@@ -22,8 +22,7 @@ Ka
 Kn
 Ks
 R,G,B
-Esfera_2
-Esfera_N
+Esfera_N+1
 Xc, Yc, Zc
 R
 Kd
@@ -32,5 +31,30 @@ Kn
 Ks
 R,G,B
 /* Poligonos */
+Poligono_N
+R,G,B
+Kd
+Ka
+Kn
+Ks
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+END_Poligono_N
+Poligono_N+1
+R,G,B
+Kd
+Ka
+Kn
+Ks
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+END_Poligono_N+1
 /* Cilindros */
 /* Conos */
