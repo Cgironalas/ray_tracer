@@ -476,6 +476,11 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		struct Vector N = normalize(Q.normalVector(Q, intersectVector));
 		struct Vector R;
 
+		if(pointProduct(N, direction) > 0){
+			N.x *= -1;
+			N.y *= -1;
+			N.z *= -1;
+		}
 
 		long double Fatt;
 		long double I = 0.0;
@@ -1030,10 +1035,10 @@ int main(int argc, char *arcgv[]){
 	//printf("Radio de esfera 0 %LF \n", Objects[0].other);
 	//printf("Color R de esfera 0 %LF \n", Objects[0].color.r);
 
-	printf("A del poligono %LF \n", Objects[1].Xc);
-	printf("B del poligono %LF \n", Objects[1].Yc);
-	printf("C del poligono %LF \n", Objects[1].Zc);
-	printf("D del poligono %LF \n", Objects[1].other);
+	//printf("A del poligono %LF \n", Objects[1].Xc);
+	//printf("B del poligono %LF \n", Objects[1].Yc);
+	//printf("C del poligono %LF \n", Objects[1].Zc);
+	//printf("D del poligono %LF \n", Objects[1].other);
 
 	int i, j;
 
