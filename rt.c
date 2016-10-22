@@ -121,9 +121,9 @@ long double pointProduct(struct Vector a, struct Vector b){
 struct Vector crossProduct(struct Vector a, struct Vector b){
 	struct Vector newVector;
 
-	newVector.x = (long double) (a.y * b.z) - (a.z * b.y);
-	newVector.y = (long double) (a.z * b.x) - (a.x * b.z);
-	newVector.z = (long double) (a.x * b.y) - (a.y * b.x);
+	newVector.x = (a.y * b.z) - (a.z * b.y);
+	newVector.y = (a.z * b.x) - (a.x * b.z);
+	newVector.z = (a.x * b.y) - (a.y * b.x);
 
 	return newVector;
 }
@@ -140,10 +140,15 @@ long double getNorm(struct Vector vector){
 struct Vector normalize(struct Vector vector){
 	long double norm = getNorm(vector);
 	struct Vector unitVector;
-
-	unitVector.x = vector.x / norm;
-	unitVector.y = vector.y / norm;
-	unitVector.z = vector.z / norm;
+	if(norm != 0){
+		unitVector.x = vector.x / norm;
+		unitVector.y = vector.y / norm;
+		unitVector.z = vector.z / norm;	
+	}else{
+		unitVector.x = vector.x;
+		unitVector.y = vector.y;
+		unitVector.z = vector.z;
+	}
 
 	return unitVector;
 }
@@ -173,7 +178,7 @@ void saveFile(){
 	//srand((unsigned) time(&t));
 	//FOR parra recorrer el framebuffer escribiendo el color de cada pixel en el PPM
 	//El formato es para que "se vea como matriz" en el PPM
-	for (i = 0; i < Vres; i++){
+	for (i = Vres-1; i >= 0; i--){
 		for (j = 0; j < Hres; j++){
 			int R = (int) 255 * Framebuffer[i][j].r;//rand() % 255;//
 			int G = (int) 255 * Framebuffer[i][j].g;
@@ -287,7 +292,7 @@ struct Vector sphereNormal(struct Object object, struct Vector vector){
 }
 
 //CHECK
-struct Vector polygonNormal(struct Object object, void *vector){
+struct Vector polygonNormal(struct Object object, struct Vector vector){
 	struct Point3D point0 = object.points3D[0];
 	struct Point3D point1 = object.points3D[1];
 	struct Point3D point2 = object.points3D[2];
@@ -295,6 +300,9 @@ struct Vector polygonNormal(struct Object object, void *vector){
 	struct Vector vector1 = {point1.x - point0.x, point1.y - point0.y, point1.z - point0.z};
 	struct Vector vector2 = {point2.x - point1.x, point2.y - point1.y, point2.z - point1.z};
 	struct Vector normal = crossProduct(vector1, vector2);
+
+	normal = normalize(normal);
+
 	return normal;
 }
 
@@ -311,7 +319,8 @@ long double whatsTheD(struct Object object){
 }
 
 struct Object getABCD(struct Object object){
-	struct Vector normal = polygonNormal(object, NULL);
+	struct Vector a;
+	struct Vector normal = polygonNormal(object, a);
 
 	object.Xc = normal.x; //A de la ecuacion del plano
 	object.Yc = normal.y; //B de la ecuacion del plano
@@ -323,6 +332,8 @@ struct Object getABCD(struct Object object){
 	object.Yc /= L;
 	object.Zc /= L;
 	object.other /= L;	
+
+	printf("A en ABCD %LF\n", normal.x);
 	return object;//Probar esto, sino regresar un array con ABCD
 }
 
@@ -334,10 +345,11 @@ int getSign(long double v){
 //PENDING
 //Julian dice cargar los puntos que se usan u, v, desde la lectura del archivo, ahi calcular ABC y con eso hacer de pichazo el array
 struct Intersection *polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	
 	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc));
 	long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
 
-	if(denominator = 0){
+	if(denominator == 0){
 		return NULL;
 	}else{
 		long double t = numerator / denominator;
@@ -347,34 +359,70 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 		tempIntersect.Yi = anchor.y + (t * direction.y);
 		tempIntersect.Zi = anchor.z + (t * direction.z);
 
+		long double maxA_B = max(abs(object.Xc), abs(object.Yc)); //maximo entre A y B
+		long double maxA_B_C = max(maxA_B, abs(object.Zc)); //maximo entre los tres
+		long double u, v;
+		if(maxA_B_C == abs(object.Xc)){
+			//A es maximo
+			u = tempIntersect.Yi;
+			v = tempIntersect.Zi;
+		}else if(maxA_B_C == abs(object.Yc) ){
+			//B es maximo
+			u = tempIntersect.Xi;
+			v = tempIntersect.Zi;
+		}else if(maxA_B_C == abs(object.Zc)){
+			//C es maximo
+			u = tempIntersect.Xi;
+			v = tempIntersect.Yi;
+		}
+
 		//PENDING: hacer lo de revisar con intersecciones 2D
 		int NC = 0;
 		int NV = object.pointAmount;
+
+		for(int i = 0; i < NV; i++){
+			object.points2D[i].u = object.points2D[i].u - u;
+			object.points2D[i].v = object.points2D[i].v - v;
+		}
+
+		//printf("%i\n", object.pointAmount);
 		int SH = getSign(object.points2D[0].v);
 		int NSH;
 		int a = 0;
 		int b = (a+1)%NV;
-
-		for (a; a < NV-1; ++a){
+		for (a = 0; a < NV-1; a++){
 			NSH = getSign(object.points2D[b].v);
+			
 			if(SH != NSH){
 				if(object.points2D[a].u > 0 && object.points2D[b].u > 0){
-					++NC;
-				}else{
-					if(object.points2D[a].u > 0 || object.points2D[b].u > 0){
-						if(object.points2D[a].u - (object.points2D[a].v * ((object.points2D[b].u - object.points2D[a].u)/(object.points2D[b].v - object.points2D[a].v)))){
-							++NC;
-						}
+					NC++;
+				}else if(object.points2D[a].u > 0 || object.points2D[b].u > 0){
+					long double N = (object.points2D[b].u - object.points2D[a].u);
+					long double D = (object.points2D[b].v - object.points2D[a].v);
+					if(D != 0){
+						if(object.points2D[a].u - ((object.points2D[a].v * N)/D) > 0){
+							NC++;
+						}	
 					}
 				}
 			}
 			SH = NSH;
-			++b;
+			b++;
 		}
-		if (NC%2 == 0)
+		//printf("NC %i", NC);
+		if (NC%2 == 0){
+			for(int i = 0; i < NV; i++){
+				object.points2D[i].u = object.points2D[i].u + u;
+				object.points2D[i].v = object.points2D[i].v + v;
+			}
 			return NULL;
-		else 
+		}else{
+			for(int i = 0; i < NV; i++){
+				object.points2D[i].u = object.points2D[i].u + u;
+				object.points2D[i].v = object.points2D[i].v + v;
+			}
 			return &tempIntersect;
+		}
 	}
 }
 
@@ -390,8 +438,8 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	tempIntersection = NULL;
 	intersection.distance = -1;
 
-	int objectsAmount = sizeof(Objects)/sizeof(Objects[0]);
-	for(k = 0; k < numberObjects; k++){
+	int objectsAmount = numberObjects;
+	for(k = 0; k < objectsAmount; k++){
 		tempIntersection = Objects[k].intersectionFuncion(anchor, direction, Objects[k]);
 		if(tempIntersection != NULL && tempIntersection->distance > e && tempIntersection->distance < tmin){
 			tmin = tempIntersection->distance;
@@ -419,7 +467,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		color = BACKGROUND;
 	}else{
 		int k;
-		int lightsAmount = sizeof(Lights)/sizeof(Lights[0]);
+		int lightsAmount = numberLights;
 		
 		struct Object Q = intersection.object;
 
@@ -582,6 +630,9 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				vertexPolygonIndex = 0;
 				printf("numVertexesPolygon %i \n", numVertexesPolygon);
 				polygon = getABCD(temp);
+				printf("A del poligono %LF\n", polygon.Xc);
+				printf("B del poligono %LF\n", polygon.Yc);
+				printf("C del poligono %LF\n", polygon.Zc);
 				polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
 				polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
 				struct Color colorPolygon;
@@ -593,8 +644,13 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				polygon.Ka = data[4];
 				polygon.Kn = data[5];
 				polygon.Ks = data[6];
+				polygon.pointAmount = numVertexesPolygon;
+				polygon.normalVector = polygonNormal;
+				polygon.intersectionFuncion = polygonIntersection;
 				long double u;
 				long double v;
+				long double maxA_B = max(abs(polygon.Xc), abs(polygon.Yc)); //maximo entre A y B
+				long double maxA_B_C = max(maxA_B, abs(polygon.Zc)); //maximo entre los tres
 				for (int i =0; i+7 < quantityData;){
 					struct Point3D vertex;
 					printf("Vertice (%LF, %LF, %Lf) \n", data[7+i],  data[7+i+1],  data[7+i+2] );
@@ -606,8 +662,6 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 					i++;
 					
 					struct Point2D squashedVertex;
-					long double maxA_B = max(abs(polygon.Xc), abs(polygon.Yc)); //maximo entre A y B
-					long double maxA_B_C = max(maxA_B, abs(polygon.Zc)); //maximo entre los tres
 					if(maxA_B_C == abs(polygon.Xc)){
 						//A es maximo
 						u = vertex.y;
@@ -634,7 +688,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				}
 				Objects[objectIndex] = polygon;
 				objectIndex++;
-
+				//return;
 			}
 		case 4:
 			{}
@@ -865,7 +919,7 @@ void getSceneObjects(){
 				counterValueSegment = 0;
 				indexValuesRead=0;
 				free(valuesRead);
-				valuesRead=malloc(sizeof(long double)*37); //Polígonos max size 
+				valuesRead=malloc(sizeof(long double)*200); //Polígonos max size 
 				currentTypeObjectReading=3;
 				printf("%s",temporalBuffer);
 				continue;
@@ -972,9 +1026,15 @@ int main(int argc, char *arcgv[]){
 	printf("Objetos %i \n", numberObjects);
 	getSceneObjects();
 
-	printf("Ip de Luz 0 %LF \n", Objects[0].other);
-	printf("RAdio de esfera 0 %LF \n", Objects[0].other);
-	printf("Color R de esfera 0 %LF \n", Objects[0].color.r);
+	//printf("Ip de Luz 0 %LF \n", Lights[0].Ip);
+	//printf("Radio de esfera 0 %LF \n", Objects[0].other);
+	//printf("Color R de esfera 0 %LF \n", Objects[0].color.r);
+
+	printf("A del poligono %LF \n", Objects[1].Xc);
+	printf("B del poligono %LF \n", Objects[1].Yc);
+	printf("C del poligono %LF \n", Objects[1].Zc);
+	printf("D del poligono %LF \n", Objects[1].other);
+
 	int i, j;
 
 	long double L;
