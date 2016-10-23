@@ -1,121 +1,272 @@
 Ecuación del cilindro:
 
-	[(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² + 
-	[(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
-	[(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]² +
-	- R² = 0
+    [(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² + 
+    [(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
+    [(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]² +
+    - R² = 0
 
-	Primer línea: 
-		[(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² 
-		= [X0 + (Xe+tXd)Xq² - X0Xq² + (Ye+tYd)YqXq - Y0YqXq + (Ze+tZd)ZqXq - Z0ZqXq - Xe + tXd]² 
-		= [X0 + XeXq² + tXdXq² - X0Xq² + YeYqXq + tYdYqXq - Y0YqXq + ZeZqXq + tZdZqXq - Z0ZqXq - Xe + tXd]² 
-		= [tXdXq² + tYdYqXq + tZdZqXq + tXd + X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe]² 
-		= [t(XdXq² + YdYqXq + ZdZqXq + Xd) + (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)]²
+    Primer línea: 
+        [(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² 
+        = [X0 + (Xe+tXd)Xq² - X0Xq² + (Ye+tYd)YqXq - Y0YqXq + (Ze+tZd)ZqXq - Z0ZqXq - Xe + tXd]² 
+        = [X0 + XeXq² + tXdXq² - X0Xq² + YeYqXq + tYdYqXq - Y0YqXq + ZeZqXq + tZdZqXq - Z0ZqXq - Xe + tXd]² 
+        = [tXdXq² + tYdYqXq + tZdZqXq + tXd + X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe]² 
+        = [t(XdXq² + YdYqXq + ZdZqXq + Xd) + (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)]²
 
-		Fórmula notable
-		a² = t²(XdXq² + YdYqXq + ZdZqXq + Xd)²
-		2ab = 2t(XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)
-		b² = (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)²
+        Fórmula notable
+        a² = t²(XdXq² + YdYqXq + ZdZqXq + Xd)²
+        2ab = 2t(XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)
+        b² = (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)²
 
-	Segunda línea:
-		[(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
-		= [Y0 + (Xe+tXd)XqYq - X0XqYq + (Ye+tYd)Yq² - Y0Yq² + (Ze+tZd)ZqYq - Z0ZqYq - Ye + tYd]²
-		= [Y0 + XeXqYq + tXdXqYq - X0XqYq + YeYq² + tYdYq² - Y0Yq² + ZeZqYq + tZdZqYq - Z0ZqYq - Ye + tYd]²
-		= [tXdXqYq + tYdYq² + tZdZqYq + tYd + Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye]²
-		= [t(XdXqYq + YdYq² + ZdZqYq + Yd) + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)]²
+    Segunda línea:
+        [(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
+        = [Y0 + (Xe+tXd)XqYq - X0XqYq + (Ye+tYd)Yq² - Y0Yq² + (Ze+tZd)ZqYq - Z0ZqYq - Ye + tYd]²
+        = [Y0 + XeXqYq + tXdXqYq - X0XqYq + YeYq² + tYdYq² - Y0Yq² + ZeZqYq + tZdZqYq - Z0ZqYq - Ye + tYd]²
+        = [tXdXqYq + tYdYq² + tZdZqYq + tYd + Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye]²
+        = [t(XdXqYq + YdYq² + ZdZqYq + Yd) + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)]²
 
-	Fórmula notable
-		a² = t²(XdXqYq + YdYq² + ZdZqYq + Yd)²
-		2ab = 2t(XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)
-		b² = (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)²
+    Fórmula notable
+        a² = t²(XdXqYq + YdYq² + ZdZqYq + Yd)²
+        2ab = 2t(XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)
+        b² = (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)²
 
-	Tercer línea:
-		[(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]²
-		= [Z0 + (Xe+tXd)XqZq - X0XqZq + (Ye+tYd)YqZq - Y0YqZq + (Ze+tZd)Zq² - Z0Zq² - Ze + tZd]²
-		= [Z0 + XeXqZq + tXdXqZq - X0XqZq + YeYqZq + tYdYqZq - Y0YqZq + ZeZq² + tZdZq² - Z0Zq² - Ze + tZd]²
-		= [tXdXqZq + tYdYqZq + tZdZq² + tZd + Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze]²
-		= [t(XdXqZq + YdYqZq + ZdZq² + Zd) + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)]²
+    Tercer línea:
+        [(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]²
+        = [Z0 + (Xe+tXd)XqZq - X0XqZq + (Ye+tYd)YqZq - Y0YqZq + (Ze+tZd)Zq² - Z0Zq² - Ze + tZd]²
+        = [Z0 + XeXqZq + tXdXqZq - X0XqZq + YeYqZq + tYdYqZq - Y0YqZq + ZeZq² + tZdZq² - Z0Zq² - Ze + tZd]²
+        = [tXdXqZq + tYdYqZq + tZdZq² + tZd + Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze]²
+        = [t(XdXqZq + YdYqZq + ZdZq² + Zd) + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)]²
 
-		Fórmula notable
-		a² = t²(XdXqZq + YdYqZq + ZdZq² + Zd)²
-		2ab = 2t(XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)
-		b² = (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)²
+        Fórmula notable
+        a² = t²(XdXqZq + YdYqZq + ZdZq² + Zd)²
+        2ab = 2t(XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)
+        b² = (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)²
 
-	Cuarta línea:
-		- R²
+    Cuarta línea:
+        - R²
 
-	Ecuación cuadrática de t
-		t²((XdXq² + YdYqXq + ZdZqXq + Xd)² + (XdXqYq + YdYq² + ZdZqYq + Yd)² + (XdXqZq + YdYqZq + ZdZq² + Zd)²) + 
+    Ecuación cuadrática de t
+        t²((XdXq² + YdYqXq + ZdZqXq + Xd)² + (XdXqYq + YdYq² + ZdZqYq + Yd)² + (XdXqZq + YdYqZq + ZdZq² + Zd)²) + 
 
-		2t((XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe) + (XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye) + (XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)) + 
+        2t((XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe) + (XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye) + (XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)) + 
 
-		(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)² + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)² + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)² - R²
+        (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)² + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)² + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)² - R²
 
 ==================================================================================================
 ==================================================================================================
 
 Ecuación del cono:
 
-	[(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² + 
-	[(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
-	[(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]² +
-	- [(k2/k1)[((Xe+tXd)-X0)Xq + ((Ye+tYd)-Y0)Yq + ((Ze+tZd)-Z0)Zq]]² = 0
+    [(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² + 
+    [(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
+    [(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]² +
+    - [(k2/k1)[((Xe+tXd)-X0)Xq + ((Ye+tYd)-Y0)Yq + ((Ze+tZd)-Z0)Zq]]² = 0
 
-	Primer línea: 
-		[(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² 
-		= [X0 + (Xe+tXd)Xq² - X0Xq² + (Ye+tYd)YqXq - Y0YqXq + (Ze+tZd)ZqXq - Z0ZqXq - Xe + tXd]² 
-		= [X0 + XeXq² + tXdXq² - X0Xq² + YeYqXq + tYdYqXq - Y0YqXq + ZeZqXq + tZdZqXq - Z0ZqXq - Xe + tXd]² 
-		= [tXdXq² + tYdYqXq + tZdZqXq + tXd + X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe]² 
-		= [t(XdXq² + YdYqXq + ZdZqXq + Xd) + (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)]²
+    Primer línea: 
+        [(X0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Xq) - (Xe + tXd)]² 
+        = [X0 + (Xe+tXd)Xq² - X0Xq² + (Ye+tYd)YqXq - Y0YqXq + (Ze+tZd)ZqXq - Z0ZqXq - Xe + tXd]² 
+        = [X0 + XeXq² + tXdXq² - X0Xq² + YeYqXq + tYdYqXq - Y0YqXq + ZeZqXq + tZdZqXq - Z0ZqXq - Xe + tXd]² 
+        = [tXdXq² + tYdYqXq + tZdZqXq + tXd + X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe]² 
+        = [t(XdXq² + YdYqXq + ZdZqXq + Xd) + (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)]²
 
-		Fórmula notable
-		a² = t²(XdXq² + YdYqXq + ZdZqXq + Xd)²
-		2ab = 2t(XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)
-		b² = (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)²
+        Fórmula notable
+        a² = t²(XdXq² + YdYqXq + ZdZqXq + Xd)²
+        2ab = 2t(XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)
+        b² = (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)²
 
-	Segunda línea:
-		[(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
-		= [Y0 + (Xe+tXd)XqYq - X0XqYq + (Ye+tYd)Yq² - Y0Yq² + (Ze+tZd)ZqYq - Z0ZqYq - Ye + tYd]²
-		= [Y0 + XeXqYq + tXdXqYq - X0XqYq + YeYq² + tYdYq² - Y0Yq² + ZeZqYq + tZdZqYq - Z0ZqYq - Ye + tYd]²
-		= [tXdXqYq + tYdYq² + tZdZqYq + tYd + Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye]²
-		= [t(XdXqYq + YdYq² + ZdZqYq + Yd) + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)]²
+    Segunda línea:
+        [(Y0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Yq) - (Ye + tYd)]² + 
+        = [Y0 + (Xe+tXd)XqYq - X0XqYq + (Ye+tYd)Yq² - Y0Yq² + (Ze+tZd)ZqYq - Z0ZqYq - Ye + tYd]²
+        = [Y0 + XeXqYq + tXdXqYq - X0XqYq + YeYq² + tYdYq² - Y0Yq² + ZeZqYq + tZdZqYq - Z0ZqYq - Ye + tYd]²
+        = [tXdXqYq + tYdYq² + tZdZqYq + tYd + Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye]²
+        = [t(XdXqYq + YdYq² + ZdZqYq + Yd) + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)]²
 
-	Fórmula notable
-		a² = t²(XdXqYq + YdYq² + ZdZqYq + Yd)²
-		2ab = 2t(XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)
-		b² = (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)²
+    Fórmula notable
+        a² = t²(XdXqYq + YdYq² + ZdZqYq + Yd)²
+        2ab = 2t(XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)
+        b² = (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)²
 
-	Tercer línea:
-		[(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]²
-		= [Z0 + (Xe+tXd)XqZq - X0XqZq + (Ye+tYd)YqZq - Y0YqZq + (Ze+tZd)Zq² - Z0Zq² - Ze + tZd]²
-		= [Z0 + XeXqZq + tXdXqZq - X0XqZq + YeYqZq + tYdYqZq - Y0YqZq + ZeZq² + tZdZq² - Z0Zq² - Ze + tZd]²
-		= [tXdXqZq + tYdYqZq + tZdZq² + tZd + Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze]²
-		= [t(XdXqZq + YdYqZq + ZdZq² + Zd) + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)]²
+    Tercer línea:
+        [(Z0 + [((Xe+tXd) - X0)Xq + ((Ye+tYd) - Y0)Yq + ((Ze+tZd) - Z0)Zq]Zq) - (Ze + tZd)]²
+        = [Z0 + (Xe+tXd)XqZq - X0XqZq + (Ye+tYd)YqZq - Y0YqZq + (Ze+tZd)Zq² - Z0Zq² - Ze + tZd]²
+        = [Z0 + XeXqZq + tXdXqZq - X0XqZq + YeYqZq + tYdYqZq - Y0YqZq + ZeZq² + tZdZq² - Z0Zq² - Ze + tZd]²
+        = [tXdXqZq + tYdYqZq + tZdZq² + tZd + Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze]²
+        = [t(XdXqZq + YdYqZq + ZdZq² + Zd) + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)]²
 
-		Fórmula notable
-		a² = t²(XdXqZq + YdYqZq + ZdZq² + Zd)²
-		2ab = 2t(XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)
-		b² = (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)²
+        Fórmula notable
+        a² = t²(XdXqZq + YdYqZq + ZdZq² + Zd)²
+        2ab = 2t(XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)
+        b² = (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)²
 
-	Cuarta línea:
-		- [(k2/k1)[((Xe+tXd)-X0)Xq + ((Ye+tYd)-Y0)Yq + ((Ze+tZd)-Z0)Zq]]² 
-		= - (k2/k1)²[((Xe+tXd)-X0)Xq + ((Ye+tYd)-Y0)Yq + ((Ze+tZd)-Z0)Zq]² 
-		= - (k2/k1)²[(Xe+tXd-X0)Xq + (Ye+tYd-Y0)Yq + (Ze+tZd-Z0)Zq]² 
-		= - (k2/k1)²[XeXq + tXdXq - X0Xq + YeYq + tYdYq - Y0Yq + ZeZq + tZdZq - Z0Zq]² 
-		= - (k2/k1)²[tXdXq + tYdYq + tZdZq + XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq]² 
-		= - (k2/k1)²[t(XdXq + YdYq + ZdZq) + (XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)]² 
+    Cuarta línea:
+        - [(k2/k1)[((Xe+tXd)-X0)Xq + ((Ye+tYd)-Y0)Yq + ((Ze+tZd)-Z0)Zq]]² 
+        = - (k2/k1)²[((Xe+tXd)-X0)Xq + ((Ye+tYd)-Y0)Yq + ((Ze+tZd)-Z0)Zq]² 
+        = - (k2/k1)²[(Xe+tXd-X0)Xq + (Ye+tYd-Y0)Yq + (Ze+tZd-Z0)Zq]² 
+        = - (k2/k1)²[XeXq + tXdXq - X0Xq + YeYq + tYdYq - Y0Yq + ZeZq + tZdZq - Z0Zq]² 
+        = - (k2/k1)²[tXdXq + tYdYq + tZdZq + XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq]² 
+        = - (k2/k1)²[t(XdXq + YdYq + ZdZq) + (XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)]² 
 
-	Fórmula notable
-		[t(XdXq + YdYq + ZdZq) + (XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)]² 
+    Fórmula notable
+        [t(XdXq + YdYq + ZdZq) + (XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)]² 
 
-		a² = - t²(k2/k1)²(XdXq + YdYq + ZdZq)²
-		2ab = - 2t(k2/k1)²(XdXq + YdYq + ZdZq)(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)
-		b² = - (k2/k1)²(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)²
+        a² = - t²(k2/k1)²(XdXq + YdYq + ZdZq)²
+        2ab = - 2t(k2/k1)²(XdXq + YdYq + ZdZq)(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)
+        b² = - (k2/k1)²(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)²
 
-	Ecuación cuadrática de t
-		t²((XdXq² + YdYqXq + ZdZqXq + Xd)² + (XdXqYq + YdYq² + ZdZqYq + Yd)² + (XdXqZq + YdYqZq + ZdZq² + Zd)² - (k2/k1)²(XdXq + YdYq + ZdZq)²) + 
+    Ecuación cuadrática de t
+        t²((XdXq² + YdYqXq + ZdZqXq + Xd)² + (XdXqYq + YdYq² + ZdZqYq + Yd)² + (XdXqZq + YdYqZq + ZdZq² + Zd)² - (k2/k1)²(XdXq + YdYq + ZdZq)²) + 
 
-		2t((XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe) + (XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye) + (XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze) - (k2/k1)²(XdXq + YdYq + ZdZq)(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)) + 
+        2t((XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe) + (XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye) + (XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze) - (k2/k1)²(XdXq + YdYq + ZdZq)(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)) + 
 
-		(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)² + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)² + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)² - (k2/k1)²(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)²
+        (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)² + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)² + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)² - (k2/k1)²(XeXq - X0Xq + YeYq - Y0Yq + ZeZq - Z0Zq)²
+
+
+
+    Derivada parcial respecto a X de función implícita de Cilindro
+
+    d/dX ((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)-X)²+
+            ((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)-Y)²+
+            ((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)-Z)²
+            -R²
+
+    d/dX((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)-X)²+
+    d/dX((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)-Y)²+
+    d/dX((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)-Z)²
+    -d/dX(R²)
+
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*d/dX((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*d/dX((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*d/dX((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)
+    - 0
+
+
+
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*(Xq²-1)
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- Y)*XqYq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqZq
+    - 0
+
+    Derivada parcial respecto a Y de función implícita de Cilindro
+
+     d/dY ((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)-X)²+
+            ((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)-Y)²+
+            ((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)-Z)²
+            -R²
+
+    d/dY((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)-X)²+
+    d/dY((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)-Y)²+
+    d/dY((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)-Z)²
+    -d/dY(R²)
+
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*d/dY((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*d/dY((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*d/dY((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)
+    - 0
+
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqYq+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*(Yq²-1)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*YqZq
+    - 0
+
+    Derivada parcial respecto a Z de función implícita de Cilindro
+
+    d/dZ ((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)-X)²+
+            ((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)-Y)²+
+            ((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)-Z)²
+            -R²
+
+    d/dZ((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)-X)²+
+    d/dZ((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)-Y)²+
+    d/dZ((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)-Z)²
+    -d/dZ(R²)
+
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*d/dZ((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*d/dZ((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*d/dZ((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)
+    - 0
+
+     2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*ZqXq+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*YqZq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)**(Zq²-1)+
+    - 0
+
+
+    Normal no normalizada de cilindro
+
+    [ 
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*(Xq²-1)
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- Y)*XqYq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqZq
+    - 0,
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqYq+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*(Yq²-1)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*YqZq
+    - 0,
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*ZqXq+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*YqZq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)**(Zq²-1)+
+    - 0
+    ]
+En Symbolab (enlaces):
+x = X
+i = Xo
+p = Xq
+j = Y
+k = Yo
+l = Yq
+b = Z
+n = Zo
+m = Zq
+
+
+
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdx%7D%5Cleft(%5Cleft(i%2B%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)p%5Cright)-x%20%5Cright)
+
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdx%7D%5Cleft(%5Cleft(k%2B%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)l%5Cright)-j%5Cright)
+
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdx%7D%5Cleft(%5Cleft(n%2B%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)-b%5Cright)
+
+Para la ecuación del cono es la misma, sólo que se deriva y se añade al final en vez de R².
+
+((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))² 
+ 
+respecto a x, y, z 
+En Symbolab (enlaces):
+c = k1
+v = k2
+x = X
+i = Xo
+p = Xq
+j = Y
+k = Yo
+l = Yq
+b = Z
+n = Zo
+m = Zq
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdx%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bc%7D%7Bv%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
+
+d/dX ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k1²Zq²Xq(Yq(Y-Yo)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²)
+
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdj%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bc%7D%7Bv%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
+
+d/dY ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k1²YqZq²(Yq(-Yo+Y)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²)
+
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdb%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bc%7D%7Bv%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
+d/dZ ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k1²(Zq^3)(Yq(Y-Yo)+Xq(-Xo+X)+Zq(-Zo+Z)))/(k2)²)
+
+NORMAL DEL CONO
+[ 
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*(Xq²-1)
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- Y)*XqYq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqZq
+    - ( (2k1²YqZq²(Yq(-Yo+Y)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²),
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqYq+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*(Yq²-1)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*YqZq
+    - ( (2k1²YqZq²(Yq(-Yo+Y)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²),
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*ZqXq+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*YqZq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)**(Zq²-1)+
+    - ( (2k1²(Zq^3)(Yq(Y-Yo)+Xq(-Xo+X)+Zq(-Zo+Z)))/(k2)²)
+    ]
+
 
