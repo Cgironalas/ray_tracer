@@ -10,10 +10,10 @@ static int Hres = 1008;
 static int Vres = 1008;
 
 //Window
-static long double Xmax = 400;
-static long double Ymax = 400;
-static long double Xmin = 0;
-static long double Ymin = 0;
+static long double Xmax = 1000;//400;
+static long double Ymax = 1000;//400;
+static long double Xmin = -2000;//0;
+static long double Ymin = -2000;//0;
 
 //Others
 static long double Ia = 0.6;
@@ -513,11 +513,149 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 }
 
 struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	long double xo = object.Xc;
+	long double yo = object.Yc;
+	long double zo = object.Zc;
 
+	long double xq = object.directionVector.x;
+	long double yq = object.directionVector.y;
+	long double zq = object.directionVector.z;
+
+	long double xd = direction.x;
+	long double yd = direction.y;
+	long double zd = direction.z;
+
+	long double xe = anchor.x;
+	long double ye = anchor.y;
+	long double ze = anchor.z;
+
+	long double radius = object.other;
+
+	long double A = pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
+		pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) +
+		pow ((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd,2);
+
+	long double B =  ((pow(xd*xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd)*(xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
+		+ ((xd*xq*yq) + (pow(yd*yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
+		+((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze);
+
+	B = 2*B;
+
+	long double C = pow ((xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) + 
+		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) ,2) +
+		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze),2) - 
+		pow(radius,2);
+
+	long double discriminant = pow(B, 2) - (4 * A * C);
+	long double t, t1, t2;
+
+	if(discriminant >= 0){
+		long double root = sqrt(discriminant);
+
+		B *= -1;
+
+		t1 = (B + root)/(2*A);
+		t2 = (B - root)/(2*A);
+
+		if(t1 > e){
+			if(t2 > e){
+				t = min(t1, t2);
+			}else{
+				t = t1;
+			}
+		}else{
+			if(t2 > e){
+				t = t2;
+			}else{
+				return NULL;
+			}
+		}
+		
+		tempIntersect.distance = t;
+		tempIntersect.object = object;
+		tempIntersect.Xi = xe + (t * xd);
+		tempIntersect.Yi = ye + (t * yd);
+		tempIntersect.Zi = ze + (t * zd);
+
+		return &tempIntersect;
+	}else{
+		return NULL;
+	}
 }
 
 struct Intersection *coneIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	long double xo = object.Xc;
+	long double yo = object.Yc;
+	long double zo = object.Zc;
 
+	long double xq = object.directionVector.x;
+	long double yq = object.directionVector.y;
+	long double zq = object.directionVector.z;
+
+	long double xd = direction.x;
+	long double yd = direction.y;
+	long double zd = direction.z;
+
+	long double k1 = object.K1;
+	long double k2 = object.K2;
+
+	long double xe = anchor.x;
+	long double ye = anchor.y;
+	long double ze = anchor.z;
+
+
+	long double A = pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
+		pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) +
+		pow ((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd,2) -
+		((pow(k2/k1,2))*( pow( ((xd*xq)+(yd*yq)+(zd*zq)), 2) ));
+
+	long double B =  ((pow(xd*xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd)*(xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
+		+ ((xd*xq*yq) + (pow(yd*yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
+		+((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze) -
+		((pow(k2/k1,2))*((xd*xq)+(yd*yq)+(zd*zq)) * ( (xe*xq) - (xo*xq) +(ye*yq) - (yo*yq) + (ze*zq) - (zo*zq) ) );
+
+	B = 2*B;
+
+	long double C = pow ((xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) + 
+		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) ,2) +
+		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze),2) -
+		((pow(k2/k1,2)) * (pow( ( (xe*xq) - (xo*xq) +(ye*yq) - (yo*yq) + (ze*zq) - (zo*zq) ), 2) ) );
+
+	long double discriminant = pow(B, 2) - (4 * A * C);
+	long double t, t1, t2;
+
+	if(discriminant >= 0){
+		long double root = sqrt(discriminant);
+
+		B *= -1;
+
+		t1 = (B + root)/(2*A);
+		t2 = (B - root)/(2*A);
+
+		if(t1 > e){
+			if(t2 > e){
+				t = min(t1, t2);
+			}else{
+				t = t1;
+			}
+		}else{
+			if(t2 > e){
+				t = t2;
+			}else{
+				return NULL;
+			}
+		}
+		
+		tempIntersect.distance = t;
+		tempIntersect.object = object;
+		tempIntersect.Xi = xe + (t * xd);
+		tempIntersect.Yi = ye + (t * yd);
+		tempIntersect.Zi = ze + (t * zd);
+
+		return &tempIntersect;
+	}else{
+		return NULL;
+	}
 }
 //DONE
 //Funcion que pide la primer interseccion de un rayo dado.
@@ -693,14 +831,8 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			}
 		case 3: 
 			{
-
-
-
 				printf("Insertando polígono...");
-				
-				printf("Color r: %LF \n", data[0]);
-				printf("Color g: %LF \n", data[1]);
-				printf("Color b: %LF \n", data[2]);
+				printf("Color polígono (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
 				printf("Poligono Kd: %LF \n", data[3]);
 				printf("Poligono Ka: %LF \n", data[4]);
 				printf("Poligono Kn: %LF \n", data[5]);
@@ -729,11 +861,11 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 
 				struct Object polygon;
 				vertexPolygonIndex = 0;
-				printf("numVertexesPolygon %i \n", numVertexesPolygon);
+				//printf("numVertexesPolygon %i \n", numVertexesPolygon);
 				polygon = getABCD(temp);
-				printf("A del poligono %LF\n", polygon.Xc);
+				/*printf("A del poligono %LF\n", polygon.Xc);
 				printf("B del poligono %LF\n", polygon.Yc);
-				printf("C del poligono %LF\n", polygon.Zc);
+				printf("C del poligono %LF\n", polygon.Zc);*/
 				polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
 				polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
 				struct Color colorPolygon;
@@ -1274,7 +1406,7 @@ int main(int argc, char *arcgv[]){
 	printf("Luces %i \n", numberLights);
 	printf("Objetos %i \n", numberObjects);
 	getSceneObjects();
-	/*
+	
 
 	int i, j;
 
@@ -1319,7 +1451,7 @@ int main(int argc, char *arcgv[]){
 			Framebuffer[i][j] = color;
 		}
 	}
-	saveFile();*/
+	saveFile();
 	free(Objects);
 	free(Lights);
 }
