@@ -51,6 +51,14 @@ Ecuación del cilindro:
 
         (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)² + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)² + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)² - R²
 
+    Corrección Alex
+
+        t²((XdXq² + YdYqXq + ZdZqXq - Xd)² + (XdXqYq + YdYq² + ZdZqYq - Yd)² + (XdXqZq + YdYqZq + ZdZq² - Zd)²)
+
+        2t((XdXq² + YdYqXq + ZdZqXq + Xd)(X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe) + (XdXqYq + YdYq² + ZdZqYq + Yd)(Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye) + (XdXqZq + YdYqZq + ZdZq² + Zd)(Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)) + 
+
+        (X0 + XeXq² - X0Xq² + YeYqXq - Y0YqXq + ZeZqXq - Z0ZqXq - Xe)² + (Y0 + XeXqYq - X0XqYq + YeYq² - Y0Yq² + ZeZqYq - Z0ZqYq - Ye)² + (Z0 + XeXqZq - X0XqZq + YeYqZq - Y0YqZq + ZeZq² - Z0Zq² - Ze)² - R²
+
 ==================================================================================================
 ==================================================================================================
 
@@ -193,9 +201,9 @@ Ecuación del cono:
     Normal no normalizada de cilindro
 
     [ 
-    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*(Xq²-1)
-    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- Y)*XqYq+
-    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqZq
+    2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*(Xq²-1)+
+    2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*XqYq+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- X)*XqZq
     - 0,
     2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqYq+
     2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*(Yq²-1)+
@@ -203,7 +211,7 @@ Ecuación del cono:
     - 0,
     2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*ZqXq+
     2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*YqZq+
-    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)**(Zq²-1)+
+    2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*(Zq²-1)+
     - 0
     ]
 En Symbolab (enlaces):
@@ -258,7 +266,7 @@ NORMAL DEL CONO
     2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*(Xq²-1)
     2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- Y)*XqYq+
     2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqZq
-    - ( (2k1²YqZq²(Yq(-Yo+Y)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²),
+    - ( (2k1²Zq²Xq(Yq(Y-Yo)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²),
     2((Xo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Xq)- X)*XqYq+
     2((Yo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Yq)- Y)*(Yq²-1)+
     2((Zo+((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq)- Z)*YqZq

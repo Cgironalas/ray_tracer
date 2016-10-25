@@ -57,4 +57,35 @@ X,Y,Z
 X,Y,Z
 END_Poligono_N+1
 /* Cilindros */
+Cilindro_1
+Xo, Yo, Zo
+Xq, Yq, Zq
+R
+d1
+d2
+Kd
+Ka
+Kn
+Ks
+Cilindro_N+1
+Xo, Yo, Zo
+Xq, Yq, Zq
+R
+d1
+d2
+Kd
+Ka
+Kn
+Ks
+R, G, B
 /* Conos */
+Cono_1
+Xo, Yo, Zo
+Xq, Yq, Zq
+k1
+k2
+Kd
+Ka
+Kn
+Ks
+R, G, B
