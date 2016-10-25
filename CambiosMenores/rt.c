@@ -564,27 +564,77 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 		t1 = (B + root)/(2*A);
 		t2 = (B - root)/(2*A);
 
+		long double Xi;
+		long double Yi;
+		long double Zi;
 		if(t1 > e){
 			if(t2 > e){
 				t = min(t1, t2);
+				Xi = xe + (t * xd);
+				Yi = ye + (t * yd);
+				Zi = ze + (t * zd);
+
+				if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ //Pertenece al cilindro finito?
+						tempIntersect.Xi = Xi;
+						tempIntersect.Yi = Yi;
+						tempIntersect.Zi = Zi;
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
+						return &tempIntersect;
+				}else{
+					t = max(t1,t2);
+					Xi = xe + (t * xd);
+					Yi = ye + (t * yd);
+					Zi = ze + (t * zd);
+
+					if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ 
+						tempIntersect.Xi = Xi;
+						tempIntersect.Yi = Yi;
+						tempIntersect.Zi = Zi;
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
+						return &tempIntersect;
+					}else{
+						return NULL;
+					}
+				}
 			}else{
 				t = t1;
+				Xi = xe + (t * xd);
+				Yi = ye + (t * yd);
+				Zi = ze + (t * zd);
+
+				if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ //Pertenece al cilindro finito?
+						tempIntersect.Xi = Xi;
+						tempIntersect.Yi = Yi;
+						tempIntersect.Zi = Zi;
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
+						return &tempIntersect;
+				}else{
+					return NULL;
+				}
 			}
 		}else{
 			if(t2 > e){
 				t = t2;
+				Xi = xe + (t * xd);
+				Yi = ye + (t * yd);
+				Zi = ze + (t * zd);
+				if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ //Pertenece al cilindro finito?
+						tempIntersect.Xi = Xi;
+						tempIntersect.Yi = Yi;
+						tempIntersect.Zi = Zi;
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
+						return &tempIntersect;
+				}else{
+					return NULL;
+				}
 			}else{
 				return NULL;
 			}
-		}
-		
-		tempIntersect.distance = t;
-		tempIntersect.object = object;
-		tempIntersect.Xi = xe + (t * xd);
-		tempIntersect.Yi = ye + (t * yd);
-		tempIntersect.Zi = ze + (t * zd);
-
-		return &tempIntersect;
+		}	
 	}else{
 		return NULL;
 	}
