@@ -10,10 +10,10 @@ static int Hres = 1008;
 static int Vres = 1008;
 
 //Window
-static long double Xmax = 1000;//400;
-static long double Ymax = 1000;//400;
-static long double Xmin = -2000;//0;
-static long double Ymin = -2000;//0;
+static long double Xmax = 400;
+static long double Ymax = 400;
+static long double Xmin = 0;
+static long double Ymin = 0;
 
 //Others
 static long double Ia = 0.6;
@@ -310,6 +310,7 @@ struct Vector polygonNormal(struct Object object, struct Vector vector){
 }
 
 struct Vector cilinderNormal(struct Object object, struct Vector intersectionPoint){
+	//DONE
 	struct Vector normalCilinder;
 	long double x = intersectionPoint.x;
 	long double y = intersectionPoint.y; 
@@ -336,7 +337,7 @@ struct Vector cilinderNormal(struct Object object, struct Vector intersectionPoi
 					2*(zo + parethesesWithZq - z)*(yq*zq) -0;
 
 	normalCilinder.z = 2*(xo + parethesesWithXq - x)*(zq*xq)+
-					2*(yo + parethesesWithYq - y)*(yq*xq)+
+					2*(yo + parethesesWithYq - y)*(yq*zq)+
 					2*(zo + parethesesWithZq - z)*(pow(zq,2)-1) -0;
 
 	normalCilinder = normalize(normalCilinder);
@@ -346,7 +347,7 @@ struct Vector cilinderNormal(struct Object object, struct Vector intersectionPoi
 }
 
 struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
-
+	//DONE
 	struct Vector normalCone;
 
 	long double x = intersectionPoint.x;
@@ -383,7 +384,7 @@ struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
 					lastFactorDerivedY;
 
 	normalCone.z = 2*(xo + parethesesWithXq - x)*(zq*xq)+
-					2*(yo + parethesesWithYq - y)*(yq*xq)+
+					2*(yo + parethesesWithYq - y)*(yq*zq)+
 					2*(zo + parethesesWithZq - z)*(pow(zq,2)-1) 
 					- lastFactorDerivedZ;
 
@@ -531,19 +532,25 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 
 	long double radius = object.other;
 
-	long double A = pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
-		pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) +
-		pow ((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd,2);
+	long double A = pow (xd*(pow(xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
+		pow ((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd,2) 
+		+
+		pow ((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd,2);
 
-	long double B =  ((pow(xd*xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd)*(xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
-		+ ((xd*xq*yq) + (pow(yd*yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
-		+((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze);
+	long double B =  (xd*(pow(xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd) * (xo + xe*(pow(xq,2)) - xo*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
+		+ 
+		((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
+		+
+		((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze);
 
 	B = 2*B;
 
-	long double C = pow ((xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) + 
-		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) ,2) +
-		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze),2) - 
+	long double C = pow ((xo + xe*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) 
+		+ 
+		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq) - (zo*zq*yq) - ye) ,2) 
+		+
+		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze),2) 
+		- 
 		pow(radius,2);
 
 	long double discriminant = pow(B, 2) - (4 * A * C);
@@ -604,21 +611,28 @@ struct Intersection *coneIntersection(struct Vector anchor, struct Vector direct
 	long double ze = anchor.z;
 
 
-	long double A = pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
-		pow ((pow(xd*xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) +
-		pow ((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd,2) -
+	long double A = pow (xd*(pow(xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
+		pow ((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd,2) 
+		+
+		pow ((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd,2) 
+		-
 		((pow(k2/k1,2))*( pow( ((xd*xq)+(yd*yq)+(zd*zq)), 2) ));
 
-	long double B =  ((pow(xd*xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd)*(xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
-		+ ((xd*xq*yq) + (pow(yd*yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
-		+((xd*xq*zq) + (yd*yq*zq) + (pow(zd*zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze) -
+	long double B =  (xd*(pow(xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd) * (xo + xe*(pow(xq,2)) - xo*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
+		+ 
+		((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
+		+
+		((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze) 
+		-
 		((pow(k2/k1,2))*((xd*xq)+(yd*yq)+(zd*zq)) * ( (xe*xq) - (xo*xq) +(ye*yq) - (yo*yq) + (ze*zq) - (zo*zq) ) );
 
 	B = 2*B;
 
-	long double C = pow ((xo + (pow(xe*xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) + 
-		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + (pow(ye*yq,2)) - (pow(yo*yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) ,2) +
-		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + (pow(ze*zq,2)) - (pow(zo*zq, 2)) - ze),2) -
+	long double C = pow ((xo + xe*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) 
+		+ 
+		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq) - (zo*zq*yq) - ye) ,2) 
+		+
+		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze),2)  -
 		((pow(k2/k1,2)) * (pow( ( (xe*xq) - (xo*xq) +(ye*yq) - (yo*yq) + (ze*zq) - (zo*zq) ), 2) ) );
 
 	long double discriminant = pow(B, 2) - (4 * A * C);
@@ -1235,7 +1249,6 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 }
 
 //Leer archivos con la escena
-//TO-FIX
 void getSceneObjects(){
 
 	int i, j, c;
