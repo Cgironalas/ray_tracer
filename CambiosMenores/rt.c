@@ -438,7 +438,7 @@ int getSign(long double v){
 //Julian dice cargar los puntos que se usan u, v, desde la lectura del archivo, ahi calcular ABC y con eso hacer de pichazo el array
 struct Intersection *polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	
-	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc));
+	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc) + object.other);
 	long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
 
 	if(denominator == 0){
@@ -454,16 +454,20 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 		long double maxA_B = max(fabs(object.Xc), fabs(object.Yc)); //maximo entre A y B
 		long double maxA_B_C = max(maxA_B, fabs(object.Zc)); //maximo entre los tres
 		long double u, v;
+		
 		if(maxA_B_C == fabs(object.Xc)){
 			//A es maximo
-			u = tempIntersect.Yi;
-			v = tempIntersect.Zi;
+			//Aplasto X
+			u = tempIntersect.Zi;
+			v = tempIntersect.Yi;
 		}else if(maxA_B_C == fabs(object.Yc) ){
 			//B es maximo
-			u = tempIntersect.Zi;
-			v = tempIntersect.Xi;
+			//Aplasto Y
+			u = tempIntersect.Xi;
+			v = tempIntersect.Zi;
 		}else if(maxA_B_C == fabs(object.Zc)){
 			//C es maximo
+			//Aplasto Z
 			u = tempIntersect.Xi;
 			v = tempIntersect.Yi;
 		}
@@ -977,6 +981,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				printf("A del poligono %LF\n", polygon.Xc);
 				printf("B del poligono %LF\n", polygon.Yc);
 				printf("C del poligono %LF\n", polygon.Zc);
+				printf("D del poligono %LF\n", polygon.other);
 				polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
 				polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
 				struct Color colorPolygon;
@@ -1009,12 +1014,12 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 					struct Point2D squashedVertex;
 					if(maxA_B_C == fabs(polygon.Xc)){
 						//A es maximo
-						u = vertex.y;
-						v = vertex.z;
+						u = vertex.z;
+						v = vertex.y;
 					}else if(maxA_B_C == fabs(polygon.Yc) ){
 						//B es maximo
-						u = vertex.z;
-						v = vertex.x;
+						u = vertex.x;
+						v = vertex.z;
 					}else if(maxA_B_C == fabs(polygon.Zc)){
 						//C es maximo
 						u = vertex.x;
