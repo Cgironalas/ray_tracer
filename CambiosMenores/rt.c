@@ -328,15 +328,18 @@ struct Vector cilinderNormal(struct Object object, struct Vector intersectionPoi
 	long double parethesesWithYq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*yq;
 	long double parethesesWithZq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*zq;
 
-	normalCilinder.x = 2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
-					2*(yo + parethesesWithYq - y)*(xq*yq)+
-					2*(zo + parethesesWithZq - z)*(xq*zq) -0;
+	normalCilinder.x = 
+					2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
+					2*(yo + parethesesWithYq - y)*(yq*xq)+
+					2*(zo + parethesesWithZq - z)*(zq*xq) -0;
 
-	normalCilinder.y = 2*(xo + parethesesWithXq - x)*(xq*yq)+
+	normalCilinder.y = 
+					2*(xo + parethesesWithXq - x)*(xq*yq)+
 					2*(yo + parethesesWithYq - y)*(pow(yq,2)-1)+
-					2*(zo + parethesesWithZq - z)*(yq*zq) -0;
+					2*(zo + parethesesWithZq - z)*(zq*yq) -0;
 
-	normalCilinder.z = 2*(xo + parethesesWithXq - x)*(zq*xq)+
+	normalCilinder.z = 
+					2*(xo + parethesesWithXq - x)*(xq*zq)+
 					2*(yo + parethesesWithYq - y)*(yq*zq)+
 					2*(zo + parethesesWithZq - z)*(pow(zq,2)-1) -0;
 
@@ -532,28 +535,22 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 
 	long double radius = object.other;
 
-	long double A = pow (xd*(pow(xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
-		pow ((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd,2) 
-		+
-		pow ((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd,2);
+	long double coef1 = xd*xq*xq + yd*yq*xq + zd*zq*xq - xd;
+	long double coef2 = xd*xq*yq + yd*yq*yq + zd*zq*yq - yd;
+	long double coef3 = xd*xq*zq + yd*yq*zq + zd*zq*zq - zd;
 
-	long double B =  (xd*(pow(xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd) * (xo + xe*(pow(xq,2)) - xo*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
-		+ 
-		((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
-		+
-		((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze);
+	long double coef4 = xo + xe*xq*xq - xo*xq*xq + ye*yq*xq - yo*yq*xq + ze*zq*xq - zo*zq*xq - xe;
+	long double coef5 = yo + xe*xq*yq - xo*xq*yq + ye*yq*yq - yo*yq*yq + ze*zq*yq - zo*zq*yq - ye;
+	long double coef6 = zo + xe*xq*zq - xo*xq*zq + ye*yq*zq - yo*yq*zq + ze*zq*zq - zo*zq*zq - ze;
 
-	B = 2*B;
+	long double A = pow (coef1,2) + pow (coef2,2) + pow (coef3,2);
 
-	long double C = pow ((xo + xe*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) 
-		+ 
-		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq) - (zo*zq*yq) - ye) ,2) 
-		+
-		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze),2) 
-		- 
-		pow(radius,2);
+	long double B =  2*(coef1*coef4 + coef2*coef5 + coef3*coef6);
+
+	long double C = pow (coef4, 2) + pow (coef5 ,2) + pow (coef6 ,2) - pow(radius,2);
 
 	long double discriminant = pow(B, 2) - (4 * A * C);
+
 	long double t, t1, t2;
 
 	if(discriminant >= 0){
@@ -660,30 +657,23 @@ struct Intersection *coneIntersection(struct Vector anchor, struct Vector direct
 	long double ye = anchor.y;
 	long double ze = anchor.z;
 
+	//Los mismos del cilindro
+	long double coef1 = xd*xq*xq + yd*yq*xq + zd*zq*xq - xd;
+	long double coef2 = xd*xq*yq + yd*yq*yq + zd*zq*yq - yd;
+	long double coef3 = xd*xq*zq + yd*yq*zq + zd*zq*zq - zd;
 
-	long double A = pow (xd*(pow(xq,2)) + (yd*yq*xq) + (zd*zq*xq) - xd,2) + 
-		pow ((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd,2) 
-		+
-		pow ((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd,2) 
-		-
-		((pow(k2/k1,2))*( pow( ((xd*xq)+(yd*yq)+(zd*zq)), 2) ));
+	long double coef4 = xo + xe*xq*xq - xo*xq*xq + ye*yq*xq - yo*yq*xq + ze*zq*xq - zo*zq*xq - xe;
+	long double coef5 = yo + xe*xq*yq - xo*xq*yq + ye*yq*yq - yo*yq*yq + ze*zq*yq - zo*zq*yq - ye;
+	long double coef6 = zo + xe*xq*zq - xo*xq*zq + ye*yq*zq - yo*yq*zq + ze*zq*zq - zo*zq*zq - ze;
 
-	long double B =  (xd*(pow(xq,2))+(yd*yq*xq)+(zd*zq*xq)-xd) * (xo + xe*(pow(xq,2)) - xo*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe) 
-		+ 
-		((xd*xq*yq) + yd*(pow(yq,2)) + (zd*zq*yq) - yd)*(yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq)-(zo*zq*yq)-ye) 
-		+
-		((xd*xq*zq) + (yd*yq*zq) + zd*(pow(zq,2)) - zd)*(zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze) 
-		-
-		((pow(k2/k1,2))*((xd*xq)+(yd*yq)+(zd*zq)) * ( (xe*xq) - (xo*xq) +(ye*yq) - (yo*yq) + (ze*zq) - (zo*zq) ) );
+	//En lugar del radio usa una combinación de estos
+	long double coefk = pow(k2/k1,2);
+	long double coef7 = xd*xq + yd*yq + zd*zq;
+	long double coef8 = xe*xq - xo*xq + ye*yq - yo*yq + ze*zq - zo*zq;
 
-	B = 2*B;
-
-	long double C = pow ((xo + xe*(pow(xq,2)) + (ye*yq*xq) - (yo*yq*xq) + (ze*zq*xq)-(zo*zq*xq) - xe)  ,2) 
-		+ 
-		pow ((yo + (xe*xq*yq)- (xo*xq*yq) + ye*(pow(yq,2)) - yo*(pow(yq,2)) + (ze*zq*yq) - (zo*zq*yq) - ye) ,2) 
-		+
-		pow ((zo + (xe*xq*zq) - (xo*xq*zq) + (ye*yq*zq) - (yo*yq*zq) + ze*(pow(zq,2)) - zo*(pow(zq, 2)) - ze),2)  -
-		((pow(k2/k1,2)) * (pow( ( (xe*xq) - (xo*xq) +(ye*yq) - (yo*yq) + (ze*zq) - (zo*zq) ), 2) ) );
+	long double A = pow(coef1,2) + pow(coef2,2) + pow(coef3,2) - coefk * pow(coef7,2);
+	long double B =  2*(coef1*coef4 + coef2*coef5 + coef3*coef6) - coefk * coef7 * coef8;
+	long double C = pow (coef4, 2) + pow (coef5 ,2) + pow (coef6 ,2) - coefk * pow(coef8,2);
 
 	long double discriminant = pow(B, 2) - (4 * A * C);
 	long double t, t1, t2;

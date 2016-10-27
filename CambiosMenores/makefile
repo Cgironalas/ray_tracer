@@ -3,12 +3,11 @@ CC=gcc
 SOURCE= rt.c
 OUTPUT=rt
 OBJECT=rt.o
-LDFLAGS= -lglut -lGL -lGLU -lm
-CFLAGS = -I/usr/include/GL
+LDFLAGS= -lm
 
 
 $(OUTPUT): $(OBJECT)
-	$(CC) $(OBJECT) -o $(OUTPUT) $(LDFLAGS) $(CFLAGS) 
+	$(CC) $(OBJECT) -o $(OUTPUT) $(LDFLAGS) 
 
 $(OBJECT): $(SOURCE)
 	$(CC) -c $(SOURCE) -o rt.o $(LDFLAGS)
