@@ -63,8 +63,10 @@ struct Object {
 	int pointAmount;
 	long double other;  //Radius of the sphere and the cilinder
 	struct Vector directionVector; //for the cilinder and cone
+	long double D1; 
+	long double D2; //Used to cut the cilinder and the cone
 	long double K1;
-	long double K2; //These two variables are for the cone or cilinder(d1 and d2)
+	long double K2; //K1 and K2 are onlt for the cone.
 	struct Color color;
 	struct Point2D *points2D;
 	struct Point3D *points3D;
@@ -564,6 +566,8 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 		long double Xi;
 		long double Yi;
 		long double Zi;
+		long double d1 = object.D1;
+		long double d2 = object.D2;
 		if(t1 > e){
 			if(t2 > e){
 				t = min(t1, t2);
@@ -571,7 +575,7 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 				Yi = ye + (t * yd);
 				Zi = ze + (t * zd);
 
-				if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ //Pertenece al cilindro finito?
+				if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ //Pertenece al cilindro finito?
 						tempIntersect.Xi = Xi;
 						tempIntersect.Yi = Yi;
 						tempIntersect.Zi = Zi;
@@ -584,7 +588,7 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 					Yi = ye + (t * yd);
 					Zi = ze + (t * zd);
 
-					if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ 
+					if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ 
 						tempIntersect.Xi = Xi;
 						tempIntersect.Yi = Yi;
 						tempIntersect.Zi = Zi;
@@ -601,7 +605,7 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 				Yi = ye + (t * yd);
 				Zi = ze + (t * zd);
 
-				if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ //Pertenece al cilindro finito?
+				if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ //Pertenece al cilindro finito?
 						tempIntersect.Xi = Xi;
 						tempIntersect.Yi = Yi;
 						tempIntersect.Zi = Zi;
@@ -618,7 +622,7 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 				Xi = xe + (t * xd);
 				Yi = ye + (t * yd);
 				Zi = ze + (t * zd);
-				if ( object.K2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= object.K1){ //Pertenece al cilindro finito?
+				if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ //Pertenece al cilindro finito?
 						tempIntersect.Xi = Xi;
 						tempIntersect.Yi = Yi;
 						tempIntersect.Zi = Zi;
@@ -638,6 +642,7 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 }
 
 struct Intersection *coneIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+
 	long double xo = object.Xc;
 	long double yo = object.Yc;
 	long double zo = object.Zc;
@@ -984,7 +989,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
 				printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
 				printf("Cilindro Radio: %LF \n", data[6]);
-				printf("Cilindro d1: %LF. Cilindro d2: %LF \n", data[7],data[8]);
+				printf("Cilindro d1: %LF Cilindro d2: %LF \n", data[7],data[8]);
 				printf("Cilindro Kd: %LF \n", data[9]);
 				printf("Cilindro Ka: %LF \n", data[10]);
 				printf("Cilindro Kn: %LF \n", data[11]);
@@ -1004,8 +1009,8 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				cilinder.directionVector = cilinderVector;
 
 				cilinder.other = data[6];
-				cilinder.K1 = data[7];
-				cilinder.K2 = data[8];
+				cilinder.D1 = data[7];
+				cilinder.D2 = data[8];
 				cilinder.Kd = data[9];
 				cilinder.Ka = data[10];
 				cilinder.Kn = data[11];
@@ -1034,12 +1039,13 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 
 				printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
 				printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
-				printf("Cono k1: %LF. COno k2: %LF \n", data[6],data[7]);
-				printf("Cono Kd: %LF \n", data[8]);
-				printf("Cono Ka: %LF \n", data[9]);
-				printf("Cono Kn: %LF \n", data[10]);
-				printf("Cono Ks: %LF \n", data[11]);
-				printf("RGB Cono: (%LF, %LF, %LF) \n", data[12], data[13],data[14]);
+				printf("Cono k1: %LF COno k2: %LF \n", data[6],data[7]);
+				printf("Cono d1: %LF COno d2: %LF \n", data[8],data[9]);
+				printf("Cono Kd: %LF \n", data[10]);
+				printf("Cono Ka: %LF \n", data[11]);
+				printf("Cono Kn: %LF \n", data[12]);
+				printf("Cono Ks: %LF \n", data[13]);
+				printf("RGB Cono: (%LF, %LF, %LF) \n", data[14], data[15],data[16]);
 
 				struct Object cone;
 				cone.Xc = data[0];
@@ -1055,17 +1061,19 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 
 				cone.K1 = data[6];
 				cone.K2 = data[7];
-				cone.Kd = data[8];
-				cone.Ka = data[9];
-				cone.Kn = data[10];
-				cone.Ks = data[11];
+				cone.D1 = data[8];
+				cone.D2 = data[9];
+				cone.Kd = data[10];
+				cone.Ka = data[11];
+				cone.Kn = data[12];
+				cone.Ks = data[13];
 				cone.intersectionFuncion = coneIntersection;
 				cone.normalVector = coneNormal;
 
 				struct Color coneColor;
-				coneColor.r = data[12];
-				coneColor.g = data[13];
-				coneColor.b = data[14];
+				coneColor.r = data[14];
+				coneColor.g = data[15];
+				coneColor.b = data[16];
 				cone.color = coneColor;
 				
 
@@ -1254,7 +1262,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 				/*Lee radio o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
 			}
 		case 5: //Conos
-			if(*counterValueSegment == 0 || *counterValueSegment == 1|| *counterValueSegment == 8){
+			if(*counterValueSegment == 0 || *counterValueSegment == 1|| *counterValueSegment == 10){
 				/*Lee el ancla, color del cono o el vector del cono. Tripleta*/
 				if (strstr(lineRead,"Cono")==NULL){ //No es el nombre
 						long double *positionCone = obtainPointFromString(lineRead);
@@ -1264,7 +1272,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 						values[2] = positionCone[2];
 						//memcpy(values, positionLight, 3);
 						//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
-						if(*counterValueSegment == 8){
+						if(*counterValueSegment == 10){
 							(*counterValueSegment) = 0;
 						}else{
 							(*counterValueSegment)++;
@@ -1276,13 +1284,13 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 					}
 					*numberValuesRead = 0;
 					return NULL;
-			}else if(*counterValueSegment >= 2 && *counterValueSegment <= 7){
+			}else if(*counterValueSegment >= 2 && *counterValueSegment <= 9){
 				values = malloc(sizeof(long double));
 				sscanf(lineRead, "%LF", &values[0]);
 				(*counterValueSegment)++;
 				*numberValuesRead = 1;
 				return values;
-				/*Lee radio o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
+				/*Lee radio o k1 i k2 o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
 			}
 		
 	}
@@ -1372,7 +1380,7 @@ void getSceneObjects(){
 				counterValueSegment = 0;
 				indexValuesRead=0;
 				free(valuesRead);
-				valuesRead = malloc(sizeof(long double)*15);
+				valuesRead = malloc(sizeof(long double)*17);
 				currentTypeObjectReading=5;
 				printf("%s",temporalBuffer);
 				continue;
@@ -1394,7 +1402,6 @@ void getSceneObjects(){
 			}
 			int i = 0;
 			for (i = 0; i < numberValuesRead; i++){
-				
 				valuesRead[indexValuesRead+i] = valuesReadTemp[i];
 			}
 			indexValuesRead+=numberValuesRead;
@@ -1409,9 +1416,7 @@ void getSceneObjects(){
 				indexValuesRead=0;
 			}
 		}
-		printf("Liberando memoria...\n");
 		free(valuesRead);
-		printf("Memoria liberada \n");
 	}
 	fclose(file);	
 	//Pendiente
