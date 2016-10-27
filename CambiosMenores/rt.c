@@ -451,18 +451,18 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 		tempIntersect.Yi = anchor.y + (t * direction.y);
 		tempIntersect.Zi = anchor.z + (t * direction.z);
 
-		long double maxA_B = max(abs(object.Xc), abs(object.Yc)); //maximo entre A y B
-		long double maxA_B_C = max(maxA_B, abs(object.Zc)); //maximo entre los tres
+		long double maxA_B = max(fabs(object.Xc), fabs(object.Yc)); //maximo entre A y B
+		long double maxA_B_C = max(maxA_B, fabs(object.Zc)); //maximo entre los tres
 		long double u, v;
-		if(maxA_B_C == abs(object.Xc)){
+		if(maxA_B_C == fabs(object.Xc)){
 			//A es maximo
 			u = tempIntersect.Yi;
 			v = tempIntersect.Zi;
-		}else if(maxA_B_C == abs(object.Yc) ){
+		}else if(maxA_B_C == fabs(object.Yc) ){
 			//B es maximo
-			u = tempIntersect.Xi;
-			v = tempIntersect.Zi;
-		}else if(maxA_B_C == abs(object.Zc)){
+			u = tempIntersect.Zi;
+			v = tempIntersect.Xi;
+		}else if(maxA_B_C == fabs(object.Zc)){
 			//C es maximo
 			u = tempIntersect.Xi;
 			v = tempIntersect.Yi;
@@ -974,9 +974,9 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				vertexPolygonIndex = 0;
 				//printf("numVertexesPolygon %i \n", numVertexesPolygon);
 				polygon = getABCD(temp);
-				/*printf("A del poligono %LF\n", polygon.Xc);
+				printf("A del poligono %LF\n", polygon.Xc);
 				printf("B del poligono %LF\n", polygon.Yc);
-				printf("C del poligono %LF\n", polygon.Zc);*/
+				printf("C del poligono %LF\n", polygon.Zc);
 				polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
 				polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
 				struct Color colorPolygon;
@@ -993,8 +993,9 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				polygon.intersectionFuncion = polygonIntersection;
 				long double u;
 				long double v;
-				long double maxA_B = max(abs(polygon.Xc), abs(polygon.Yc)); //maximo entre A y B
-				long double maxA_B_C = max(maxA_B, abs(polygon.Zc)); //maximo entre los tres
+				printf("abs A : %lf abs B: %lf abs C: %lf \n",fabs(polygon.Xc), fabs(polygon.Yc), fabs(polygon.Zc));
+				long double maxA_B = max(fabs(polygon.Xc), fabs(polygon.Yc)); //maximo entre A y B
+				long double maxA_B_C = max(maxA_B, fabs(polygon.Zc)); //maximo entre los tres
 				for (int i =0; i+7 < quantityData;){
 					struct Point3D vertex;
 					printf("Vertice (%LF, %LF, %Lf) \n", data[7+i],  data[7+i+1],  data[7+i+2] );
@@ -1006,23 +1007,23 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 					i++;
 					
 					struct Point2D squashedVertex;
-					if(maxA_B_C == abs(polygon.Xc)){
+					if(maxA_B_C == fabs(polygon.Xc)){
 						//A es maximo
 						u = vertex.y;
 						v = vertex.z;
-					}else if(maxA_B_C == abs(polygon.Yc) ){
+					}else if(maxA_B_C == fabs(polygon.Yc) ){
 						//B es maximo
-						u = vertex.x;
-						v = vertex.z;
-					}else if(maxA_B_C == abs(polygon.Zc)){
+						u = vertex.z;
+						v = vertex.x;
+					}else if(maxA_B_C == fabs(polygon.Zc)){
 						//C es maximo
 						u = vertex.x;
 						v = vertex.y;
 					} 
 					squashedVertex.u = u;
 					squashedVertex.v = v;
-					//printf("squashedVertex (%LF, %LF, ) \n", squashedVertex.u, squashedVertex.v);
-					vertex.x = data[7+i];
+					printf("squashedVertex (%LF, %LF, ) \n", squashedVertex.u, squashedVertex.v);
+					//vertex.x = data[7+i];
 					polygon.points3D[vertexPolygonIndex]=vertex;
 					//printf("vertexPolygonIndex %i \n", vertexPolygonIndex);
 					polygon.points2D[vertexPolygonIndex]=squashedVertex;

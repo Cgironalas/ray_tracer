@@ -84,6 +84,8 @@ Xo, Yo, Zo
 Xq, Yq, Zq
 k1
 k2
+d1
+d2
 Kd
 Ka
 Kn
