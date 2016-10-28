@@ -1,0 +1,93 @@
+/* Escena */
+Ia 
+/* Luces*/
+Luz_N
+Xp, Yp, Zp
+c1
+c2
+c3
+Ip
+Luz_N
+Xp, Yp, Zp
+c1
+c2
+c3
+Ip
+/* Esferas */
+Esfera_N
+Xc, Yc, Zc
+R
+Kd
+Ka
+Kn
+Ks
+R,G,B
+Esfera_N+1
+Xc, Yc, Zc
+R
+Kd
+Ka
+Kn
+Ks
+R,G,B
+/* Poligonos */
+Poligono_N
+R,G,B
+Kd
+Ka
+Kn
+Ks
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+END_Poligono_N
+Poligono_N+1
+R,G,B
+Kd
+Ka
+Kn
+Ks
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+X,Y,Z
+END_Poligono_N+1
+/* Cilindros */
+Cilindro_1
+Xo, Yo, Zo
+Xq, Yq, Zq
+R
+d1
+d2
+Kd
+Ka
+Kn
+Ks
+Cilindro_N+1
+Xo, Yo, Zo
+Xq, Yq, Zq
+R
+d1
+d2
+Kd
+Ka
+Kn
+Ks
+R, G, B
+/* Conos */
+Cono_1
+Xo, Yo, Zo
+Xq, Yq, Zq
+k1
+k2
+d1
+d2
+Kd
+Ka
+Kn
+Ks
+R, G, B
