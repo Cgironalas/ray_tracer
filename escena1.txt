@@ -1,57 +1,77 @@
-/* Escena */
-0.2
-/* Luces*/
-Luz_1
-200.0,200.0,-10.0
-1.0
-0.0
-0.0
-1.0
-/* Esferas */
-/* Poligonos */
-Poligono_acostado_Superior
-0.0,1.0,1.0
-0.2
-0.6
-20.0
-1.0
-100.0,100.0,200.0
-300.0,100.0,200.0
-200.0,200.0,270.0
-100.0,100.0,200.0
-END_Poligono
-/* Cilindros */
-Cilindro_EjeX
-0.0,0.0,0.0
-1.0,0.0,0.0
-1.0
-0
-10000
-0.2
-0.4
-50
-0.3
-1.0,1.0,1.0
-Cilindro_EjeY
-0.0,0.0,0.0
-0.0,1.0,0.0
-1.0
-0
-10000
-0.2
-0.4
-50
-0.3
-1.0,1.0,1.0
-Cilindro_EjeZ
-0.0,0.0,0.0
-0.0,0.0,1.0
-1.0
-0
-10000
-0.2
-0.4
-50
-0.3
-1.0,1.0,1.0
-/* Conos */
+Scene_Data
+#Datos de la escena
+Ia = 0.2
+Xmin = -100
+Ymin = -100
+Xmax = 400
+Ymax = 400
+Hres = 1080:
+Vres = 720;
+Epsilon = 0.0005
+Eye = 200, 200, -5000
+Background = 0.1, 0.1, 0.1
+
+
+### Pueden comentar poniendo un # en la línea y se pueden dejar líneas en blanco
+
+
+Polygon_Object acostado_Superior
+Color = 0.0,1.0,1.0
+Kd = 0.2
+Ka = 0.6
+Kn = 20.0
+Ks = 1.0
+Vertice inicial = 100.0,100.0,200.0
+Vertice = 300.0,100.0,200.0
+Vertice =  200.0,200.0,270.0
+Vertice inicial = 100.0,100.0,200.0
+END_Vertices
+
+
+Cylinder_Object EjeX
+ANcla = 0.0,0.0,0.0
+Direccion = 1.0,0.0,0.0
+RAdio = 1.0
+d1 = 0
+d2 = 10000
+Kd = 0.2
+Ka = 0.4
+Kn = 50
+Ks = 0.3
+Color = 1.0,1.0,1.0
+
+
+Cylinder_Object EjeY
+ANcla = 0.0,0.0,0.0
+Direccion = 0.0,1.0,0.0
+RAdio = 1.0
+d1 = 0
+d2 = 10000
+Kd = 0.2
+Ka = 0.4
+Kn = 50
+Ks = 0.3
+Color = 1.0,1.0,1.0
+
+Light_Object 1
+Posicion = 200.0,200.0,-10.0
+c1=1.0
+c2=0.0
+c3=0.0
+# Happening
+Ip=1.0
+
+
+Cylinder_Object EjeZ
+ANcla = 0.0,0.0,0.0
+Direccion = 0.0,0.0,1.0
+RAdio = 1.0
+d1 = 0
+d2 = 10000
+Kd = 0.2
+Ka = 0.4
+Kn = 50
+Ks = 0.3
+Color = 1.0,1.0,1.0
+
+

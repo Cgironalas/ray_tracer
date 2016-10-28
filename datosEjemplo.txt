@@ -1,53 +1,65 @@
-/* Escena */
-Ia 
+Escena
+#Datos de la escena
+Ia = IaNum
+Xmin = XminNum
+Ymin = YminNum
+Xmax = XmaxNum
+Ymax = YmaxNum
+Hres = HresNum
+Vres = VresNum
+Epsilon = EpsilonNum
+Eye = Xe Ye Ze
+Background = R, G, B
+
 /* Luces*/
 Luz_N
-Xp, Yp, Zp
-c1
-c2
-c3
-Ip
+Posicion = Xp, Yp, Zp
+c1 = c1Num
+c2 = c2Num
+c3 = c3Num
+Ip = IpNum
 Luz_N
 Xp, Yp, Zp
-c1
-c2
-c3
-Ip
+Posicion = Xp, Yp, Zp
+c1 = c1Num
+c2 = c2Num
+c3 = c3Num
+Ip = IpNum
 /* Esferas */
 Esfera_N
-Xc, Yc, Zc
-R
-Kd
-Ka
-Kn
-Ks
-R,G,B
+Posicion = Xc, Yc, Zc
+Radio = radioNUm
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
+Color de la esfera = R, G, B
 Esfera_N+1
-Xc, Yc, Zc
-R
-Kd
-Ka
-Kn
-Ks
-R,G,B
+Posicion = Xc, Yc, Zc
+Radio = radioNUm
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
+Color de la esfera N+1 = R, G, B
 /* Poligonos */
 Poligono_N
-R,G,B
-Kd
-Ka
-Kn
-Ks
+Color del polígono N+1 = R, G, B
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
 X,Y,Z
 X,Y,Z
 X,Y,Z
 X,Y,Z
 END_Poligono_N
 Poligono_N+1
-R,G,B
-Kd
-Ka
-Kn
-Ks
+Color = R, G, B
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
 X,Y,Z
 X,Y,Z
 X,Y,Z
@@ -61,33 +73,34 @@ Cilindro_1
 Xo, Yo, Zo
 Xq, Yq, Zq
 R
-d1
+d1 = 
 d2
-Kd
-Ka
-Kn
-Ks
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
+Color = R, G, B
 Cilindro_N+1
 Xo, Yo, Zo
 Xq, Yq, Zq
 R
 d1
 d2
-Kd
-Ka
-Kn
-Ks
-R, G, B
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
+Color = R, G, B
 /* Conos */
 Cono_1
 Xo, Yo, Zo
 Xq, Yq, Zq
-k1
-k2
-d1
-d2
-Kd
-Ka
-Kn
-Ks
-R, G, B
+k1 = k1_Num
+k2 = k2_Num
+d1 = d1_Num
+d2 = d2_Num
+Kd = Kd_Num
+Ka = Ka_Num
+Kn = Kn_Num
+Ks = Ks_Num
+Color = R, G, B
