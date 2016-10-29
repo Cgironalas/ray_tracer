@@ -1,60 +1,26 @@
+
 Scene_Data
 #Datos de la escena
 Ia = 0.2
-Xmin = -100
-Ymin = -100
-Xmax = 400
-Ymax = 400
-Hres = 1080:
-Vres = 720;
+Xmin = 0
+Ymin = 0
+Xmax = 800
+Ymax = 450
+Hres = 1600:
+Vres = 900;
 Epsilon = 0.0005
-Eye = 200, 200, -5000
-Background = 0.1, 0.1, 0.1
+Eye = 400, 225, -800
+Background = 0.3, 0.3, 0.3
 
 
 ### Pueden comentar poniendo un # en la línea y se pueden dejar líneas en blanco
 
+ NO AÑADAN # O LA LINEA NO SERÁ LEÍDA
 
-Polygon_Object acostado_Superior
-Color = 0.0,1.0,1.0
-Kd = 0.2
-Ka = 0.6
-Kn = 20.0
-Ks = 1.0
-Vertice inicial = 100.0,100.0,200.0
-Vertice = 300.0,100.0,200.0
-Vertice =  200.0,200.0,270.0
-Vertice inicial = 100.0,100.0,200.0
-END_Vertices
-
-
-Cylinder_Object EjeX
-ANcla = 0.0,0.0,0.0
-Direccion = 1.0,0.0,0.0
-RAdio = 1.0
-d1 = 0
-d2 = 10000
-Kd = 0.2
-Ka = 0.4
-Kn = 50
-Ks = 0.3
-Color = 1.0,1.0,1.0
-
-
-Cylinder_Object EjeY
-ANcla = 0.0,0.0,0.0
-Direccion = 0.0,1.0,0.0
-RAdio = 1.0
-d1 = 0
-d2 = 10000
-Kd = 0.2
-Ka = 0.4
-Kn = 50
-Ks = 0.3
-Color = 1.0,1.0,1.0
+# El orden tiene que ir igual para cada objeto 
 
 Light_Object 1
-Posicion = 200.0,200.0,-10.0
+Posicion = 600.0,600.0,-10.0
 c1=1.0
 c2=0.0
 c3=0.0
@@ -62,16 +28,102 @@ c3=0.0
 Ip=1.0
 
 
-Cylinder_Object EjeZ
-ANcla = 0.0,0.0,0.0
-Direccion = 0.0,0.0,1.0
-RAdio = 1.0
+
+
+Sphere_Object Esfera base
+POsicion = 400, -2000, 1000
+RAdio = 2000
+Kd = 0.5
+Ka = 0.2
+Kn = 30
+Ks =0.2
+Color = 1.0, 0.0, 0.0
+
+
+Cone_Object Cabeza Bicho
+Ancla = 400, 400, 1200
+Q = 0, -1, 0
+k1= 100
+k2 = 33
+d1 = -300
+d2 = 0
+Kd = 0.4
+Ka = 0.2
+Kn = 100
+Ks = 0.7
+Color = 1, 1, 0
+
+Light_Object Luz debajo de la JACHA del bicho
+Posicion = 400, 400, 1050
+c1 = 1
+c2 = 0
+c3 = 0
+Ip = 1
+
+
+
+######### MANO IZQUIERDA #########
+
+Sphere_Object  Esfera_manoIzq
+Posicion = -2500, 2000, 8500
+RAdio = 300
+KD = 0.2
+Ka = 0.01
+KN = 5
+Ks = 0.1
+Color = 1.0, 1.0, 0.0	
+
+Cylinder_Object Dedo largo meñique
+Position = -2600, 1800, 8500
+Q = -0.2, -0.4, -0.4
+Radio = 20
+d1 = 0
+d2 = 2000
+KD = 0.2
+Ka = 0.01
+KN = 5
+Ks = 0.1
+Color = 1.0, 1.0, 0.0
+
+
+### EJES ###
+
+Cylinder_Object EjeX
+Ancla = 1.0,0.0,0.0
+Q = 1.0,0.0,0.0
+Radio =1.0
 d1 = 0
 d2 = 10000
-Kd = 0.2
+Kd = 0.8
 Ka = 0.4
 Kn = 50
-Ks = 0.3
-Color = 1.0,1.0,1.0
+KS = 0.3
+Color = 1.0, 0.0, 0.0
+
+
+Cylinder_Object EjeY
+Ancla = 1.0,0.0,0.0
+Q = 0.0,1.0,0.0
+Radio =1.0
+d1 = 0
+d2 = 10000
+Kd = 0.8
+Ka = 0.4
+Kn = 50
+KS = 0.3
+Color = 1.0, 0.0, 0.0
+
+
+Cylinder_Object  EjeZ
+Ancla = 1.0,0.0,0.0
+Q = 0,0.0,1.0
+Radio =1.0
+d1 = 0
+d2 = 10000
+Kd = 0.8
+Ka = 0.4
+Kn = 50
+KS = 0.3
+Color = 1.0, 0.0, 0.0
 
 

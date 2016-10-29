@@ -831,7 +831,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 
 			long double distanceToLight = getNorm(light);
 
-			if(obstacle.distance < e) {
+			if(obstacle.distance < e || (obstacle.distance > e && obstacle.distance <= distanceToLight)) {
 				long double pp = pointProduct(N, L);
 				Fatt = getAtunuationFactor(Lights[k], distanceToLight);
 				if(pp > 0.0){
@@ -902,27 +902,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			}
 
 			/*
-				int main()
-{
-    int r = 3, c = 4, i, j, count;
- 
-    int **arr = (int **)malloc(r * sizeof(int *));
-    for (i=0; i<r; i++)
-         arr[i] = (int *)malloc(c * sizeof(int));
- 
-    // Note that arr[i][j] is same as *(*(arr+i)+j)
-    count = 0;
-    for (i = 0; i <  r; i++)
-      for (j = 0; j < c; j++)
-         arr[i][j] = ++count;  // OR *(*(arr+i)+j) = ++count
- 
-    for (i = 0; i <  r; i++)
-      for (j = 0; j < c; j++)
-         printf("%d ", arr[i][j]);
 
- 
-   return 0;
-}
 			*/
 
 			printf("Escena establecida  \n \n");
@@ -1617,6 +1597,7 @@ int main(int argc, char *arcgv[]){
 	saveFile();
 	free(Objects);
 	free(Lights);
+	free(Framebuffer);
 	printf("\nFrame ready :)\n");
 	
 
