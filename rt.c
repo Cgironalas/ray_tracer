@@ -831,7 +831,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 
 			long double distanceToLight = getNorm(light);
 
-			if(obstacle.distance < e || (obstacle.distance > e && obstacle.distance <= distanceToLight)) {
+			if(obstacle.distance < e || (obstacle.distance > e && obstacle.distance > distanceToLight)) {
 				long double pp = pointProduct(N, L);
 				Fatt = getAtunuationFactor(Lights[k], distanceToLight);
 				if(pp > 0.0){
@@ -1518,6 +1518,16 @@ void howManyObjectsLights(){
 
 		while (fgets(temporalBuffer, 100, file)!=NULL){//Mientras el archivo siga teniendo algo
 
+
+			if (temporalBuffer[0] == '\n'){
+				printf("Linea vacía \n");
+				continue;
+			}
+			if (strstr(temporalBuffer, "#")!=NULL){
+				printf("Comentario \n");
+				continue;
+			}
+			
 			if (strstr(temporalBuffer, "Light_Object")!=NULL){
 				numberLights++;
 				//printf("%s", temporalBuffer);

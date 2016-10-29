@@ -8,7 +8,7 @@ Xmax = 800
 Ymax = 450
 Hres = 1600:
 Vres = 900;
-Epsilon = 0.0005
+Epsilon = 0.005
 Eye = 400, 225, -800
 Background = 0.3, 0.3, 0.3
 
@@ -19,13 +19,7 @@ Background = 0.3, 0.3, 0.3
 
 # El orden tiene que ir igual para cada objeto 
 
-Light_Object 1
-Posicion = 600.0,600.0,-10.0
-c1=1.0
-c2=0.0
-c3=0.0
-# Happening
-Ip=1.0
+
 
 
 
@@ -36,30 +30,109 @@ RAdio = 2000
 Kd = 0.5
 Ka = 0.2
 Kn = 30
-Ks =0.2
+Ks = 0
 Color = 1.0, 0.0, 0.0
 
 
 Cone_Object Cabeza Bicho
-Ancla = 400, 400, 1200
+Ancla = 400, 70, 1150
 Q = 0, -1, 0
 k1= 100
 k2 = 33
 d1 = -300
+d2 = -250
+Kd = 0.6
+Ka = 0.2
+Kn = 1
+Ks = 0.2
+Color = 1, 1, 0
+
+Cone_Object Cabeza Bicho
+Ancla = 400, 80, 1150
+Q = 0, -1, 0.1
+k1= 100
+k2 = 33
+d1 = -200
+d2 = -150
+Kd = 0.7
+Ka = 0.2
+Kn = 1
+Ks = 0.2
+Color = 1, 1, 0
+
+Cone_Object Cabeza Bicho
+Ancla = 400, 70, 1150
+Q = 0, -1, 0
+k1= 100
+k2 = 33
+d1 = -120
+d2 = -100
+Kd = 0.6
+Ka = 0.2
+Kn = 1
+Ks = 0.2
+Color = 1, 1, 0
+
+Cone_Object SOMBRERO
+Ancla = 400, 480, 800
+Q = 0, 1, 0.2
+k1= 10
+k2 = 25
+d1 = -100
 d2 = 0
 Kd = 0.4
 Ka = 0.2
-Kn = 100
+Kn = 1
+Ks = 0.2
+Color = 1, 1, 0
+
+Light_Object Luz al frente del cono 
+Posicion = 400, 200, 500
+c1=1.0
+c2=0
+c3=0.0
+# Happening
+Ip=1.0
+
+
+#### TRES ESFERAS FLOTANDO ####
+
+
+Sphere_Object Esfera flotando más a la izquierda
+Posicion = 100, 100, 600
+Radio = 50
+Kd = 0.7
+Ka = 0.4
+Kn = 10
 Ks = 0.7
 Color = 1, 1, 0
 
-Light_Object Luz debajo de la JACHA del bicho
-Posicion = 400, 400, 1050
-c1 = 1
-c2 = 0
-c3 = 0
-Ip = 1
+# Sphere_Object Esfera flotando del centro
+# Posicion = 400, 200, 1200
+# Radio = 30
+# Kd = 0.4
+# Ka = 0.2
+# Kn = 100
+# Ks = 0.7
+# Color = 1, 1, 0 
 
+Sphere_Object ojo izquierda
+Posicion = 360, 300, 1200
+Radio = 30
+Kd = 0.4
+Ka = 0.4
+Kn = 10
+Ks = 0.3
+Color = 1, 0, 0
+
+Sphere_Object ojo derecha
+Posicion = 440, 300, 1200
+Radio = 30
+Kd = 0.4
+Ka = 0.4
+Kn = 10
+Ks = 0.3
+Color = 1, 0, 0
 
 
 ######### MANO IZQUIERDA #########
@@ -89,7 +162,7 @@ Color = 1.0, 1.0, 0.0
 ### EJES ###
 
 Cylinder_Object EjeX
-Ancla = 1.0,0.0,0.0
+Ancla = 0.0,0.0,0.0
 Q = 1.0,0.0,0.0
 Radio =1.0
 d1 = 0
@@ -102,7 +175,7 @@ Color = 1.0, 0.0, 0.0
 
 
 Cylinder_Object EjeY
-Ancla = 1.0,0.0,0.0
+Ancla = 0.0,0.0,0.0
 Q = 0.0,1.0,0.0
 Radio =1.0
 d1 = 0
@@ -115,7 +188,7 @@ Color = 1.0, 0.0, 0.0
 
 
 Cylinder_Object  EjeZ
-Ancla = 1.0,0.0,0.0
+Ancla = 0.0,0.0,0.0
 Q = 0,0.0,1.0
 Radio =1.0
 d1 = 0
