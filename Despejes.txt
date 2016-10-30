@@ -280,16 +280,16 @@ l = Yq
 b = Z
 n = Zo
 m = Zq
-https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdx%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bc%7D%7Bv%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdx%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bv%7D%7Bc%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
 
-d/dX ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k1²Zq²Xq(Yq(Y-Yo)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²)
+d/dX ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k2²Zq²Xq(Yq(Y-Yo)+Zq(Z-Zo)+Xq(-Xo+X)))/(k1)²)
 
-https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdj%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bc%7D%7Bv%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdj%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bv%7D%7Bc%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
 
-d/dY ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k1²YqZq²(Yq(-Yo+Y)+Zq(Z-Zo)+Xq(-Xo+X)))/(k2)²)
+d/dY ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k2²YqZq²(Yq(-Yo+Y)+Zq(Z-Zo)+Xq(-Xo+X)))/(k1)²)
 
-https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdb%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bc%7D%7Bv%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
-d/dZ ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k1²(Zq^3)(Yq(Y-Yo)+Xq(-Xo+X)+Zq(-Zo+Z)))/(k2)²)
+https://www.symbolab.com/solver/step-by-step/%5Cfrac%7Bd%7D%7Bdb%7D%5Cleft(%5Cleft(%5Cleft(%5Cfrac%7Bv%7D%7Bc%7D%5Cright)%5Cleft(%5Cleft(%5Cleft(%5Cleft(x-i%5Cright)p%2B%5Cleft(j-k%5Cright)l%2B%5Cleft(b-n%5Cright)m%5Cright)m%5Cright)%5Cright)%5Cright)%5E%7B2%7D%5Cright)
+d/dZ ((k2/k1)(((X-Xo)Xq+(Y-Yo)Yq+(Z-Zo)Zq)Zq))²  = ( (2k2²(Zq^3)(Yq(Y-Yo)+Xq(-Xo+X)+Zq(-Zo+Z)))/(k1)²)
 
 NORMAL DEL CONO
 [ 

@@ -701,9 +701,9 @@ struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
 	long double parethesesWithYq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*yq;
 	long double parethesesWithZq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*zq;
 
-	long double lastFactorDerivedX = ((2*(pow(k1,2))*xq*(pow(zq,2))*(yq*(y-yo)+zq*(z-zo)+xq*(-xo+x))))/(pow(k2,2));
-	long double lastFactorDerivedY = ((2*(pow(k1,2))*yq*(pow(zq,2))*(yq*(-yo+y)+zq*(z-zo)+xq*(-xo+x))))/(pow(k2,2));
-	long double lastFactorDerivedZ = ((2*(pow(k1,2))*(pow(zq,3))*(yq*(y-yo)+zq*(-zo+z)+xq*(-xo+x))))/(pow(k2,2));
+	long double lastFactorDerivedX = (((2*(pow(k2,2))*xq*(pow(zq,2)))*( (yq*(y-yo) )+(zq*(z-zo)+(xq*(-xo+x)))))/(pow(k1,2)));
+	long double lastFactorDerivedY = (((2*(pow(k2,2))*yq*(pow(zq,2)))*( (yq*(yo-y) )+(zq*(z-zo))+(xq*(-xo+x))))/(pow(k1,2)));
+	long double lastFactorDerivedZ = (((2*(pow(k2,2))*(pow(zq,3)))*( (yq*(y-yo) )+(zq*(-zo+z))+(xq*(-xo+x))))/(pow(k1,2)));
 
 	normalCone.x = 2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
 					2*(yo + parethesesWithYq - y)*(xq*yq)+
@@ -865,9 +865,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 	data es el arreglo de valores del objeto a crear. Se asume que estará completo.*/
 	//printf("%i \n",whichObjectCreate);
 	switch(whichObjectCreate){
-
 		case 0: {
-
 			printf("Insertando datos de escena \n");
 			printf("Iluminación ambiente: %LF \n", data[0]);
 			printf("Plano de proyección (Xmin, Ymin) (Xmax, Ymax) : (%LF, %LF) (%LF, %LF) \n", data[1], data[2],data[3],data[4]);
@@ -875,7 +873,6 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			printf("Epsilon %LF \n", data[7]);
 			printf("Ojo: (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
 			printf("Color background: (%LF, %LF, %LF) \n", data[11],data[12],data[13]);
-
 
 			Ia = data[0];
 			Xmin = data[1];
@@ -895,16 +892,10 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			background.b = data[13];
 
 			Framebuffer[Hres][Vres];
-
 			Framebuffer = (struct Color **)malloc(Vres * sizeof(struct Color*));
 			for (int i = 0; i<Vres; i++){
 				Framebuffer[i] = (struct Color *)malloc(Hres*sizeof(struct Color));
 			}
-
-			/*
-
-			*/
-
 			printf("Escena establecida  \n \n");
 			return;
 			}
