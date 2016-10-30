@@ -704,9 +704,9 @@ struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
 
 	long double factCoefsK = ( (yq*(y-yo) )+(zq*(z-zo))+(xq*(-xo+x)));
 
-	long double lastFactorDerivedX = (((2*(pow(k2,2))*xq*(pow(zq,2)))*factCoefsK)/(pow(k1,2)));
-	long double lastFactorDerivedY = (((2*(pow(k2,2))*yq*(pow(zq,2)))*factCoefsK)/(pow(k1,2)));
-	long double lastFactorDerivedZ = (((2*(pow(k2,2))*(pow(zq,3)))*factCoefsK)/(pow(k1,2)));
+	long double lastFactorDerivedX = (((2*(pow(k2,2))*xq)*factCoefsK)/(pow(k1,2)));
+	long double lastFactorDerivedY = (((2*(pow(k2,2))*yq)*factCoefsK)/(pow(k1,2)));
+	long double lastFactorDerivedZ = (((2*(pow(k2,2))*zq)*factCoefsK)/(pow(k1,2)));
 
 	normalCone.x = 2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
 					2*(yo + parethesesWithYq - y)*(xq*yq)+
