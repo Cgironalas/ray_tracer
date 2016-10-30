@@ -19,6 +19,8 @@ static long double Ymin = -100;
 static long double Ia;
 static long double e;
 
+static int debug = 0;
+
 struct Color { 
 	long double r;
 	long double g;
@@ -869,13 +871,15 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 	//printf("%i \n",whichObjectCreate);
 	switch(whichObjectCreate){
 		case 0: {
-			printf("Insertando datos de escena \n");
-			printf("Iluminación ambiente: %LF \n", data[0]);
-			printf("Plano de proyección (Xmin, Ymin) (Xmax, Ymax) : (%LF, %LF) (%LF, %LF) \n", data[1], data[2],data[3],data[4]);
-			printf("Resolución:  %LFx%LF \n", data[5], data[6]);
-			printf("Epsilon %LF \n", data[7]);
-			printf("Ojo: (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
-			printf("Color background: (%LF, %LF, %LF) \n", data[11],data[12],data[13]);
+			if (debug == 1) {
+				printf("Insertando datos de escena \n");
+				printf("Iluminación ambiente: %LF \n", data[0]);
+				printf("Plano de proyección (Xmin, Ymin) (Xmax, Ymax) : (%LF, %LF) (%LF, %LF) \n", data[1], data[2],data[3],data[4]);
+				printf("Resolución:  %LFx%LF \n", data[5], data[6]);
+				printf("Epsilon %LF \n", data[7]);
+				printf("Ojo: (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
+				printf("Color background: (%LF, %LF, %LF) \n", data[11],data[12],data[13]);
+			}
 
 			Ia = data[0];
 			Xmin = data[1];
@@ -899,17 +903,23 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			for (int i = 0; i<Vres; i++){
 				Framebuffer[i] = (struct Color *)malloc(Hres*sizeof(struct Color));
 			}
-			printf("Escena establecida  \n \n");
+			
+			printf("Scene data read correctly.\n \n");
 			return;
 			}
 		case 1: {
-			printf("Insertando Luz...\n");
+			if (debug == 1) {
+			
+				printf("Insertando Luz...\n");
+	
+				printf("Pos luz (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+				printf("c1: %LF, c2: %LF, c3 %LF \n", data[3],data[4],data[5]);
+				printf("Ip luz: %LF \n", data[6]);
+			}
+
 			struct Object polygon;
 			struct Color colorPolygon;
 
-			printf("Pos luz (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
-			printf("c1: %LF, c2: %LF, c3 %LF \n", data[3],data[4],data[5]);
-			printf("Ip luz: %LF \n", data[6]);
 
 			struct Light luz;
 			luz.Xp=data[0];
@@ -923,21 +933,25 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			Lights[lightIndex]=luz;
 			lightIndex++;
 
-			printf("Luz insertado \n \n");
+			// printf("Light processed. \n \n");
 			return;
-			/*Lo hago como si fuera una pila y ustedes no pueden detenerme.*/
 			}
 		case 2: {
-			printf("Insertando Esfera...");
+			if (debug == 1) {
+				printf("Insertando Esfera...");
+				printf("Pos esfera (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+				printf("Radio esfera: %LF \n", data[3]);
+				printf("Esfera Kd: %LF \n", data[3]);
+				printf("Esfera Ka: %LF \n", data[4]);
+				printf("Esfera Kn: %LF \n", data[5]);
+				printf("Esfera Ks: %LF \n", data[6]);
+				printf("Color esfera (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
+				
+			}
+			
 			struct Object polygon;
 			struct Color colorPolygon;
-			printf("Pos esfera (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
-			printf("Radio esfera: %LF \n", data[3]);
-			printf("Esfera Kd: %LF \n", data[3]);
-			printf("Esfera Ka: %LF \n", data[4]);
-			printf("Esfera Kn: %LF \n", data[5]);
-			printf("Esfera Ks: %LF \n", data[6]);
-			printf("Color esfera (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
+			
 			struct Object esfera;
 			esfera.Xc=data[0];
 			esfera.Yc=data[1];
@@ -956,16 +970,19 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			esfera.color=colorSphere;
 			Objects[objectIndex]=esfera;
 			objectIndex++;
-			printf("Esfera insertada \n \n");
+			//printf("Sphere processed \n \n");
 			return;
 		}
 		case 3: {
-			printf("Insertando polígono...");
-			printf("Color polígono (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
-			printf("Poligono Kd: %LF \n", data[3]);
-			printf("Poligono Ka: %LF \n", data[4]);
-			printf("Poligono Kn: %LF \n", data[5]);
-			printf("Poligono Ks: %LF \n", data[6]);
+			if (debug == 1){
+				printf("Insertando polígono...");
+				printf("Color polígono (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+				printf("Poligono Kd: %LF \n", data[3]);
+				printf("Poligono Ka: %LF \n", data[4]);
+				printf("Poligono Kn: %LF \n", data[5]);
+				printf("Poligono Ks: %LF \n", data[6]);
+			}
+
 			//7 Elementos adicionales a los vertices
 			//Creo un objeto temporal
 			int vertexPolygonIndex = 0;
@@ -992,10 +1009,15 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			vertexPolygonIndex = 0;
 			//printf("numVertexesPolygon %i \n", numVertexesPolygon);
 			polygon = getABCD(temp);
-			printf("A del poligono %LF\n", polygon.Xc);
-			printf("B del poligono %LF\n", polygon.Yc);
-			printf("C del poligono %LF\n", polygon.Zc);
-			printf("D del poligono %LF\n", polygon.other);
+
+			if (debug == 1) {
+				printf("A del poligono %LF\n", polygon.Xc);
+				printf("B del poligono %LF\n", polygon.Yc);
+				printf("C del poligono %LF\n", polygon.Zc);
+				printf("D del poligono %LF\n", polygon.other);
+				
+			}
+
 			polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
 			polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
 			struct Color colorPolygon;
@@ -1012,12 +1034,14 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			polygon.intersectionFuncion = polygonIntersection;
 			long double u;
 			long double v;
-			printf("abs A : %lf abs B: %lf abs C: %lf \n",fabs(polygon.Xc), fabs(polygon.Yc), fabs(polygon.Zc));
+			
+			//printf("abs A : %lf abs B: %lf abs C: %lf \n",fabs(polygon.Xc), fabs(polygon.Yc), fabs(polygon.Zc));
+			
 			long double maxA_B = max(fabs(polygon.Xc), fabs(polygon.Yc)); //maximo entre A y B
 			long double maxA_B_C = max(maxA_B, fabs(polygon.Zc)); //maximo entre los tres
 			for (int i =0; i+7 < quantityData;){
 				struct Point3D vertex;
-				printf("Vertice (%LF, %LF, %Lf) \n", data[7+i],  data[7+i+1],  data[7+i+2] );
+				//printf("Vertice (%LF, %LF, %Lf) \n", data[7+i],  data[7+i+1],  data[7+i+2] );
 				vertex.x = data[7+i];
 				i++;
 				vertex.y = data[7+i];
@@ -1041,7 +1065,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				} 
 				squashedVertex.u = u;
 				squashedVertex.v = v;
-				printf("squashedVertex (%LF, %LF, ) \n", squashedVertex.u, squashedVertex.v);
+				//printf("squashedVertex (%LF, %LF, ) \n", squashedVertex.u, squashedVertex.v);
 				//vertex.x = data[7+i];
 				polygon.points3D[vertexPolygonIndex]=vertex;
 				//printf("vertexPolygonIndex %i \n", vertexPolygonIndex);
@@ -1050,22 +1074,26 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			}
 			Objects[objectIndex] = polygon;
 			objectIndex++;
-			printf("Polígono insertado. \n \n");
+			//printf("Polygon processed. \n \n");
+			
 			return;
 		}
 		case 4: { //Cilindros
-			printf("Insertando cilindro...");
+			if (debug == 1) {
+				printf("Insertando cilindro...");
 
-			printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
-			printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
-			printf("Cilindro Radio: %LF \n", data[6]);
-			printf("Cilindro d1: %LF Cilindro d2: %LF \n", data[7],data[8]);
-			printf("Cilindro Kd: %LF \n", data[9]);
-			printf("Cilindro Ka: %LF \n", data[10]);
-			printf("Cilindro Kn: %LF \n", data[11]);
-			printf("Cilindro Ks: %LF \n", data[12]);
-			printf("RGB Cilindro: (%LF, %LF, %LF) \n", data[13], data[14],data[15]);
-
+				printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
+				printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+				printf("Cilindro Radio: %LF \n", data[6]);
+				printf("Cilindro d1: %LF Cilindro d2: %LF \n", data[7],data[8]);
+				printf("Cilindro Kd: %LF \n", data[9]);
+				printf("Cilindro Ka: %LF \n", data[10]);
+				printf("Cilindro Kn: %LF \n", data[11]);
+				printf("Cilindro Ks: %LF \n", data[12]);
+				printf("RGB Cilindro: (%LF, %LF, %LF) \n", data[13], data[14],data[15]);
+	
+			}
+			
 			struct Object cilinder;
 			cilinder.Xc = data[0];
 			cilinder.Yc = data[1];
@@ -1076,7 +1104,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			cilinderVector.y = data[4];
 			cilinderVector.z = data[5];
 			cilinderVector = normalize(cilinderVector);
-			printf("Vector normalizado del: (%LF, %LF, %LF) \n", cilinderVector.x, cilinderVector.y,cilinderVector.z);
+			//printf("Vector normalizado del: (%LF, %LF, %LF) \n", cilinderVector.x, cilinderVector.y,cilinderVector.z);
 			cilinder.directionVector = cilinderVector;
 
 			cilinder.other = data[6];
@@ -1095,27 +1123,25 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			cilinderColor.b = data[15];
 			cilinder.color = cilinderColor;
 			
-			//Añadir funcion normal e interseccion 
-
 			Objects[objectIndex] = cilinder;
 			objectIndex++;
-			printf("Cilindro insertado.\n \n");
+			//printf("Cylinder processed.\n \n");
 			return;
 		}
 		case 5: { //Conos
-			
-			printf("Insertando cono...");
+			if (debug == 1) {
+				printf("Insertando cono...");
+				printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
+				printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+				printf("Cono k1: %LF COno k2: %LF \n", data[6],data[7]);
+				printf("Cono d1: %LF COno d2: %LF \n", data[8],data[9]);
+				printf("Cono Kd: %LF \n", data[10]);
+				printf("Cono Ka: %LF \n", data[11]);
+				printf("Cono Kn: %LF \n", data[12]);
+				printf("Cono Ks: %LF \n", data[13]);
+				printf("RGB Cono: (%LF, %LF, %LF) \n", data[14], data[15],data[16]);
 				
-
-			printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
-			printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
-			printf("Cono k1: %LF COno k2: %LF \n", data[6],data[7]);
-			printf("Cono d1: %LF COno d2: %LF \n", data[8],data[9]);
-			printf("Cono Kd: %LF \n", data[10]);
-			printf("Cono Ka: %LF \n", data[11]);
-			printf("Cono Kn: %LF \n", data[12]);
-			printf("Cono Ks: %LF \n", data[13]);
-			printf("RGB Cono: (%LF, %LF, %LF) \n", data[14], data[15],data[16]);
+			}
 				
 			struct Object cone;
 			cone.Xc = data[0];
@@ -1146,13 +1172,10 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			coneColor.g = data[15];
 			coneColor.b = data[16];
 			cone.color = coneColor;
-				
-
-			//Añadir funcion normal e interseccion 
-
+			
 			Objects[objectIndex] = cone;
 			objectIndex++;
-			printf("Cono insertado.\n \n");
+			//printf("Cone processed.\n \n");
 			return;
 		}
 	}
@@ -1227,7 +1250,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 				}else{
 					(*counterValueSegment)++;
 				}
-				printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
 				return values;
 			}
 		case 1: //Luces
@@ -1242,7 +1265,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 						(*counterValueSegment)++;
 						*numberValuesRead = 3;
 						free (positionLight);
-						printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+						//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
 						return values;
 				}else if((*counterValueSegment) >= 1 && (*counterValueSegment <= 4)){ 
 
@@ -1331,7 +1354,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 					
 				*numberValuesRead = 3;
 				free (positionCilinder);
-				printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
 				return values;
 			}else if(*counterValueSegment >= 2 && *counterValueSegment <= 8){
 				values = malloc(sizeof(long double));
@@ -1358,7 +1381,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 				}
 				*numberValuesRead = 3;
 				free (positionCone);
-				printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
 				return values;
 			}else if(*counterValueSegment >= 2 && *counterValueSegment <= 9){
 				values = malloc(sizeof(long double));
@@ -1404,11 +1427,11 @@ void getSceneObjects(){
 		while (fgets(temporalBuffer, 100, file)!=NULL){//Mientras el archivo siga teniendo algo
 
 			if (temporalBuffer[0] == '\n'){
-				printf("Linea vacía \n");
+				//printf("Linea vacía \n");
 				continue;
 			}
 			if (strstr(temporalBuffer, "#")!=NULL){
-				printf("Comentario \n");
+				//printf("Comentario \n");
 				continue;
 			}
 			if (strstr(temporalBuffer, "Scene_Data")!=NULL){
@@ -1419,7 +1442,7 @@ void getSceneObjects(){
 				valuesRead=NULL;
 				valuesRead = malloc(sizeof(long double)*14);  
 				currentTypeObjectReading=0;
-				printf("%s",temporalBuffer);
+				//printf("%s",temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer,"Light_Object")!=NULL){
 			//Entra en state = 1. Luces
@@ -1429,7 +1452,7 @@ void getSceneObjects(){
 				free(valuesRead);
 				valuesRead = malloc(sizeof(long double)*7); //Las luces siempre seran 7 valores
 				currentTypeObjectReading=1;
-				printf("%s",temporalBuffer);
+				//printf("%s",temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Sphere_Object")!=NULL){
 			//Entra en state = 2. Esferas
@@ -1439,18 +1462,18 @@ void getSceneObjects(){
 				valuesRead=malloc(sizeof(long double)*11); //Esferas siempre serán 11 valores
 				counterValueSegment = 0;
 				currentTypeObjectReading=2;
-				printf("%s",temporalBuffer);
+				//printf("%s",temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Polygon_Object")!=NULL){
 			//Entra en state = 3. Poligonos
-				printf("Leyó polígonos");
+				//printf("Leyó polígonos");
 				state = 3;
 				counterValueSegment = 0;
 				indexValuesRead=0;
 				free(valuesRead);
 				valuesRead=malloc(sizeof(long double)*200); //Polígonos max size 
 				currentTypeObjectReading=3;
-				printf("%s",temporalBuffer);
+				//printf("%s",temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Cylinder_Object")!=NULL){
 			//Entra en state = 4. Cilindros
@@ -1460,7 +1483,7 @@ void getSceneObjects(){
 				free(valuesRead);
 				valuesRead = malloc(sizeof(long double)*16);
 				currentTypeObjectReading=4;
-				printf("%s",temporalBuffer);
+				//printf("%s",temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer, "Cone_Object")!=NULL){
 			//Entra en state = 5. Conos
@@ -1470,7 +1493,7 @@ void getSceneObjects(){
 				free(valuesRead);
 				valuesRead = malloc(sizeof(long double)*17);
 				currentTypeObjectReading=5;
-				printf("%s",temporalBuffer);
+				//printf("%s",temporalBuffer);
 				continue;
 			}
 			
@@ -1480,7 +1503,7 @@ void getSceneObjects(){
 			//printf("counterValueSegment %i \n", counterValueSegment);
 			long double *valuesReadTemp = readValueFromLine(state, &counterValueSegment, temporalBuffer, &numberValuesRead);
 			if (valuesReadTemp == NULL){ //Se devolvió NULL
-				printf("readValueFromLine devolvió NULL \n");
+				//printf("readValueFromLine devolvió NULL \n");
 				continue;
 			}
 			int i = 0;
@@ -1492,7 +1515,7 @@ void getSceneObjects(){
 			 se leyeron los datos de dicho objeto/luz, ergo, se crea.*/
 			if (counterValueSegment == 0){
 				createObjectFromData(valuesRead, currentTypeObjectReading, indexValuesRead);
-				printf("Sup \n");
+				//printf("Sup \n");
 				indexValuesRead=0;
 			}
 		}
@@ -1514,11 +1537,11 @@ void howManyObjectsLights(){
 
 
 			if (temporalBuffer[0] == '\n'){
-				printf("Linea vacía \n");
+				//printf("Linea vacía \n");
 				continue;
 			}
 			if (strstr(temporalBuffer, "#")!=NULL){
-				printf("Comentario \n");
+				//printf("Comentario \n");
 				continue;
 			}
 			
@@ -1551,8 +1574,8 @@ void howManyObjectsLights(){
 // OP main: =====================================================
 int main(int argc, char *arcgv[]){
 	howManyObjectsLights();
-	printf("Luces %i \n", numberLights);
-	printf("Objetos %i \n", numberObjects);
+	printf("Lights: %i \n", numberLights);
+	printf("Objects: %i \n", numberObjects);
 	getSceneObjects();
 	
 	int i, j;
@@ -1570,7 +1593,7 @@ int main(int argc, char *arcgv[]){
 
 	Zd = -eye.z;
 
-	printf("\nIniciando Ray Tracing...\n...\n...\n");
+	printf("\nRay Tracing...\n...\n...\n");
 	for (i = 0; i < Vres; i++){
 		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
 		Yd = Yw - eye.y;
@@ -1602,7 +1625,7 @@ int main(int argc, char *arcgv[]){
 	free(Objects);
 	free(Lights);
 	free(Framebuffer);
-	printf("\nFrame ready :)\n");
+	printf("\nDONE.\n");
 	
 
 }
