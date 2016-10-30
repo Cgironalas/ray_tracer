@@ -34,7 +34,10 @@ Ks = 0
 Color = 1.0, 0.0, 0.0
 
 
-Cone_Object Cabeza Bicho
+
+###############CABEZA################
+
+Cone_Object Cabeza Bicho Inferior
 Ancla = 400, 70, 1150
 Q = 0, -1, 0
 k1= 100
@@ -47,7 +50,7 @@ Kn = 1
 Ks = 0.2
 Color = 1, 1, 0
 
-Cone_Object Cabeza Bicho
+Cone_Object Cabeza Bicho Medio
 Ancla = 400, 80, 1150
 Q = 0, -1, 0.1
 k1= 100
@@ -147,7 +150,7 @@ Ks = 0.1
 Color = 1.0, 1.0, 0.0	
 
 Cylinder_Object Dedo largo meñique
-Position = -2600, 1800, 8500
+Position = -2800, 1900, 8500
 Q = -0.2, -0.4, -0.4
 Radio = 20
 d1 = 0

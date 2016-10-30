@@ -701,9 +701,12 @@ struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
 	long double parethesesWithYq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*yq;
 	long double parethesesWithZq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*zq;
 
-	long double lastFactorDerivedX = (((2*(pow(k2,2))*xq*(pow(zq,2)))*( (yq*(y-yo) )+(zq*(z-zo)+(xq*(-xo+x)))))/(pow(k1,2)));
-	long double lastFactorDerivedY = (((2*(pow(k2,2))*yq*(pow(zq,2)))*( (yq*(yo-y) )+(zq*(z-zo))+(xq*(-xo+x))))/(pow(k1,2)));
-	long double lastFactorDerivedZ = (((2*(pow(k2,2))*(pow(zq,3)))*( (yq*(y-yo) )+(zq*(-zo+z))+(xq*(-xo+x))))/(pow(k1,2)));
+
+	long double factCoefsK = ( (yq*(y-yo) )+(zq*(z-zo))+(xq*(-xo+x)));
+
+	long double lastFactorDerivedX = (((2*(pow(k2,2))*xq*(pow(zq,2)))*factCoefsK)/(pow(k1,2)));
+	long double lastFactorDerivedY = (((2*(pow(k2,2))*yq*(pow(zq,2)))*factCoefsK)/(pow(k1,2)));
+	long double lastFactorDerivedZ = (((2*(pow(k2,2))*(pow(zq,3)))*factCoefsK)/(pow(k1,2)));
 
 	normalCone.x = 2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
 					2*(yo + parethesesWithYq - y)*(xq*yq)+
