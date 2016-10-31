@@ -74,7 +74,7 @@ struct Object {
 	struct Point2D *points2D;
 	struct Point3D *points3D;
 	struct Vector (*normalVector)();
-	struct Intersection *(*intersectionFuncion)(struct Vector, struct Vector, struct Object);
+	struct Intersection (*intersectionFuncion)(struct Vector, struct Vector, struct Object);
 };
 
 struct Intersection {
@@ -83,6 +83,7 @@ struct Intersection {
 	long double Zi;
 	long double distance;
 	struct Object object;
+	long double null;
 };
 
 static struct Light *Lights;
@@ -93,7 +94,6 @@ static int lightIndex = 0;
 static int objectIndex = 0;
 
 static struct Vector V;
-static struct Intersection tempIntersect;
 
 static struct Vector eye;
 static struct Color **Framebuffer;
@@ -224,13 +224,15 @@ struct Color specularHighlight(long double E, struct Color color){
 //RAY TRACER
 
 //Esferas: =======================================================
-struct Intersection *sphereIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+struct Intersection sphereIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	long double t, t1, t2;
 
 	long double Xdif = anchor.x - object.Xc;
 	long double Ydif = anchor.y - object.Yc;
 	long double Zdif = anchor.z - object.Zc;
-
+	struct Intersection tempIntersect;
+	tempIntersect.null = 0;
+	
 	long double B = 2 * ((direction.x * Xdif) + (direction.y * Ydif) + (direction.z * Zdif));
 	long double C = pow(Xdif, 2) + pow(Ydif, 2) + pow(Zdif, 2) - pow(object.other,2);
 
@@ -254,19 +256,23 @@ struct Intersection *sphereIntersection(struct Vector anchor, struct Vector dire
 			if(t2 > e){
 				t = t2;
 			}else{
-				return NULL;
+				tempIntersect.null = 1;
 			}
 		}
 		
-		tempIntersect.distance = t;
-		tempIntersect.object = object;
-		tempIntersect.Xi = anchor.x + (t * direction.x);
-		tempIntersect.Yi = anchor.y + (t * direction.y);
-		tempIntersect.Zi = anchor.z + (t * direction.z);
-
-		return &tempIntersect;
+		if (tempIntersect.null != 1) {
+			tempIntersect.distance = t;
+			tempIntersect.object = object;
+			tempIntersect.Xi = anchor.x + (t * direction.x);
+			tempIntersect.Yi = anchor.y + (t * direction.y);
+			tempIntersect.Zi = anchor.z + (t * direction.z);
+	
+		}
+		
+		return tempIntersect;
 	}else{
-		return NULL;
+		tempIntersect.null = 1;
+		return tempIntersect;
 	}
 }
 
@@ -287,13 +293,18 @@ int getSign(long double v){
 	else{ return 0; }
 }
 
-struct Intersection *polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+struct Intersection polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	
 	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc) + object.other);
 	long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
 
+	struct Intersection tempIntersect;
+	tempIntersect.null = 0;
+
 	if(denominator == 0){
-		return NULL;
+		tempIntersect.null = 1;
+		return tempIntersect;
+
 	}else{
 		long double t = numerator / denominator;
 		tempIntersect.distance = t;
@@ -362,13 +373,14 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 				object.points2D[i].u = object.points2D[i].u + u;
 				object.points2D[i].v = object.points2D[i].v + v;
 			}
-			return NULL;
+			tempIntersect.null = 1;
+			return tempIntersect;
 		}else{
 			for(int i = 0; i < NV; i++){
 				object.points2D[i].u = object.points2D[i].u + u;
 				object.points2D[i].v = object.points2D[i].v + v;
 			}
-			return &tempIntersect;
+			return tempIntersect;
 		}
 	}
 }
@@ -390,7 +402,10 @@ struct Vector polygonNormal(struct Object object, struct Vector vector){
 // ===============================================================
 
 //Cilindros: =====================================================
-struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+struct Intersection cilinderIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	struct Intersection tempIntersect;
+	tempIntersect.null = 0;
+
 	long double xo = object.Xc;
 	long double yo = object.Yc;
 	long double zo = object.Zc;
@@ -453,7 +468,7 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 				}else{
 					t = max(t1,t2);
 					Xi = xe + (t * xd);
@@ -466,9 +481,10 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 					}else{
-						return NULL;
+						tempIntersect.null = 1;
+						return tempIntersect;
 					}
 				}
 			}else{
@@ -483,9 +499,10 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 				}else{
-					return NULL;
+					tempIntersect.null = 1;
+					return tempIntersect;
 				}
 			}
 		}else{
@@ -500,16 +517,19 @@ struct Intersection *cilinderIntersection(struct Vector anchor, struct Vector di
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 				}else{
-					return NULL;
+					tempIntersect.null = 1;
+					return tempIntersect;
 				}
 			}else{
-				return NULL;
+				tempIntersect.null = 1;
+				return tempIntersect;
 			}
 		}	
 	}else{
-		return NULL;
+		tempIntersect.null = 1;
+		return tempIntersect;
 	}
 }
 
@@ -554,7 +574,9 @@ struct Vector cilinderNormal(struct Object object, struct Vector intersectionPoi
 // ===============================================================
 
 //Conos: =========================================================
-struct Intersection *coneIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+struct Intersection coneIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+	struct Intersection tempIntersect;
+	tempIntersect.null = 0;
 
 	long double xo = object.Xc;
 	long double yo = object.Yc;
@@ -622,7 +644,7 @@ struct Intersection *coneIntersection(struct Vector anchor, struct Vector direct
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 				}else{
 					t = max(t1,t2);
 					Xi = xe + (t * xd);
@@ -635,9 +657,10 @@ struct Intersection *coneIntersection(struct Vector anchor, struct Vector direct
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 					}else{
-						return NULL;
+						tempIntersect.null = 1;
+						return tempIntersect;
 					}
 				}
 			}else{
@@ -652,9 +675,10 @@ struct Intersection *coneIntersection(struct Vector anchor, struct Vector direct
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 				}else{
-					return NULL;
+					tempIntersect.null = 1;
+					return tempIntersect;
 				}
 			}
 		}else{
@@ -669,16 +693,19 @@ struct Intersection *coneIntersection(struct Vector anchor, struct Vector direct
 						tempIntersect.Zi = Zi;
 						tempIntersect.distance = t;
 						tempIntersect.object = object;
-						return &tempIntersect;
+						return tempIntersect;
 				}else{
-					return NULL;
+					tempIntersect.null = 1;
+					return tempIntersect;
 				}
 			}else{
-				return NULL;
+				tempIntersect.null = 1;
+				return tempIntersect;
 			}
 		}	
 	}else{
-		return NULL;
+		tempIntersect.null = 1;
+		return tempIntersect;
 	}
 }
 
@@ -765,32 +792,26 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	int k;
 	long double tmin;
 	struct Intersection intersection;
-	struct Intersection * tempIntersection;
+	struct Intersection tempIntersection;
 
 	tmin = 100000;
-	tempIntersection = NULL;
+	tempIntersection.null = 1;
 	intersection.distance = -1;
 
 	int objectsAmount = numberObjects;
 	for(k = 0; k < objectsAmount; k++){
 		tempIntersection = Objects[k].intersectionFuncion(anchor, direction, Objects[k]);
-
-
 		
-		if(tempIntersection != NULL && tempIntersection->distance > e && tempIntersection->distance < tmin){
+		if(tempIntersection.null != 1 && tempIntersection.distance > e && tempIntersection.distance < tmin){
 			
 			if (rec == 1) {
-				printf ("%LF\n", tempIntersection->Xi);	
+				printf ("%LF\n", tempIntersection.Xi);	
 			}
 			
-			tmin = tempIntersection->distance;
-			intersection.Xi = tempIntersection->Xi;
-			intersection.Yi = tempIntersection->Yi;
-			intersection.Zi = tempIntersection->Zi;
-			intersection.object = tempIntersection->object;
-			intersection.distance = tempIntersection->distance;
+			tmin = tempIntersection.distance;
+			intersection = tempIntersection;
 		}
-		tempIntersection = NULL;
+		tempIntersection.null = 1;
 	}
 	return intersection;
 }

@@ -12,7 +12,7 @@ Eye = 400, 270, -500
 Background = 0.6392, 0.6588, 0.6509
 
 Light_Object Luz lado derecho
-	Posicion = 400, 260, 800
+	Posicion = 400, 260, 900
 	c1=1
 	c2=0
 	c3=0.0
