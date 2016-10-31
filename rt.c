@@ -295,17 +295,21 @@ int getSign(long double v){
 
 struct Intersection polygonIntersection(struct Vector anchor, struct Vector direction, struct Object object){
 	
-	long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc) + object.other);
 	long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
 
 	struct Intersection tempIntersect;
 	tempIntersect.null = 0;
 
 	if(denominator == 0){
-		tempIntersect.null = 1;
+		if (rec == 1 && debug == 1) {
+			printf("rare case\n");	
+		}
+		tempIntersect.distance = 100000;
 		return tempIntersect;
 
 	}else{
+		long double numerator = -((anchor.x * object.Xc) + (anchor.y * object.Yc) + (anchor.z * object.Zc) + object.other);
+	
 		long double t = numerator / denominator;
 		tempIntersect.distance = t;
 		tempIntersect.object = object;
@@ -855,9 +859,9 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			R.z = (2 * N.z * a) - L.z;
 			R = normalize(R);
 
-			//rec = 1;
+			rec = 1;
 			obstacle = getFirstIntersection(intersectVector, L);
-			//rec = 0;
+			rec = 0;
 
 			long double distanceToLight = getNorm(light);
 

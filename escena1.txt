@@ -29,9 +29,9 @@ Light_Object Luz lado derecho
 		Kn = 30.0
 		Ks = 0.5
 		Vertice Inicial = -120, 480.0, 505
-		Vertice = -120, 500.0, 510
+		Vertice = -120, 500.0, 505
 		Vertice = 920, 500.0, 510
-		Vertice = 920, 480.0, 505
+		Vertice = 920, 480.0, 510
 		Vertice Inicial = -120, 480.0, 505
 		END_Vertices
 
@@ -48,5 +48,3 @@ Light_Object Luz lado derecho
 		Vertice Inicial = -120, 480.0, 1000
 		END_Vertices
 		
-
-
