@@ -387,7 +387,7 @@ struct Vector polygonNormal(struct Object object, struct Vector vector){
 	struct Vector vector2 = {point2.x - point1.x, point2.y - point1.y, point2.z - point1.z};
 
 	struct Vector normal = crossProduct(vector1,vector2);
-	normal = normalize(normal);
+	//normal = normalize(normal);
 
 	return normal;
 }
@@ -769,7 +769,6 @@ struct Object getABCD(struct Object object){
 	object.Yc = normal.y; //B de la ecuacion del plano
 	object.Zc = normal.z; //C de la ecuacion del plano
 	object.other = whatsTheD(object); //D de la ecuacion del plano
-
 	long double L = getNorm(normal);
 	
 	object.Xc /= L;
@@ -839,7 +838,8 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		for(k = 0; k < numberLights; k++){
 			struct Intersection obstacle;
 			struct Vector light = {Lights[k].Xp - intersection.Xi, Lights[k].Yp - intersection.Yi, Lights[k].Zp - intersection.Zi};
-			//L = normalize(light);
+			L = light;
+			L = normalize(light);
 			
 			long double a = pointProduct(N, L);
 	
@@ -1635,7 +1635,7 @@ int main(int argc, char *arcgv[]){
 			V.y = -direction.y;
 			V.z = -direction.z;
 
-			V = normalize(V);
+			//V = normalize(V);
 
 			color = getColor(eye, direction);
 
