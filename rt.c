@@ -19,7 +19,8 @@ static long double Ymin = -100;
 static long double Ia;
 static long double e;
 
-static int debug = 0;
+static int debug = 1;
+static int rec = 0;
 
 struct Color { 
 	long double r;
@@ -773,8 +774,15 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	int objectsAmount = numberObjects;
 	for(k = 0; k < objectsAmount; k++){
 		tempIntersection = Objects[k].intersectionFuncion(anchor, direction, Objects[k]);
+
+
 		
 		if(tempIntersection != NULL && tempIntersection->distance > e && tempIntersection->distance < tmin){
+			
+			if (rec == 1) {
+				printf ("%LF\n", tempIntersection->Xi);	
+			}
+			
 			tmin = tempIntersection->distance;
 			intersection.Xi = tempIntersection->Xi;
 			intersection.Yi = tempIntersection->Yi;
@@ -793,10 +801,12 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 	struct Intersection *tempIntersection;
 	
 	intersection = getFirstIntersection(anchor, direction);
-	
+
 	if(intersection.distance == -1){
 		color = background;
 	}else{
+		printf("%LF\n", intersection.object.other);
+
 		int k;
 		int lightsAmount = numberLights;
 		
@@ -829,7 +839,9 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			R.z = (2 * N.z * a) - L.z;
 			R = normalize(R);
 
+			rec = 1;
 			obstacle = getFirstIntersection(intersectVector, L);
+			rec = 0;
 
 			long double distanceToLight = getNorm(light);
 
