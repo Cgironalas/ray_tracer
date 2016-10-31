@@ -192,7 +192,7 @@ void saveFile(){
 // Ilumination ==================================================
 
 //Calcula el factor de atenuacion de una luz
-long double getAtunuationFactor(struct Light light, long double distance){
+long double getAttenuationFactor(struct Light light, long double distance){
 	long double value = 1 / (light.c1 + (light.c2 * distance) + (light.c3 * pow(distance, 2)));
 	return min(1.0, value);
 }
@@ -373,14 +373,15 @@ struct Intersection *polygonIntersection(struct Vector anchor, struct Vector dir
 }
 
 struct Vector polygonNormal(struct Object object, struct Vector vector){
+	
 	struct Point3D point0 = object.points3D[0];
 	struct Point3D point1 = object.points3D[1];
 	struct Point3D point2 = object.points3D[2];
 
 	struct Vector vector1 = {point1.x - point0.x, point1.y - point0.y, point1.z - point0.z};
 	struct Vector vector2 = {point2.x - point1.x, point2.y - point1.y, point2.z - point1.z};
-	struct Vector normal = crossProduct(vector1, vector2);
 
+	struct Vector normal = crossProduct(vector1, vector2);
 	normal = normalize(normal);
 
 	return normal;
@@ -733,13 +734,10 @@ struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
 
 //Planos: ========================================================
 long double whatsTheD(struct Object object){
-	long double theD = 0;
+	
 	struct Point3D point = object.points3D[0];
-
-	theD -= object.Xc * point.x;
-	theD -= object.Yc * point.y;
-	theD -= object.Zc * point.z;
-
+	long double theD = -((object.Xc * point.x) + (object.Yc * point.y) + (object.Zc * point.z));
+	
 	return theD;
 }
 
@@ -758,8 +756,7 @@ struct Object getABCD(struct Object object){
 	object.Zc /= L;
 	object.other /= L;	
 
-	printf("A en ABCD %LF\n", normal.x);
-	return object;//Probar esto, sino regresar un array con ABCD
+	return object; //Probar esto, sino regresar un array con ABCD
 }
 //================================================================
 
@@ -776,6 +773,7 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	int objectsAmount = numberObjects;
 	for(k = 0; k < objectsAmount; k++){
 		tempIntersection = Objects[k].intersectionFuncion(anchor, direction, Objects[k]);
+		
 		if(tempIntersection != NULL && tempIntersection->distance > e && tempIntersection->distance < tmin){
 			tmin = tempIntersection->distance;
 			intersection.Xi = tempIntersection->Xi;
@@ -809,7 +807,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 		struct Vector N = normalize(Q.normalVector(Q, intersectVector));
 		struct Vector R;
 
-		if(pointProduct(N, direction) > 0){ //Correción de Heiner
+		if(pointProduct(N, direction) > 0){
 			N.x *= -1;
 			N.y *= -1;
 			N.z *= -1;
@@ -825,8 +823,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			L = normalize(light);
 			
 			long double a = pointProduct(N, L);
-			//struct Vector another = {N.x - L.x, N.y - L.y, N.z - L.z};
-			//R = crossProduct(R, another);
+	
 			R.x = (2 * N.x * a) - L.x;
 			R.y = (2 * N.y * a) - L.y;
 			R.z = (2 * N.z * a) - L.z;
@@ -838,7 +835,7 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 
 			if(obstacle.distance < e || (obstacle.distance > e && obstacle.distance > distanceToLight)) {
 				long double pp = pointProduct(N, L);
-				Fatt = getAtunuationFactor(Lights[k], distanceToLight);
+				Fatt = getAttenuationFactor(Lights[k], distanceToLight);
 				if(pp > 0.0){
 					I = I + (pp * Q.Kd * Fatt * Lights[k].Ip);
 				}
@@ -868,7 +865,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 		SI está en 4, crea cilindros
 		SI está en 5, crea conos.
 	data es el arreglo de valores del objeto a crear. Se asume que estará completo.*/
-	//printf("%i \n",whichObjectCreate);
+	
 	switch(whichObjectCreate){
 		case 0: {
 			if (debug == 1) {
@@ -904,7 +901,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				Framebuffer[i] = (struct Color *)malloc(Hres*sizeof(struct Color));
 			}
 			
-			printf("Scene data read correctly.\n \n");
+			//printf("Scene data read correctly.\n");
 			return;
 			}
 		case 1: {
@@ -972,7 +969,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			objectIndex++;
 			//printf("Sphere processed \n \n");
 			return;
-		}
+			}
 		case 3: {
 			if (debug == 1){
 				printf("Insertando polígono...");
@@ -1001,6 +998,7 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				i++;
 				vertex.z = data[7+i];
 				i++;
+
 				temp.points3D[vertexPolygonIndex]=vertex;
 				vertexPolygonIndex++;
 			}
@@ -1015,11 +1013,11 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				printf("B del poligono %LF\n", polygon.Yc);
 				printf("C del poligono %LF\n", polygon.Zc);
 				printf("D del poligono %LF\n", polygon.other);
-				
 			}
 
 			polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
 			polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
+			
 			struct Color colorPolygon;
 			colorPolygon.r = data[0];
 			colorPolygon.g = data[1];
@@ -1029,9 +1027,11 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			polygon.Ka = data[4];
 			polygon.Kn = data[5];
 			polygon.Ks = data[6];
+
 			polygon.pointAmount = numVertexesPolygon;
 			polygon.normalVector = polygonNormal;
 			polygon.intersectionFuncion = polygonIntersection;
+			
 			long double u;
 			long double v;
 			
@@ -1039,9 +1039,10 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 			
 			long double maxA_B = max(fabs(polygon.Xc), fabs(polygon.Yc)); //maximo entre A y B
 			long double maxA_B_C = max(maxA_B, fabs(polygon.Zc)); //maximo entre los tres
+			
 			for (int i =0; i+7 < quantityData;){
 				struct Point3D vertex;
-				//printf("Vertice (%LF, %LF, %Lf) \n", data[7+i],  data[7+i+1],  data[7+i+2] );
+				
 				vertex.x = data[7+i];
 				i++;
 				vertex.y = data[7+i];
@@ -1050,32 +1051,35 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
 				i++;
 				
 				struct Point2D squashedVertex;
-				if(maxA_B_C == fabs(polygon.Xc)){
-					//A es maximo
+
+				if(maxA_B_C == fabs(polygon.Xc)){ //A es maximo
 					u = vertex.z;
 					v = vertex.y;
-				}else if(maxA_B_C == fabs(polygon.Yc) ){
-					//B es maximo
+				}
+
+				else if(maxA_B_C == fabs(polygon.Yc) ){ //B es maximo
 					u = vertex.x;
 					v = vertex.z;
-				}else if(maxA_B_C == fabs(polygon.Zc)){
-					//C es maximo
+				}
+
+				else if(maxA_B_C == fabs(polygon.Zc)){ //C es maximo
 					u = vertex.x;
 					v = vertex.y;
 				} 
+
 				squashedVertex.u = u;
 				squashedVertex.v = v;
-				//printf("squashedVertex (%LF, %LF, ) \n", squashedVertex.u, squashedVertex.v);
-				//vertex.x = data[7+i];
+				
 				polygon.points3D[vertexPolygonIndex]=vertex;
-				//printf("vertexPolygonIndex %i \n", vertexPolygonIndex);
+				
 				polygon.points2D[vertexPolygonIndex]=squashedVertex;
 				vertexPolygonIndex++;
 			}
+
 			Objects[objectIndex] = polygon;
 			objectIndex++;
-			//printf("Polygon processed. \n \n");
 			
+			//printf("Polygon processed. \n \n");
 			return;
 		}
 		case 4: { //Cilindros
@@ -1401,39 +1405,40 @@ void getSceneObjects(){
 
 	int i, j, c;
 	int state = 0;
-	/*State indica qué segmento lee de la escena
+	/*  State indica qué segmento lee de la escena
 		Si está en 0, lee variables de escena
-		SI está en 1, lee luces
+		Si está en 1, lee luces
 		Si está en 2, lee esferas
 		Si está en 3, lee polígonos, 
-		SI está en 4, lee cilindros
-		SI está en 5, lee conos.*/
+		Si está en 4, lee cilindros
+		Si está en 5, lee conos. */
+
 	int counterValueSegment = 0; 
-	//Contador que indica qué valor del objeto está leyendo del actual objeto de
-	//un segmento. 
+	// Contador que indica qué valor del objeto está leyendo del actual objeto de un segmento. 
+	
 	char temporalBuffer[100]; //Aquí se guardará lo leído cada línea
-	long double *valuesRead; //Se guarda los valores del objeto para finalmente crearlo.
-	int indexValuesRead = 0; //Pos de valuesRead 
+	long double *valuesRead;  //Se guarda los valores del objeto para finalmente crearlo.
+	int indexValuesRead = 0;  //Pos de valuesRead 
 	int currentTypeObjectReading = 1;
-	/*SI está en 1, crea luces
+	
+	/*  Si está en 1, crea luces
 		Si está en 2, crea esferas
 		Si está en 3, crea polígonos, 
-		SI está en 4, crea cilindros
-		SI está en 5, crea conos.
-	*/
+		Si está en 4, crea cilindros
+		Si está en 5, crea conos. */
+
 	FILE* file; //archivo
 	if (file = fopen(escenaFile, "r")){
 
-		while (fgets(temporalBuffer, 100, file)!=NULL){//Mientras el archivo siga teniendo algo
+		while (fgets(temporalBuffer, 100, file)!=NULL){ //Mientras el archivo siga teniendo algo
 
 			if (temporalBuffer[0] == '\n'){
-				//printf("Linea vacía \n");
 				continue;
 			}
 			if (strstr(temporalBuffer, "#")!=NULL){
-				//printf("Comentario \n");
 				continue;
 			}
+
 			if (strstr(temporalBuffer, "Scene_Data")!=NULL){
 			//Entra en state = 0. Escena
 				state = 0;
@@ -1535,19 +1540,14 @@ void howManyObjectsLights(){
 
 		while (fgets(temporalBuffer, 100, file)!=NULL){//Mientras el archivo siga teniendo algo
 
-
 			if (temporalBuffer[0] == '\n'){
-				//printf("Linea vacía \n");
 				continue;
 			}
 			if (strstr(temporalBuffer, "#")!=NULL){
-				//printf("Comentario \n");
 				continue;
 			}
-			
 			if (strstr(temporalBuffer, "Light_Object")!=NULL){
 				numberLights++;
-				//printf("%s", temporalBuffer);
 				continue;
 			}else if (strstr(temporalBuffer,"Sphere_Object")!=NULL){
 				numberObjects++;
@@ -1593,7 +1593,7 @@ int main(int argc, char *arcgv[]){
 
 	Zd = -eye.z;
 
-	printf("\nRay Tracing...\n...\n...\n");
+	printf("\nRay Tracing\n...\n...\n");
 	for (i = 0; i < Vres; i++){
 		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
 		Yd = Yw - eye.y;

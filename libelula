@@ -1,0 +1,279 @@
+Scene_Data
+# Datos de la escena
+Ia = 0.4
+Xmin = 0.0
+Ymin = 0.0
+Xmax = 800.0
+Ymax = 450.0
+Hres = 1600.0
+Vres = 900.0
+Epsilon = 0.005
+Eye = 400, 225, -800
+Background = 0.6392, 0.6588, 0.6509
+
+### COLORES DE FONDO ###
+
+  Polygon_Object Color azul cielo fondo
+    Color del fondo = 0.4, 0.58, 0.92
+    Kd = 0.5
+    Ka = 1.0
+    Kn = 20.0
+    Ks = 0.1
+    Vertice Inicial=-20000.0,0.0,20000.0
+    Vertice =20000.0,0.0,20000.0
+    Vertice =20000.0,5000.0,20000.0
+    Vertice =-20000.0,5000.0,20000.0
+    Vertice Inicial=-20000.0,0.0,20000.0
+    END_Vertices Color azul cielo fondo
+
+# Libélula
+
+# Cabeza
+Sphere_Object eye
+	Posicion = -1120, 450, 10800
+	Radio = 195
+	Kd = 0.6
+	Ka = 0.01
+	Kn = 10
+	Ks = 0.8
+	Color = 0.21176470588, 0.58039215686, 0.26274509803
+Sphere_Object head_middle
+	Posicion = -1080, 520, 10900
+	Radio = 200
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.76862745098, 0.04705882352, 0.04705882352
+Sphere_Object head_eye
+	Posicion = -1080, 480, 10850
+	Radio = 200
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.76862745098, 0.04705882352, 0.04705882352
+Sphere_Object head_back
+	Posicion = -1080, 480, 10900
+	Radio = 200
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.76862745098, 0.04705882352, 0.04705882352
+Sphere_Object head_below
+	Posicion = -1080, 440, 10850
+	Radio = 200
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0.8
+	Color = 0.76862745098, 0.04705882352, 0.04705882352
+Sphere_Object mouth
+	Posicion = -1170, 460, 10900
+	Radio = 200
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Sphere_Object neck
+	Posicion = -870, 440, 10900
+	Radio = 150
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.76862745098, 0.04705882352, 0.04705882352
+# Leg 1
+Cylinder_Object upper_leg_1
+	Position = -820, 370, 10900
+	Q = -0.38, -1, 0.4
+	Radio = 60
+	d1 = 0
+	d2 = 800
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Sphere_Object leg_articulation_1
+	Posicion = -1135, -380, 11500
+	Radio = 80
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cone_Object lower_leg_1
+	Ancla = -1820, -1120, 10900
+	Q = 0.464, 0.5, 0.4
+	k1 = 15
+	k2 = 1
+	d1 = 0
+	d2 = 1100
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+# Leg 2
+Cylinder_Object upper_leg_2
+	Position = -770, 430, 10900
+	Q = 0.43, -1, -0.4
+	Radio = 60
+	d1 = 0
+	d2 = 800
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Sphere_Object leg_articulation_2
+	Posicion = -475, -300, 10650
+	Radio = 80
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cone_Object lower_leg_2
+	Ancla = -1255, -940, 10900
+	Q = 0.757, 0.61, -0.273
+	k1 = 15
+	k2 = 1
+	d1 = 0
+	d2 = 1050
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+# Torso
+Cylinder_Object torso_upper
+	Position = -770, 490, 10900
+	Q = 1, 0.5, -0.2
+	Radio = 120
+	d1 = 0
+	d2 = 550
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cylinder_Object torso_middle
+	Position = -770, 190, 10920
+	Q = 1, 0.8, -0.2
+	Radio = 120
+	d1 = 400
+	d2 = 600
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Sphere_Object upper_torso
+	Posicion = -675, 500, 10900
+	Radio = 150
+	Kd = 0.5
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Sphere_Object middle_torso
+	Posicion = -475, 500, 10900
+	Radio = 180
+	Kd = 0.4
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Sphere_Object back_torso
+	Posicion = -325, 650, 10800
+	Radio = 200
+	Kd = 0.4
+	Ka = 0.6
+	Kn = 10
+	Ks = 0
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+# Cola
+Cylinder_Object segment_1
+	Position = -330, 720, 10800
+	Q = 1, -0.2, 0
+	Radio = 120
+	d1 = 100
+	d2 = 850
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cylinder_Object segment_2
+	Position = -330, 720, 10800
+	Q = 1, -0.2, 0
+	Radio = 110
+	d1 = 100
+	d2 = 1350
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cylinder_Object segment_3
+	Position = -330, 720, 10800
+	Q = 1, -0.2, 0
+	Radio = 100
+	d1 = 100
+	d2 = 1850
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cylinder_Object segment_4
+	Position = -330, 720, 10800
+	Q = 1, -0.2, 0
+	Radio = 110
+	d1 = 1850
+	d2 = 2350
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cylinder_Object segment_5
+	Position = -330, 720, 10800
+	Q = 1, -0.2, 0
+	Radio = 120
+	d1 = 2350
+	d2 = 2850
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+Cylinder_Object segment_6
+	Position = -330, 720, 10800
+	Q = 1, -0.2, 0
+	Radio = 130
+	d1 = 2850
+	d2 = 3350
+	Kd = 0.8
+	Ka = 0.2
+	Kn = 10
+	Ks = 0.1
+	Color = 0.96862745098, 0.68235294117, 0.10196078431
+
+Light_Object Luz lado derecho
+Posicion = -1900, 500, 9500
+c1=1
+c2=0
+c3=0.0
+Ip=1.0
+
+Light_Object Luz lado derecho
+Posicion = 1000, 500, 9500
+c1=1
+c2=0
+c3=0.0
+Ip=1.0

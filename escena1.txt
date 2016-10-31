@@ -1,133 +1,201 @@
 Scene_Data
-#Datos de la escena
-Ia = 0.2
-Xmin = 0
-Ymin = 0
-Xmax = 800
-Ymax = 450
-Hres = 1600:
-Vres = 900;
-Epsilon = 0.005
-Eye = 400, 225, -800
-Background = 0.3, 0.3, 0.3
+# Datos de la escena
+Ia = 0.5
+Xmin = 0.0
+Ymin = 0.0
+Xmax = 800.0
+Ymax = 450.0
+Hres = 1600.0
+Vres = 900.0
+Epsilon = 0.00005
+Eye = 400, 270, -500
+Background = 0.6392, 0.6588, 0.6509
 
-# ROBOT 1 
-Sphere_Object cabeza
-Posicion = 400, 500, 2000
-Radio = 200
-Kd = 0.5
-Ka = 0.2
-Kn = 10
-Ks = 0.8
-Color = 0.31764705882, 0.8431372549, 1
+### PARED DE FONDO ###
 
-Cylinder_Object glasses
-Position = 400, 500, 2000
-Q = 0, 1, -0.5
-Radio = 200
-d1 = -50
-d2 = 50
-Kd = 1
-Ka = 0.2
-Kn = 10
-Ks = 1
-Color = 0.8, 1.0, 0.5
+	Polygon_Object Color de la pared 
+		Color del fondo = 1.0, 0.937, 0.8352
+		Kd = 0.5
+		Ka = 0.6
+		Kn = 10.0
+		Ks = 0.4
+		Vertice Inicial = -1000, -1000.0, 1000
+		Vertice = 2000, -1000, 1000
+		Vertice = 2000, 1000, 1000
+		Vertice = -1000, 1000, 1000
+		Vertice Inicial= -1000, -1000.0, 1000
+		END_Vertices
 
-Cone_Object antena_izquierda
-Ancla = 120, 780, 2000
-Q = -0.5, 0.5, -0.4
-k1 = 2
-k2 = 1
-d1 = -300
-d2 = 0
-Kd = 0.4
-Ka = 0.2
-Kn = 10
-Ks = 0.8
-Color = 0.31764705882, 0.8431372549, 1
+	### STAND  ###
 
-Cone_Object antena_derecha
-Ancla = 680, 780, 2000
-Q = 0.5, 0.5, -0.4
-k1 = 2
-k2 = 1
-d1 = -300
-d2 = 0
-Kd = 0.4
-Ka = 0.2
-Kn = 10
-Ks = 0.8
-Color = 0.31764705882, 0.8431372549, 1
+		### Lado izquierdo ###
 
-Cone_Object pico
-Ancla = 400, 300, 1700
-Q = 0, -1, -1
-k1 = 2
-k2 = 1
-d1 = -350
-d2 = 0
-Kd = 1
-Ka = 0.2
-Kn = 10
-Ks = 1
-Color = 0.31764705882, 0.8431372549, 1
+		Polygon_Object Lado izquierdo 
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -100, 500.0, 1000
+			Vertice = -100, 500, 700
+			Vertice = -100, 0, 700
+			Vertice = -100, 0, 1000
+			Vertice Inicial = -100, 500.0, 1000
+			END_Vertices
 
-Cylinder_Object torso
-Position = 400, 500, 2000
-Q = 0, -1, 0.5
-Radio = 100
-d1 = 100
-d2 = 480
-Kd = 0.9
-Ka = 0.01
-Kn = 5
-Ks = 0.8
-Color = 1, 1, 0
+		Polygon_Object Lado izquierdo
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, 500.0, 1000
+			Vertice = -120, 500, 700
+			Vertice = -120, 0, 700
+			Vertice = -120, 0, 1000
+			Vertice Inicial = -120, 500.0, 1000
+			END_Vertices
 
-Cone_Object shirt
-Ancla = 400, -30, 2300
-Q = 0, -1, 0.7
-k1 = 2
-k2 = 0.9
-d1 = -590
-d2 = 0
-Kd = 1
-Ka = 0.01
-Kn = 5
-Ks = 0.8
-Color = 1, 1, 0
+		Polygon_Object Lado izquierdo Frontal 
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, 500.0, 1000
+			Vertice = -120, 500.0, 700
+			Vertice = -100, 500.0, 700
+			Vertice = -100, 500.0, 1000
+			Vertice Inicial = -120, 500.0, 1000
+			END_Vertices
 
-Cone_Object propulsion_1
-Ancla = 400, -30, 2300
-Q = 0, -1, 0.7
-k1 = 2
-k2 = 5
-d1 = 10
-d2 = 40
-Kd = 0.4
-Ka = 0.2
-Kn = 1
-Ks = 0.2
-Color = 1, 0.4, 0
+		### LADO DERECHO ###
 
-Cone_Object propulsion_2
-Ancla = 400, -10, 2300
-Q = 0, -1, 0.7
-k1 = 2
-k2 = 5
-d1 = 50
-d2 = 100
-Kd = 0.4
-Ka = 0.2
-Kn = 1
-Ks = 0.2
-Color = 1, 0.4, 0
-# ROBOT 1 FIN 
+		Polygon_Object Lado derecho
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = 900, 500.0, 1000
+			Vertice = 900, 500, 700
+			Vertice = 900, 0, 700
+			Vertice = 900, 0, 1000
+			Vertice Inicial = 900, 500.0, 1000
+			END_Vertices
+ 
+		Polygon_Object Lado derecho
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = 920, 500.0, 1000
+			Vertice = 920, 500, 700
+			Vertice = 920, 0, 700
+			Vertice = 920, 0, 1000
+			Vertice Inicial = 920, 500.0, 1000
+			END_Vertices
+
+		Polygon_Object Lado derecho Frontal 
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = 900, 500.0, 1000
+			Vertice = 900, 500.0, 700
+			Vertice = 920, 500.0, 700
+			Vertice = 920, 500.0, 1000
+			Vertice Inicial = 900, 500.0, 1000
+			END_Vertices
+
+		### Base del stand ### 
+
+		Polygon_Object Base del stand Superior
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, 0.0, 1000
+			Vertice = -120, 0.0, 500
+			Vertice = 920, 0.0, 500
+			Vertice = 920, 0.0, 1000
+			Vertice Inicial = -120, 0.0, 1000
+			END_Vertices
+
+		Polygon_Object Base del stand Inferior
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, -20.0, 1000
+			Vertice = -120, -20.0, 500
+			Vertice = 920, -20.0, 500
+			Vertice = 920, -20.0, 1000
+			Vertice Inicial = -120, -20.0, 1000
+			END_Vertices
+
+		Polygon_Object Base del stand Frontal
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, -20.0, 500
+			Vertice = -120, 0.0, 500
+			Vertice = 920, 0.0, 500
+			Vertice = 920, -20.0, 500
+			Vertice Inicial = -120, -20.0, 500
+			END_Vertices
+
+		### Base del stand2 ### 
+
+		Polygon_Object Base2 del stand Superior
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, 500.0, 1000
+			Vertice = -120, 500.0, 500
+			Vertice = 920, 500.0, 500
+			Vertice = 920, 500.0, 1000
+			Vertice Inicial = -120, 500.0, 1000
+			END_Vertices
+		
+		Polygon_Object Base2 del stand Inferior
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, 480.0, 1000
+			Vertice = -120, 480.0, 500
+			Vertice = 920, 480.0, 500
+			Vertice = 920, 480.0, 1000
+			Vertice Inicial = -120, 480.0, 1000
+			END_Vertices
+		
+		Polygon_Object Base2 del stand Frontal
+			Color del fondo = 0.4, 0.4, 0.4
+			Kd = 0.8
+			Ka = 0.7
+			Kn = 30.0
+			Ks = 0.5
+			Vertice Inicial = -120, 480.0, 500
+			Vertice = -120, 500.0, 500
+			Vertice = 920, 500.0, 500
+			Vertice = 920, 480.0, 500
+			Vertice Inicial = -120, 480.0, 500
+			END_Vertices
+
 
 Light_Object Luz lado derecho
-Posicion = 700, 400, 1500
-c1=1
-c2=0
-c3=0.0
-# Happening
-Ip=1.0
+	Posicion = 400, 260, 900
+	c1=1
+	c2=0
+	c3=0.0
+	Ip=1.0
