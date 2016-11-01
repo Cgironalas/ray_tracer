@@ -28,127 +28,127 @@ Background = 0.6392, 0.6588, 0.6509
 
 	### STAND  ###
 
-		# Suelo del stand
-		Polygon_Object suelo superior
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, -300.0, 1000
-			Vertice = -400, -300.0, 700
-			Vertice = 1200, -300.0, 700
-			Vertice = 1200, -300.0, 1000
-			Vertice Inicial = -400, -300.0, 1000
-			END_Vertices
-		Polygon_Object suelo inferior
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, -280.0, 1000
-			Vertice = -400, -280.0, 700
-			Vertice = 1200, -280.0, 700
-			Vertice = 1200, -280.0, 1000
-			END_Vertices
-		Polygon_Object suelo del stand Frontal
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, -280.0, 700
-			Vertice = -400, -300.0, 700
-			Vertice = 1200, -300.0, 700
-			Vertice = 1200, -280.0, 700
-			END_Vertices
+	# Suelo del stand
+	Polygon_Object suelo superior
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, -300.0, 1000
+		Vertice = -400, -300.0, 700
+		Vertice = 1200, -300.0, 700
+		Vertice = 1200, -300.0, 1000
+		Vertice Inicial = -400, -300.0, 1000
+		END_Vertices
+	Polygon_Object suelo inferior
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, -280.0, 1000
+		Vertice = -400, -280.0, 700
+		Vertice = 1200, -280.0, 700
+		Vertice = 1200, -280.0, 1000
+		END_Vertices
+	Polygon_Object suelo del stand Frontal
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, -280.0, 700
+		Vertice = -400, -300.0, 700
+		Vertice = 1200, -300.0, 700
+		Vertice = 1200, -280.0, 700
+		END_Vertices
 
-		# Techo del stand 
-		Polygon_Object techo superior
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, 600.0, 1000
-			Vertice = -400, 600.0, 700
-			Vertice = 1200, 600.0, 700
-			Vertice = 1200, 600.0, 1000
-			END_Vertices
-		Polygon_Object techo inferior
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, 580.0, 1000
-			Vertice = -400, 580.0, 700
-			Vertice = 1200, 580.0, 700
-			Vertice = 1200, 580.0, 1000
-			END_Vertices
-		Polygon_Object techo frontal
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, 600.0, 700
-			Vertice = -400, 580.0, 700
-			Vertice = 1200, 580.0, 700
-			Vertice = 1200, 600.0, 700
-			END_Vertices
+	# Techo del stand 
+	Polygon_Object techo superior
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, 600.0, 1000
+		Vertice = -400, 600.0, 700
+		Vertice = 1200, 600.0, 700
+		Vertice = 1200, 600.0, 1000
+		END_Vertices
+	Polygon_Object techo inferior
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, 580.0, 1000
+		Vertice = -400, 580.0, 700
+		Vertice = 1200, 580.0, 700
+		Vertice = 1200, 580.0, 1000
+		END_Vertices
+	Polygon_Object techo frontal
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, 600.0, 700
+		Vertice = -400, 580.0, 700
+		Vertice = 1200, 580.0, 700
+		Vertice = 1200, 600.0, 700
+		END_Vertices
 
 
-				### Lado izquierdo ###
+			### Lado izquierdo ###
 
-		# Muro izquierdo
-		Polygon_Object izquierdo 
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, 600.0, 1000
-			Vertice = -400, 600, 700
-			Vertice = -400, -300, 700
-			Vertice = -400, -300, 1000
-			END_Vertices
-		Polygon_Object izquierdo +20
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -380, 600.0, 1000
-			Vertice = -380, 600, 700
-			Vertice = -380, -300, 700
-			Vertice = -380, -300, 1000
-			END_Vertices
-		
-		# Muro derecho
-		Polygon_Object Lado derecho
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = 1200, 600.0, 1000
-			Vertice = 1200, 600, 700
-			Vertice = 1200, -300, 700
-			Vertice = 1200, -300, 1000
-			END_Vertices
-		Polygon_Object Lado derecho -20
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = 1179, 600.0, 1000
-			Vertice = 1180, 600, 700
-			Vertice = 1180, -300, 700
-			Vertice = 1180, -300, 1000
-			END_Vertices
+	# Muro izquierdo
+	Polygon_Object izquierdo 
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -400, 600.0, 1000
+		Vertice = -400, 600, 700
+		Vertice = -400, -300, 700
+		Vertice = -400, -300, 1000
+		END_Vertices
+	Polygon_Object izquierdo +20
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = -380, 600.0, 1000
+		Vertice = -380, 600, 700
+		Vertice = -380, -300, 700
+		Vertice = -380, -300, 1000
+		END_Vertices
+	
+	# Muro derecho
+	Polygon_Object Lado derecho
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = 1200, 600.0, 1000
+		Vertice = 1200, 600, 700
+		Vertice = 1200, -300, 700
+		Vertice = 1200, -300, 1000
+		END_Vertices
+	Polygon_Object Lado derecho -20
+		Color del fondo = 0.4062, 0.2039, 0.0235
+		Kd = 0.8
+		Ka = 0.7
+		Kn = 30.0
+		Ks = 0.5
+		Vertice Inicial = 1179, 600.0, 1000
+		Vertice = 1180, 600, 700
+		Vertice = 1180, -300, 700
+		Vertice = 1180, -300, 1000
+		END_Vertices
 		
 # TROFEO 2 
 
@@ -166,7 +166,7 @@ Background = 0.6392, 0.6588, 0.6509
 		Color = 0.4062, 0.2039, 0.0235
 
 Light_Object Luz de prueba
-    Posicion = 900, 400, 950
+    Posicion = 400, 150, 200
     c1 = 0.0
     c2 = 0.001
     c3 = 0.0
@@ -612,8 +612,8 @@ Cylinder_Object Pie Der1
         Ks = 0.8
         Color = 0.31764705882, 0.8431372549, 1
     Cone_Object antena_frontal
-        Ancla = 400, 150, 650
-        Q = 20, -125, 150
+        Ancla = 400, 150, 680
+        Q = 0, -125, 120
         k1 = 2
         k2 = 1
         d1 = 0
