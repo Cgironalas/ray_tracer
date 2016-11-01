@@ -841,21 +841,21 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 			L = light;
 			L = normalize(light);
 			
-			long double a = pointProduct(N, L);
-	
-			R.x = (2 * N.x * a) - L.x;
-			R.y = (2 * N.y * a) - L.y;
-			R.z = (2 * N.z * a) - L.z;
-			R = normalize(R);
-		
+			long double pp = pointProduct(N, L);
 			obstacle = getFirstIntersection(intersectVector, L);
 
 			long double distanceToLight = getNorm(light);
 			
-			if(obstacle.distance < e || (obstacle.distance > e && obstacle.distance > distanceToLight)) {
-				long double pp = pointProduct(N, L);
+			if(obstacle.null == 1 || (obstacle.distance > e && obstacle.distance > distanceToLight)) {
+				
 				Fatt = getAttenuationFactor(Lights[k], distanceToLight);
 				if(pp > 0.0){
+
+					R.x = (2 * N.x * pp) - L.x;
+					R.y = (2 * N.y * pp) - L.y;
+					R.z = (2 * N.z * pp) - L.z;
+					R = normalize(R);
+		
 					I = I + (pp * Q.Kd * Fatt * Lights[k].Ip);
 				}
 				long double pp2 = pointProduct(R, V);
