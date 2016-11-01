@@ -8,7 +8,7 @@ Ymax = 450.0
 Hres = 1600.0
 Vres = 900.0
 Epsilon = 0.00005
-Eye = 400, 225, -500
+Eye = 400, 275, -500
 Background = 0.6392, 0.6588, 0.6509
 
 # Pared de fondo
