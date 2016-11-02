@@ -13,162 +13,207 @@ Background = 0.6392, 0.6588, 0.6509
 
 # Pared de fondo
 
-	Polygon_Object backwall
-		Color del fondo = 1.0, 0.937, 0.8352
-		Kd = 0.5
-		Ka = 0.8
-		Kn = 10.0
-		Ks = 0.4
-		Vertice Inicial = -1000, -1000.0, 1000
-		Vertice = 2000, -1000, 1000
-		Vertice = 2000, 1000, 1000
-		Vertice = -1000, 1000, 1000
-		Vertice Inicial= -1000, -1000.0, 1000
-		END_Vertices
+  Polygon_Object backwall
+    Color del fondo = 1.0, 0.937, 0.8352
+    Kd = 0.5
+    Ka = 0.8
+    Kn = 10.0
+    Ks = 0.4
+    Vertice Inicial = -1000, -1000.0, 1001
+    Vertice = 2000, -1000, 1001
+    Vertice = 2000, 1000, 1001
+    Vertice = -1000, 1000, 1001
+    END_Vertices
 
 # Stand 
 
-	# Suelo del stand
-		Polygon_Object suelo superior
-		Color del fondo = 0.4062, 0.2039, 0.0235
-		Kd = 0.8
-		Ka = 0.7
-		Kn = 30.0
-		Ks = 0.5
-		Vertice Inicial = -400, -300.0, 1000
-		Vertice = -400, -300.0, 700
-		Vertice = 1200, -300.0, 700
-		Vertice = 1200, -300.0, 1000
-		Vertice Inicial = -400, -300.0, 1000
-		END_Vertices
-		Polygon_Object suelo inferior
-		Color del fondo = 0.4062, 0.2039, 0.0235
-		Kd = 0.8
-		Ka = 0.7
-		Kn = 30.0
-		Ks = 0.5
-		Vertice Inicial = -400, -280.0, 1000
-		Vertice = -400, -280.0, 700
-		Vertice = 1200, -280.0, 700
-		Vertice = 1200, -280.0, 1000
-		END_Vertices
-		Polygon_Object suelo del stand Frontal
-		Color del fondo = 0.4062, 0.2039, 0.0235
-		Kd = 0.8
-		Ka = 0.7
-		Kn = 30.0
-		Ks = 0.5
-		Vertice Inicial = -400, -280.0, 700
-		Vertice = -400, -300.0, 700
-		Vertice = 1200, -300.0, 700
-		Vertice = 1200, -280.0, 700
-		END_Vertices
+  # Suelo del stand
+    Polygon_Object suelo superior
+    Color del fondo = 0.4062, 0.2039, 0.0235
+    Kd = 0.8
+    Ka = 0.7
+    Kn = 30.0
+    Ks = 0.5
+    Vertice Inicial = -400, -300.0, 1100
+    Vertice = -400, -300.0, 700
+    Vertice = 1200, -300.0, 700
+    Vertice = 1200, -300.0, 1100
+    END_Vertices
+    Polygon_Object suelo inferior
+    Color del fondo = 0.4062, 0.2039, 0.0235
+    Kd = 0.8
+    Ka = 0.7
+    Kn = 30.0
+    Ks = 0.5
+    Vertice Inicial = -400, -280.0, 1000
+    Vertice = -400, -280.0, 700
+    Vertice = 1200, -280.0, 700
+    Vertice = 1200, -280.0, 1000
+    END_Vertices
+    Polygon_Object suelo del stand Frontal
+    Color del fondo = 0.4062, 0.2039, 0.0235
+    Kd = 0.8
+    Ka = 0.7
+    Kn = 30.0
+    Ks = 0.5
+    Vertice Inicial = -400, -280.0, 700
+    Vertice = -400, -300.0, 700
+    Vertice = 1200, -300.0, 700
+    Vertice = 1200, -280.0, 700
+    END_Vertices
 
-	# Techo del stand 
-		Polygon_Object techo superior
-		Color del fondo = 0.4062, 0.2039, 0.0235
-		Kd = 0.8
-		Ka = 0.7
-		Kn = 30.0
-		Ks = 0.5
-		Vertice Inicial = -400, 600.0, 1000
-		Vertice = -400, 600.0, 700
-		Vertice = 1200, 600.0, 700
-		Vertice = 1200, 600.0, 1000
-		END_Vertices
-		Polygon_Object techo inferior
-		Color del fondo = 0.4062, 0.2039, 0.0235
-		Kd = 0.8
-		Ka = 0.7
-		Kn = 30.0
-		Ks = 0.5
-		Vertice Inicial = -400, 580.0, 1000
-		Vertice = -400, 580.0, 700
-		Vertice = 1200, 580.0, 700
-		Vertice = 1200, 580.0, 1000
-		END_Vertices
-		Polygon_Object techo frontal
-		Color del fondo = 0.4062, 0.2039, 0.0235
-		Kd = 0.8
-		Ka = 0.7
-		Kn = 30.0
-		Ks = 0.5
-		Vertice Inicial = -400, 600.0, 700
-		Vertice = -400, 580.0, 700
-		Vertice = 1200, 580.0, 700
-		Vertice = 1200, 600.0, 700
-		END_Vertices
+  # Techo del stand 
+    Polygon_Object techo superior
+    Color del fondo = 0.4062, 0.2039, 0.0235
+    Kd = 0.8
+    Ka = 0.7
+    Kn = 30.0
+    Ks = 0.5
+    Vertice Inicial = -400, 600.0, 1000
+    Vertice = -400, 600.0, 700
+    Vertice = 1200, 600.0, 700
+    Vertice = 1200, 600.0, 1000
+    END_Vertices
+    Polygon_Object techo inferior
+    Color del fondo = 0.4062, 0.2039, 0.0235
+    Kd = 0.8
+    Ka = 0.7
+    Kn = 30.0
+    Ks = 0.5
+    Vertice Inicial = -400, 580.0, 1000
+    Vertice = -400, 580.0, 700
+    Vertice = 1200, 580.0, 700
+    Vertice = 1200, 580.0, 1000
+    END_Vertices
+    Polygon_Object techo frontal
+    Color del fondo = 0.4062, 0.2039, 0.0235
+    Kd = 0.8
+    Ka = 0.7
+    Kn = 30.0
+    Ks = 0.5
+    Vertice Inicial = -400, 600.0, 700
+    Vertice = -400, 580.0, 700
+    Vertice = 1200, 580.0, 700
+    Vertice = 1200, 600.0, 700
+    END_Vertices
 
-	# Muro izquierdo
-		Polygon_Object izquierdo 
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -400, 600.0, 1000
-			Vertice = -400, 600, 700
-			Vertice = -400, -300, 700
-			Vertice = -400, -300, 1000
-			END_Vertices
-		Polygon_Object izquierdo +20
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -380, 600.0, 1000
-			Vertice = -380, 600, 700
-			Vertice = -380, -300, 700
-			Vertice = -380, -300, 1000
-			END_Vertices
-		Polygon_Object izquierdo frontal
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = -380, 600.0, 700
-			Vertice = -400, 600, 700
-			Vertice = -400, -300, 700
-			Vertice = -380, -300, 700
-			END_Vertices
-		
-	# Muro derecho
-		Polygon_Object Lado derecho
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = 1200, 600.0, 1000
-			Vertice = 1200, 600, 700
-			Vertice = 1200, -300, 700
-			Vertice = 1200, -300, 1000
-			END_Vertices
-		Polygon_Object Lado derecho -20
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = 1180, 600.0, 1000
-			Vertice = 1180, 600, 700
-			Vertice = 1180, -300, 700
-			Vertice = 1180, -300, 1000
-			END_Vertices
-		Polygon_Object Lado derecho frontal 
-			Color del fondo = 0.4062, 0.2039, 0.0235
-			Kd = 0.8
-			Ka = 0.7
-			Kn = 30.0
-			Ks = 0.5
-			Vertice Inicial = 1180, 600.0, 700
-			Vertice = 1200, -300, 700
-			Vertice = 1200, 600, 700
-			Vertice = 1180, -300, 700
-			END_Vertices
+  # Muro izquierdo
+    Polygon_Object izquierdo 
+      Color del fondo = 0.4062, 0.2039, 0.0235
+      Kd = 0.8
+      Ka = 0.7
+      Kn = 30.0
+      Ks = 0.5
+      Vertice Inicial = -400, 600.0, 1000
+      Vertice = -400, 600, 700
+      Vertice = -400, -300, 700
+      Vertice = -400, -300, 1000
+      END_Vertices
+    Polygon_Object izquierdo +20
+      Color del fondo = 0.4062, 0.2039, 0.0235
+      Kd = 0.8
+      Ka = 0.7
+      Kn = 30.0
+      Ks = 0.5
+      Vertice Inicial = -380, 600.0, 1000
+      Vertice = -380, 600, 700
+      Vertice = -380, -300, 700
+      Vertice = -380, -300, 1000
+      END_Vertices
+    Polygon_Object izquierdo frontal
+      Color del fondo = 0.4062, 0.2039, 0.0235
+      Kd = 0.8
+      Ka = 0.7
+      Kn = 30.0
+      Ks = 0.5
+      Vertice Inicial = -380, 600.0, 700
+      Vertice = -400, 600, 700
+      Vertice = -400, -300, 700
+      Vertice = -380, -300, 700
+      END_Vertices
+    
+  # Muro derecho
+    Polygon_Object Lado derecho
+      Color del fondo = 0.4062, 0.2039, 0.0235
+      Kd = 0.8
+      Ka = 0.7
+      Kn = 30.0
+      Ks = 0.5
+      Vertice Inicial = 1200, 600.0, 1000
+      Vertice = 1200, 600, 700
+      Vertice = 1200, -300, 700
+      Vertice = 1200, -300, 1000
+      END_Vertices
+    Polygon_Object Lado derecho -20
+      Color del fondo = 0.4062, 0.2039, 0.0235
+      Kd = 0.8
+      Ka = 0.7
+      Kn = 30.0
+      Ks = 0.5
+      Vertice Inicial = 1180, 600.0, 1000
+      Vertice = 1180, 600, 700
+      Vertice = 1180, -300, 700
+      Vertice = 1180, -300, 1000
+      END_Vertices
+    Polygon_Object Lado derecho frontal 
+      Color del fondo = 0.4062, 0.2039, 0.0235
+      Kd = 0.8
+      Ka = 0.7
+      Kn = 30.0
+      Ks = 0.5
+      Vertice Inicial = 1180, 600.0, 700
+      Vertice = 1200, 600, 700
+      Vertice = 1200, -300, 700
+      Vertice = 1180, -300, 700
+      END_Vertices
 
+	Cylinder_Object roof structure_1
+        Position = 400, 520, 800
+        Q = 1, 0, 0
+        Radio = 5
+        d1 = -800
+        d2 = 800
+        Kd = 1
+        Ka = 0.2
+        Kn = 10
+        Ks = 1
+        Color = 0.95294117647, 0.89803921568, 0.67058823529
+  
+  	Cylinder_Object roof structure_2
+        Position = 400, 520, 900
+        Q = 1, 0, 0
+        Radio = 5
+        d1 = -800
+        d2 = 800
+        Kd = 1
+        Ka = 0.2
+        Kn = 10
+        Ks = 1
+        Color = 0.95294117647, 0.89803921568, 0.67058823529
+
+    Cylinder_Object structure_1
+        Position = 1180, 600.0, 700
+        Q = 0, 1, 0.5
+        Radio = 2
+        d1 = 0
+        d2 = 800
+        Kd = 1
+        Ka = 0.2
+        Kn = 10
+        Ks = 1
+        Color = 0.95294117647, 0.89803921568, 0.67058823529
+    
+    Cylinder_Object structure_2
+        Position = -380, 600.0, 700
+        Q = 0, 1, 0.5
+        Radio = 2
+        d1 = 0
+        d2 = 800
+        Kd = 1
+        Ka = 0.2
+        Kn = 10
+        Ks = 1
+        Color = 0.95294117647, 0.89803921568, 0.67058823529
 
 # Lights
 	Light_Object Luz de prueba
@@ -192,7 +237,10 @@ Background = 0.6392, 0.6588, 0.6509
     	c3 = 0.0
 	    Ip = 1
 
-
+# 36, 131, 87
+# 0.141176471, 0.51372549, 0.341176471
+# 10, 18, 21
+# 0.039215686, 0.070588235, 0.093333333
 #DragonFly
     # Se baja 50 el y
     # Cabeza
@@ -200,50 +248,50 @@ Background = 0.6392, 0.6588, 0.6509
     		Posicion = 662.5, -6, 802
     		Radio = 17.5
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Sphere_Object head_eye
     		Posicion = 664, -4, 804
     		Radio = 18.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Sphere_Object head_back
     		Posicion = 667.5, 1, 814
     		Radio = 18
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Sphere_Object head_below
     		Posicion = 664, -8, 804
     		Radio = 18.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
        	Sphere_Object mouth
     		Posicion = 659, -5.5, 809
     		Radio = 18.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Sphere_Object neck
     		Posicion = 692.5, -6.5, 809
     		Radio = 12.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
 
     # Leg 1
         Cylinder_Object upper_leg_1
@@ -253,18 +301,18 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 60.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Sphere_Object leg_articulation_1
     		Posicion = 668.3, -75.5, 824.5
     		Radio = 7.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Cone_Object lower_leg_1
     		Ancla = 601.5, -148.2, 769.5
     		Q = 0.464, 0.5, 0.4
@@ -273,10 +321,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 110.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
     
     # Leg 2
         Cylinder_Object upper_leg_2
@@ -286,18 +334,18 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 65.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Sphere_Object leg_articulation_2
     		Posicion = 724, -70, 789
     		Radio = 8.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Cone_Object lower_leg_2
     		Ancla = 645, -135, 809
     		Q = 0.757, 0.61, -0.273
@@ -306,10 +354,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 105
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
     
     # Torso
         Cylinder_Object torso_upper
@@ -319,10 +367,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 50.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Cylinder_Object torso_middle
     		Position = 695, -32, 812
     		Q = 1, 0.8, -0.2
@@ -330,34 +378,34 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 40.0
     		d2 = 80.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Sphere_Object upper_torso
     		Posicion = 707, -2, 810
     		Radio = 13
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Sphere_Object middle_torso
     		Posicion = 727, -2, 810
     		Radio = 15.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Sphere_Object back_torso
     		Posicion = 737, 12, 800
     		Radio = 17.0
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
 
     # Cola
         Cylinder_Object segment_1
@@ -367,10 +415,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 50
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Cylinder_Object segment_2
     		Position = 740, 15, 800
     		Q = 1, -0.2, 0
@@ -378,10 +426,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 100
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Cylinder_Object segment_3
     		Position = 740, 15, 800
     		Q = 1, -0.2, 0
@@ -389,10 +437,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 0
     		d2 = 150
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Cylinder_Object segment_4
 		    Position = 740, 15, 800
     		Q = 1, -0.2, 0
@@ -400,10 +448,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 150
     		d2 = 200
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
         Cylinder_Object segment_5
     		Position = 740, 15, 800
     		Q = 1, -0.2, 0
@@ -411,10 +459,10 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 200
     		d2 = 250
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.039215686, 0.070588235, 0.093333333
         Cylinder_Object segment_6
     		Position = 740, 15, 800
     		Q = 1, -0.2, 0
@@ -422,87 +470,159 @@ Background = 0.6392, 0.6588, 0.6509
     		d1 = 250
     		d2 = 300
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    		Ks = 0.6
+    		Color = 0.141176471, 0.51372549, 0.341176471
     
     #Ala
-    	Polygon_Object borde ala
-    		Color = 0.756862745, 0.756862745, 0.756862745
+    	Polygon_Object ala atras
+    		Color = 0.850980392, 0.564705882, 0.345098039
     		Kd = 0.6
-    		Ka = 0.05
+    		Ka = 0.5
     		Kn = 30
-    		Ks = 0.4
-    		Vertice = 738.4465, 37.8807, 800.0000
-    		Vertice = 738.5643, -4.5045, 800.0000
-    		Vertice = 739.5950, 2.7023, 800.0000
-    		Vertice = 740.2176, 8.9961, 800.0000
-    		Vertice = 741.7531, 14.8819, 800.0000
-    		Vertice = 742.5798, 21.6322, 800.0000
-    		Vertice = 743.8145, 29.2955, 800.0000
-    		Vertice = 744.4371, 35.5893, 800.0000
-    		Vertice = 747.5082, 47.3608, 800.0000
-    		Vertice = 749.7631, 57.3064, 800.0000
-    		Vertice = 751.5817, 72.1571, 800.0000
-    		Vertice = 753.4924, 92.1148, 800.0000
-    		Vertice = 756.3640, 119.8582, 800.0000
-    		Vertice = 758.5684, 129.9359, 800.0000
-    		Vertice = 760.6408, 139.9631, 800.0000
-    		Vertice = 762.2407, 147.4631, 800.0000
-    		Vertice = 763.3252, 151.3598, 800.0000
-    		Vertice = 766.1099, 157.3444, 800.0000
-    		Vertice = 769.1234, 161.1455, 800.0000
-    		Vertice = 771.8513, 164.3076, 800.0000
-    		Vertice = 774.9733, 166.6363, 800.0000
-    		Vertice = 777.9923, 168.2442, 800.0000
-    		Vertice = 781.0715, 169.4967, 800.0000
-    		Vertice = 783.6416, 170.1005, 800.0000
-    		Vertice = 786.5050, 170.1350, 800.0000
-    		Vertice = 789.3061, 169.5401, 800.0000
-    		Vertice = 791.8720, 168.1741, 800.0000
-    		Vertice = 793.2801, 166.6684, 800.0000
-    		Vertice = 794.7173, 164.4925, 800.0000
-    		Vertice = 795.9311, 162.3069, 800.0000
-    		Vertice = 797.3565, 159.3695, 800.0000
-    		Vertice = 798.7507, 156.1174, 800.0000
-    		Vertice = 799.7992, 152.5818, 800.0000
-    		Vertice = 800.6747, 148.9044, 800.0000
-    		Vertice = 801.0937, 145.4310, 800.0000
-    		Vertice = 801.3807, 141.9071, 800.0000
-    		Vertice = 801.7009, 139.6828, 800.0000
-    		Vertice = 802.1919, 136.6154, 800.0000
-    		Vertice = 802.9622, 131.2324, 800.0000
-    		Vertice = 802.7208, 127.5066, 800.0000
-    		Vertice = 803.2387, 122.7841, 800.0000
-    		Vertice = 802.3637, 117.1508, 800.0000
-    		Vertice = 801.0688, 109.8431, 800.0000
-    		Vertice = 799.7449, 103.2055, 800.0000
-    		Vertice = 797.8088, 95.1985, 800.0000
-    		Vertice = 795.6106, 88.0755, 800.0000
-    		Vertice = 793.4748, 81.5818, 800.0000
-    		Vertice = 784.5668, 60.9181, 800.0000
-    		Vertice = 781.8970, 56.4156, 800.0000
-    		Vertice = 778.7644, 49.1625, 800.0000
-    		Vertice = 776.4834, 46.0198, 800.0000
-    		Vertice = 773.7223, 41.5582, 800.0000
-    		Vertice = 770.5552, 37.1684, 800.0000
-    		Vertice = 767.3978, 32.5553, 800.0000
-    		Vertice = 764.1201, 28.6532, 800.0000
-    		Vertice = 762.0818, 25.0734, 800.0000
-    		Vertice = 758.8760, 21.5772, 800.0000
-    		Vertice = 755.7207, 17.9490, 800.0000
-    		Vertice = 752.9112, 14.6043, 800.0000
-    		Vertice = 748.0958, 03.8316, 800.0000
-    		Vertice = 747.8565, 01.0906, 800.0000
-    		Vertice = 746.4164, -2.8662, 800.0000
-    		Vertice = 746.1362, -5.6984, 800.0000
-    		Vertice = 743.4000, -12.8, 800.0000
-    		END_Vertices
+    		Ks = 0.6
+			Vertice = 718.4465, 40.8807, 820.0000
+	        Vertice = 718.5643, -1.5045, 820.0000
+	        Vertice = 719.5950, 6.7023, 820.0000
+	        Vertice = 720.2176, 12.9961, 820.0000
+	        Vertice = 721.7531, 17.8819, 820.0000
+	        Vertice = 722.5798, 24.6322, 820.0000
+	        Vertice = 723.8145, 32.2955, 820.0000
+	        Vertice = 724.4371, 38.5893, 820.0000
+	        Vertice = 727.5082, 50.3608, 820.0000
+	        Vertice = 729.7631, 60.3064, 820.0000
+	        Vertice = 731.5817, 75.1571, 820.0000
+	        Vertice = 733.4924, 95.1148, 820.0000
+	        Vertice = 736.3640, 121.8582, 820.0000
+	        Vertice = 738.5684, 132.9359, 820.0000
+	        Vertice = 740.6408, 142.9631, 820.0000
+	        Vertice = 742.2407, 150.4631, 820.0000
+	        Vertice = 743.3252, 154.3598, 820.0000
+	        Vertice = 746.1099, 160.3444, 820.0000
+	        Vertice = 749.1234, 164.1455, 820.0000
+	        Vertice = 751.8513, 167.3076, 820.0000
+	        Vertice = 754.9733, 169.6363, 820.0000
+	        Vertice = 757.9923, 171.2442, 820.0000
+	        Vertice = 761.0715, 172.4967, 820.0000
+	        Vertice = 763.6416, 173.1005, 820.0000
+	        Vertice = 766.5050, 173.1350, 820.0000
+	        Vertice = 769.3061, 172.5401, 820.0000
+	        Vertice = 771.8720, 171.1741, 820.0000
+	        Vertice = 773.2801, 169.6684, 820.0000
+	        Vertice = 774.7173, 167.4925, 820.0000
+	        Vertice = 775.9311, 165.3069, 820.0000
+	        Vertice = 777.3565, 162.3695, 820.0000
+	        Vertice = 778.7507, 159.1174, 820.0000
+	        Vertice = 779.7992, 155.5818, 820.0000
+	        Vertice = 780.6747, 151.9044, 820.0000
+	        Vertice = 781.0937, 148.4310, 820.0000
+	        Vertice = 781.3807, 144.9071, 820.0000
+	        Vertice = 781.7009, 142.6828, 820.0000
+	        Vertice = 782.1919, 139.6154, 820.0000
+	        Vertice = 782.9622, 134.2324, 820.0000
+	        Vertice = 782.7208, 130.5066, 820.0000
+	        Vertice = 783.2387, 125.7841, 820.0000
+	        Vertice = 782.3637, 120.1508, 820.0000
+	        Vertice = 781.0688, 112.8431, 820.0000
+	        Vertice = 779.7449, 106.2055, 820.0000
+	        Vertice = 777.8088, 98.1985, 820.0000
+	        Vertice = 775.6106, 91.0755, 820.0000
+	        Vertice = 773.4748, 84.5818, 820.0000
+	        Vertice = 764.5668, 63.9181, 820.0000
+	        Vertice = 761.8970, 59.4156, 820.0000
+	        Vertice = 758.7644, 52.1625, 820.0000
+	        Vertice = 756.4834, 49.0198, 820.0000
+	        Vertice = 753.7223, 44.5582, 820.0000
+	        Vertice = 750.5552, 40.1684, 820.0000
+	        Vertice = 747.3978, 35.5553, 820.0000
+	        Vertice = 744.1201, 31.6532, 820.0000
+	        Vertice = 742.0818, 28.0734, 820.0000
+	        Vertice = 738.8760, 24.5772, 820.0000
+	        Vertice = 735.7207, 20.9490, 820.0000
+	        Vertice = 732.9112, 17.6043, 820.0000
+	        Vertice = 728.0958, 06.8316, 820.0000
+	        Vertice = 727.8565, 04.0906, 820.0000
+	        Vertice = 726.4164, 1.8662, 820.0000
+	        Vertice = 726.1362, -2.6984, 820.0000
+	        Vertice = 723.4000, -9.8, 820.0000
+	        END_Vertices
+
+    	Polygon_Object ala frente
+    		Color = 0.850980392, 0.564705882, 0.345098039
+    		Kd = 0.6
+    		Ka = 0.5
+    		Kn = 30
+    		Ks = 0.6
+			Vertice = 738.4465, 37.8807, 800.0000
+	        Vertice = 738.5643, -4.5045, 800.0000
+	        Vertice = 739.5950, 2.7023, 800.0000
+	        Vertice = 740.2176, 8.9961, 800.0000
+	        Vertice = 741.7531, 14.8819, 800.0000
+	        Vertice = 742.5798, 21.6322, 800.0000
+	        Vertice = 743.8145, 29.2955, 800.0000
+	        Vertice = 744.4371, 35.5893, 800.0000
+	        Vertice = 747.5082, 47.3608, 800.0000
+	        Vertice = 749.7631, 57.3064, 800.0000
+	        Vertice = 751.5817, 72.1571, 800.0000
+	        Vertice = 753.4924, 92.1148, 800.0000
+	        Vertice = 756.3640, 119.8582, 800.0000
+	        Vertice = 758.5684, 129.9359, 800.0000
+	        Vertice = 760.6408, 139.9631, 800.0000
+	        Vertice = 762.2407, 147.4631, 800.0000
+	        Vertice = 763.3252, 151.3598, 800.0000
+	        Vertice = 766.1099, 157.3444, 800.0000
+	        Vertice = 769.1234, 161.1455, 800.0000
+	        Vertice = 771.8513, 164.3076, 800.0000
+	        Vertice = 774.9733, 166.6363, 800.0000
+	        Vertice = 777.9923, 168.2442, 800.0000
+	        Vertice = 781.0715, 169.4967, 800.0000
+	        Vertice = 783.6416, 170.1005, 800.0000
+	        Vertice = 786.5050, 170.1350, 800.0000
+	        Vertice = 789.3061, 169.5401, 800.0000
+	        Vertice = 791.8720, 168.1741, 800.0000
+	        Vertice = 793.2801, 166.6684, 800.0000
+	        Vertice = 794.7173, 164.4925, 800.0000
+	        Vertice = 795.9311, 162.3069, 800.0000
+	        Vertice = 797.3565, 159.3695, 800.0000
+	        Vertice = 798.7507, 156.1174, 800.0000
+	        Vertice = 799.7992, 152.5818, 800.0000
+	        Vertice = 800.6747, 148.9044, 800.0000
+	        Vertice = 801.0937, 145.4310, 800.0000
+	        Vertice = 801.3807, 141.9071, 800.0000
+	        Vertice = 801.7009, 139.6828, 800.0000
+	        Vertice = 802.1919, 136.6154, 800.0000
+	        Vertice = 802.9622, 131.2324, 800.0000
+	        Vertice = 802.7208, 127.5066, 800.0000
+	        Vertice = 803.2387, 122.7841, 800.0000
+	        Vertice = 802.3637, 117.1508, 800.0000
+	        Vertice = 801.0688, 109.8431, 800.0000
+	        Vertice = 799.7449, 103.2055, 800.0000
+	        Vertice = 797.8088, 95.1985, 800.0000
+	        Vertice = 795.6106, 88.0755, 800.0000
+	        Vertice = 793.4748, 81.5818, 800.0000
+	        Vertice = 784.5668, 60.9181, 800.0000
+	        Vertice = 781.8970, 56.4156, 800.0000
+	        Vertice = 778.7644, 49.1625, 800.0000
+	        Vertice = 776.4834, 46.0198, 800.0000
+	        Vertice = 773.7223, 41.5582, 800.0000
+	        Vertice = 770.5552, 37.1684, 800.0000
+	        Vertice = 767.3978, 32.5553, 800.0000
+	        Vertice = 764.1201, 28.6532, 800.0000
+	        Vertice = 762.0818, 25.0734, 800.0000
+	        Vertice = 758.8760, 21.5772, 800.0000
+	        Vertice = 755.7207, 17.9490, 800.0000
+	        Vertice = 752.9112, 14.6043, 800.0000
+	        Vertice = 748.0958, 03.8316, 800.0000
+	        Vertice = 747.8565, 01.0906, 800.0000
+	        Vertice = 746.4164, -2.8662, 800.0000
+	        Vertice = 746.1362, -5.6984, 800.0000
+	        Vertice = 743.4000, -12.8, 800.0000
+	        END_Vertices
 
 # Tin man 
 	Sphere_Object Head1
-		Posicion = -120, 160, 800
+		Posicion = 30, -20, 900
 		Radio = 80
 		Kd = 0.7
 		Ka = 0.1
@@ -516,16 +636,16 @@ Background = 0.6392, 0.6588, 0.6509
         Ka = 0.8
         Kn = 10.0
         Ks = 0.4
-        Vertice = -200, 190, 700
-        Vertice = -150, 130, 700
-        Vertice = -120, 150, 700
-        Vertice = -90 , 130, 700
-        Vertice = -40 , 190, 700
-        Vertice = -120, 160, 700
+        Vertice = -50, 10, 800
+        Vertice =   0, -50, 800
+        Vertice =  30, -30, 800
+        Vertice =  60, -50, 800
+        Vertice = 110, 10, 800
+        Vertice = 30, -20, 800
         END_Vertices
 
 	Cylinder_Object Cuello1
-		Ancla = -120, 180, 800
+		Ancla = 30, 0, 900
 		Q = 0.0, 1.0, 0.0
 		R = 30
 		d1 = 0
@@ -537,7 +657,7 @@ Background = 0.6392, 0.6588, 0.6509
 		Color = 1.0, 1.0, 1.0
 
 	Cylinder_Object Cuerpo1
-		Ancla = -120.0, -100.0, 800.0
+		Ancla = 30.0, -280.0, 900.0
 		Q = 0.0, 1.0, 0.0
 		R = 60
 		d1 = 0
@@ -549,7 +669,7 @@ Background = 0.6392, 0.6588, 0.6509
 		Color = 1.0, 1.0, 1.0
 
 	Cylinder_Object Mano Izq1
-		Ancla = -175.0, 90.0, 800.0
+		Ancla = -25.0, -90.0, 900.0
 		Q = -0.3, -0.7, 0
 		R = 16.0
 		d1 = 0
@@ -561,7 +681,7 @@ Background = 0.6392, 0.6588, 0.6509
 		Color = 1.0, 1.0, 1.0
 
 	Cylinder_Object Mano Der1
-		Ancla = -75.0, 90.0, 800.0
+		Ancla = 75.0, -90.0, 900.0
 		Q = 0.3, -0.7, 0
 		R = 16.0
 		d1 = 0
@@ -573,8 +693,8 @@ Background = 0.6392, 0.6588, 0.6509
 		Color = 1.0, 1.0, 1.0
 
 	Cylinder_Object Pie Izq1
-		Ancla = -190.0, -280.0, 870.0
-		Q = 0, 1.0, 0.15
+		Ancla = 15.0, -260.0, 910.0
+		Q = -0.15, 0, -0.3
 		R = 20.0
 		d1 = 0
 		d2 = 150
@@ -585,8 +705,8 @@ Background = 0.6392, 0.6588, 0.6509
 		Color = 1.0, 1.0, 1.0
 
 	Cylinder_Object Pie Der1
-		Ancla = -120.0, -280.0, 910.0
-		Q = 0, 1.0, -0.15
+		Ancla = 60.0, -260.0, 910.0
+		Q = 0.15, 0, -0.3
 		R = 20.0
 		d1 = 0
 		d2 = 150
@@ -598,27 +718,28 @@ Background = 0.6392, 0.6588, 0.6509
 
 # Trofeo 1 
     Sphere_Object cabeza
-        Posicion = 400, 25, 800
+        Posicion = 400, 75, 850
+        Radio = 75
+        Kd = 0.5
+        Ka = 0.2
+        Kn = 10
+        Ks = 0.5
+        Color = 0.6862745098, 0.11764705882, 0.11764705882
+    
+    Cylinder_Object glasses
+        Position = 400, 20, 850
+        Q = 0, 1, 0
         Radio = 85
+        d1 = -10
+        d2 = 25
         Kd = 0.5
         Ka = 0.2
         Kn = 10
         Ks = 0.5
         Color = 0.31764705882, 0.8431372549, 1
-    Cylinder_Object glasses
-        Position = 400, 25, 800
-        Q = 0, 1, 0
-        Radio = 85
-        d1 = -10
-        d2 = 10
-        Kd = 1
-        Ka = 0.2
-        Kn = 10
-        Ks = 1
-        Color = 0.8, 1.0, 0.5
     Cone_Object antena_izquierda
         Ancla = 275, 150, 850
-        Q = 125, -125, -50
+        Q = 125, -125, 0
         k1 = 2
         k2 = 1
         d1 = 0
@@ -630,55 +751,102 @@ Background = 0.6392, 0.6588, 0.6509
         Color = 0.31764705882, 0.8431372549, 1
     Cone_Object antena_derecha
         Ancla = 525, 150, 850
-        Q = -125, -125, -50
+        Q = -125, -125, 0
         k1 = 2
         k2 = 1
         d1 = 0
         d2 = 140
-        Kd = 0.4
+        Kd = 0.5
         Ka = 0.2
         Kn = 10
-        Ks = 0.8
+        Ks = 0.5
         Color = 0.31764705882, 0.8431372549, 1
-    Cone_Object antena_frontal
-        Ancla = 400, 35, 680
-        Q = 0, 0, 120
-        k1 = 2
-        k2 = 1
-        d1 = 0
-        d2 = 105
-        Kd = 0.4
-        Ka = 0.2
-        Kn = 10
-        Ks = 0.8
-        Color = 0.31764705882, 0.8431372549, 1
-    ####
+
     Cylinder_Object torso
-        Position = 400, -35, 800
+        Position = 400, -35, 850
         Q = 0, -1, 0
-        Radio = 80
-        d1 = -5
+        Radio = 70
+        d1 = 8
         d2 = 48
         Kd = 0.9
         Ka = 0.01
         Kn = 5
         Ks = 0.8
-        Color = 1, 1, 0
+        Color = 0.29411764705, 0.38431372549, 0.29411764705
+    Cylinder_Object torso
+        Position = 400, -35, 850
+        Q = 0, -1, 0
+        Radio = 72
+        d1 = 20
+        d2 = 38
+        Kd = 0.9
+        Ka = 0.01
+        Kn = 5
+        Ks = 0.8
+        Color = 0.76862745098, 0.76470588235, 0.11372549019
+    
     Cone_Object shirt
-        Ancla = 400, -260, 800
+        Ancla = 400, -260, 850
         Q = 0, -1, 0
         k1 = 5
-        k2 = 2.08
-        d1 = -215
-        d2 = 0
+        k2 = 1.5
+        d1 = -190
+        d2 = -100
         Kd = 1
         Ka = 0.01
         Kn = 5
         Ks = 0.8
-        Color = 1, 1, 0
+        Color = 0.76862745098, 0.76470588235, 0.11372549019
+    Cone_Object shirt2
+        Ancla = 400, 60, 850
+        Q = 0, -1, 0
+        k1 = 5
+        k2 = 1.5
+        d1 = 90
+        d2 = 130
+        Kd = 1
+        Ka = 0.01
+        Kn = 5
+        Ks = 0.8
+        Color = 0.76862745098, 0.76470588235, 0.11372549019
+    Cone_Object shirt3
+        Ancla = 400, -60, 850
+        Q = 0, -1, 0
+        k1 = 5
+        k2 = 1.5
+        d1 = 0
+        d2 = 150
+        Kd = 1
+        Ka = 0.01
+        Kn = 5
+        Ks = 0.8
+        Color = 0.76862745098, 0.76470588235, 0.11372549019
+    
+    Cylinder_Object torso2
+        Position = 400, -35, 850
+        Q = 0, -1, 0
+        Radio = 60
+        d1 = 160
+        d2 = 180
+        Kd = 0.9
+        Ka = 0.01
+        Kn = 5
+        Ks = 0.8
+        Color = 0.29411764705, 0.38431372549, 0.29411764705
+    Cylinder_Object torso2
+        Position = 400, -35, 850
+        Q = 0, -1, 0
+        Radio = 62
+        d1 = 165
+        d2 = 175
+        Kd = 0.9
+        Ka = 0.01
+        Kn = 5
+        Ks = 0.8
+        Color = 0.76862745098, 0.76470588235, 0.11372549019
 
-    Cone_Object propulsion_1
-        Ancla = 400, -250, 800
+    Cone_Object propulsion
+        Ancla = 400, -250, 850
         Q = 0, -1, 0
         k1 = 2
         k2 = 5
@@ -688,24 +856,34 @@ Background = 0.6392, 0.6588, 0.6509
         Ka = 0.2
         Kn = 1
         Ks = 0.2
-        Color = 1, 0.4, 0
-
-    Cone_Object propulsion_2
-        Ancla = 400, -270, 800
+        Color = 0.29411764705, 0.38431372549, 0.29411764705
+    Cone_Object propulsion2
+        Ancla = 400, -245, 850
         Q = 0, -1, 0
         k1 = 2
         k2 = 5
-        d1 = 5
-        d2 = 10
+        d1 = 18
+        d2 = 25
         Kd = 0.4
         Ka = 0.2
         Kn = 1
         Ks = 0.2
-        Color = 1, 0.4, 0
+        Color = 0.76862745098, 0.76470588235, 0.11372549019
+
+    Sphere_Object propbase
+        Posicion = 400, -250, 850
+        Radio = 40
+        Kd = 0.5
+        Ka = 0.2
+        Kn = 10
+        Ks = 0.5
+        Color = 0.6862745098, 0.11764705882, 0.11764705882
 
 # CG
+	#205, 35, 35
+	#0.803921569, 0.137254902, 0.137254902
 	Polygon_Object C
-    	Color del fondo = 1, 0, 0
+    	Color = 0.803921569, 0.137254902, 0.137254902
       	Kd = 0.5
       	Ka = 0.8
       	Kn = 10.0
@@ -720,8 +898,10 @@ Background = 0.6392, 0.6588, 0.6509
     	Vertice = -200, 150, 950
       	END_Vertices
 
+    #101, 199, 34
+    #0.396078431, 0.780392157, 0.133333333
     Polygon_Object G
-      	Color del fondo = 1, 1, 0
+      	Color = 0.396078431, 0.780392157, 0.133333333
       	Kd = 0.5
       	Ka = 0.8
       	Kn = 10.0
@@ -740,13 +920,15 @@ Background = 0.6392, 0.6588, 0.6509
     	Vertice = -25, 150, 950
       	END_Vertices
 
-# Toy
+# Toys
+	#37, 92, 159
+	#0.145098039, 0.360784314, 0.623529412
 	Polygon_Object T
-		Color = 0, 1, 0
-		Kd = 0.6
-		Ka = 0.2
-		Kn = 0
-		Ks = 0.4
+		Color = 0.145098039, 0.360784314, 0.623529412
+		Kd = 0.5
+      	Ka = 0.8
+      	Kn = 10.0
+      	Ks = 0.4
 		Vertice = 325, 300, 950
 		Vertice = 475, 300, 950
 		Vertice = 475, 270, 950
@@ -757,12 +939,14 @@ Background = 0.6392, 0.6588, 0.6509
 		Vertice = 325, 270, 950
 		END_Vertices
 
+	#202, 149, 35
+	#0.792156863, 0.584313725, 0.137254902
 	Polygon_Object Good O
-		Color = 0, 1, 1
-		Kd = 0.6
-		Ka = 0.2
-		Kn = 0
-		Ks = 0.4
+		Color = 0.792156863, 0.584313725, 0.137254902
+		Kd = 0.5
+      	Ka = 0.8
+      	Kn = 10.0
+      	Ks = 0.4
 		Vertice = 500, 300, 930
 		Vertice = 650, 300, 930
 		Vertice = 650, 150, 930
@@ -775,12 +959,14 @@ Background = 0.6392, 0.6588, 0.6509
 		Vertice = 530, 270, 940
 		END_Vertices
 
+	#130, 33, 140
+	#0.509803922, 0.129411765, 0.549019608
 	Polygon_Object Y
-		Color = 0, 0, 1
-		Kd = 0.6
-		Ka = 0.2
-		Kn = 0
-		Ks = 0.4
+		Color = 0.509803922, 0.129411765, 0.549019608
+		Kd = 0.5
+      	Ka = 0.8
+      	Kn = 10.0
+      	Ks = 0.4
 		Vertice = 675, 300, 950
 		Vertice = 705, 300, 950
 		Vertice = 750, 270, 950
@@ -792,12 +978,14 @@ Background = 0.6392, 0.6588, 0.6509
 		Vertice = 735, 240, 950
 		END_Vertices 
 
+	#67, 255, 249
+	#0.262745098, 1, 0.976470588
 	Polygon_Object S
-		Color = 1, 1, 1
-		Kd = 0.6
-		Ka = 0.2
-		Kn = 0
-		Ks = 0.4
+		Color = 0.262745098, 1, 0.976470588
+		Kd = 0.5
+      	Ka = 0.8
+      	Kn = 10.0
+      	Ks = 0.4
 		Vertice =  850, 300, 950
 		Vertice = 1000, 300, 950
 		Vertice = 1000, 270, 950
