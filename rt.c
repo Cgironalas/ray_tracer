@@ -329,26 +329,28 @@ struct Intersection polygonIntersection(struct Vector anchor, struct Vector dire
 		int NC = 0;
 		int NV = object.pointAmount;
 
-		for(int i = 0; i < NV; i++){
-			object.points2D[i].u -= u;
-			object.points2D[i].v -= v;
+		struct Point2D *points2DArrayTemp = malloc(sizeof(struct Point2D)*NV);
+		for(int i = 0; i < NV; i++){ //Traslado a origen
+
+			points2DArrayTemp[i].u =object.points2D[i].u - u;
+			points2DArrayTemp[i].v =object.points2D[i].v - v;
 		}
 
-		int SH = getSign(object.points2D[0].v);
+		int SH = getSign(points2DArrayTemp[0].v);
 		int NSH;
 		int a = 0;
 		int b = (a+1)%NV;
 		for (a = 0; a < NV-1;){
-			NSH = getSign(object.points2D[b].v);
+			NSH = getSign(points2DArrayTemp[b].v);
 			
 			if(SH != NSH){
-				if(object.points2D[a].u > 0 && object.points2D[b].u > 0){
+				if(points2DArrayTemp[a].u > 0 && points2DArrayTemp[b].u > 0){
 					NC++;
-				}else if(object.points2D[a].u > 0 || object.points2D[b].u > 0){
-					long double N = (object.points2D[b].u - object.points2D[a].u);
-					long double D = (object.points2D[b].v - object.points2D[a].v);
+				}else if(points2DArrayTemp[a].u > 0 || points2DArrayTemp[b].u > 0){
+					long double N = (points2DArrayTemp[b].u - points2DArrayTemp[a].u);
+					long double D = (points2DArrayTemp[b].v - points2DArrayTemp[a].v);
 					if(D != 0){
-						if(object.points2D[a].u - ((object.points2D[a].v * N)/D) > 0){
+						if(points2DArrayTemp[a].u - ((points2DArrayTemp[a].v * N)/D) > 0){
 							NC++;
 						}	
 					}
@@ -361,17 +363,20 @@ struct Intersection polygonIntersection(struct Vector anchor, struct Vector dire
 		}
 
 		if (NC%2 == 0){
-			for(int i = 0; i < NV; i++){
+			/*for(int i = 0; i < NV; i++){ //Traslado de vuelta a punto original
 				object.points2D[i].u += u;
 				object.points2D[i].v += v;
-			}
+			}*/
 			tempIntersect.null = 1;
+			free(points2DArrayTemp);
 			return tempIntersect;
 		}else{
-			for(int i = 0; i < NV; i++){
+			/*for(int i = 0; i < NV; i++){ //Traslado de vuelta a punto original
 				object.points2D[i].u += u;
 				object.points2D[i].v += v;
-			}
+			}*/
+			free(points2DArrayTemp);
+			tempIntersect.null = 0;
 			return tempIntersect;
 		}
 	}
