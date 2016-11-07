@@ -1,0 +1,81 @@
+# Tin man 
+	Sphere_Object Head1
+	Posicion = -120, 160, 800
+	Radio = 80
+	Kd = 0.7
+	Ka = 0.1
+	Kn = 40
+	Ks = 0.6
+	Color = 1.0, 1.0, 1.0
+
+	Cylinder_Object Cuello1
+	Ancla = -120, 180, 800
+	Q = 0.0, 1.0, 0.0
+	R = 30
+	d1 = 0
+	d1 = 30
+	Kd = 0.7
+	Ka = 0.1
+	Kn = 40
+	Ks = 0.6
+	Color = 1.0, 1.0, 1.0
+
+	Cylinder_Object Cuerpo1
+		Ancla = -120.0, -100.0, 800.0
+		Q = 0.0, 1.0, 0.0
+		R = 60
+		d1 = 0
+		d2 = 200
+		Kd = 0.7
+		Ka = 0.1
+		Kn = 40
+		Ks = 0.6
+		Color = 1.0, 1.0, 1.0
+
+	Cylinder_Object Mano Izq1
+		Ancla = -175.0, 90.0, 800.0
+		Q = -0.3, -0.7, 0
+		R = 16.0
+		d1 = 0
+		d2 = 150
+		Kd = 0.7
+		Ka = 0.1
+		Kn = 40
+		Ks = 0.6
+		Color = 1.0, 1.0, 1.0
+
+	Cylinder_Object Mano Der1
+		Ancla = -75.0, 90.0, 800.0
+		Q = 0.3, -0.7, 0
+		R = 16.0
+		d1 = 0
+		d2 = 150
+		Kd = 0.7
+		Ka = 0.1
+		Kn = 40
+		Ks = 0.6
+		Color = 1.0, 1.0, 1.0
+
+	Cylinder_Object Pie Izq1
+		Ancla = -190.0, -280.0, 870.0
+		Q = 0, 1.0, 0.15
+		R = 20.0
+		d1 = 0
+		d2 = 150
+		Kd = 0.7
+		Ka = 0.1
+		Kn = 40
+		Ks = 0.6
+		Color = 1.0, 1.0, 1.0
+
+	Cylinder_Object Pie Der1
+		Ancla = -120.0, -280.0, 910.0
+		Q = 0, 1.0, -0.15
+		R = 20.0
+		d1 = 0
+		d2 = 150
+		Kd = 0.7
+		Ka = 0.1
+		Kn = 40
+		Ks = 0.6
+		Color = 1.0, 1.0, 1.0
