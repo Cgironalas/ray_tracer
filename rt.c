@@ -421,19 +421,35 @@ struct Intersection cilinderIntersection(struct Vector anchor, struct Vector dir
 
 	long double radius = object.other;
 
-	long double coef1 = xd*xq*xq + yd*yq*xq + zd*zq*xq - xd;
-	long double coef2 = xd*xq*yq + yd*yq*yq + zd*zq*yq - yd;
-	long double coef3 = xd*xq*zq + yd*yq*zq + zd*zq*zq - zd;
+	//Cálculo
+	long double xdxq = xd*xq;
+	long double ydyq = yd*yq;
+	long double zdzq = zd*zq;
 
-	long double coef4 = xo + xe*xq*xq - xo*xq*xq + ye*yq*xq - yo*yq*xq + ze*zq*xq - zo*zq*xq - xe;
-	long double coef5 = yo + xe*xq*yq - xo*xq*yq + ye*yq*yq - yo*yq*yq + ze*zq*yq - zo*zq*yq - ye;
-	long double coef6 = zo + xe*xq*zq - xo*xq*zq + ye*yq*zq - yo*yq*zq + ze*zq*zq - zo*zq*zq - ze;
+	long double xexq = xe*xq;
+	long double yeyq = ye*yq;
+	long double zezq = ze*zq;
+
+	long double xoxq = xo*xq;
+	long double yoyq = yo*yq;
+	long double zozq = zo*zq;
+
+	long double coef1 = xdxq*xq + ydyq*xq + zdzq*xq - xd;
+	long double coef2 = xdxq*yq + ydyq*yq + zdzq*yq - yd;
+	long double coef3 = xdxq*zq + ydyq*zq + zdzq*zq - zd;
+
+	long double coef4 = xo + xexq*xq - xoxq*xq + yeyq*xq - yoyq*xq + zezq*xq - zozq*xq - xe;
+	long double coef5 = yo + xexq*yq - xoxq*yq + yeyq*yq - yoyq*yq + zezq*yq - zozq*yq - ye;
+	long double coef6 = zo + xexq*zq - xoxq*zq + yeyq*zq - yoyq*zq + zezq*zq - zozq*zq - ze;
 
 	long double A = pow (coef1,2) + pow (coef2,2) + pow (coef3,2);
 
 	long double B =  2*(coef1*coef4 + coef2*coef5 + coef3*coef6);
 
-	long double C = pow (coef4, 2) + pow (coef5 ,2) + pow (coef6 ,2) - pow(radius,2);
+	long double C = pow (coef4, 2) + 
+					pow (coef5 ,2) + 
+					pow (coef6 ,2) - 
+					pow(radius,2);
 
 	long double discriminant = pow(B, 2) - (4 * A * C);
 
@@ -545,24 +561,27 @@ struct Vector cilinderNormal(struct Object object, struct Vector intersectionPoi
 	long double yq = object.directionVector.y;
 	long double zq = object.directionVector.z;
 
-	long double parethesesWithXq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*xq;
-	long double parethesesWithYq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*yq;
-	long double parethesesWithZq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*zq;
+	//Cálculo
+	long double xxoxq = (x-xo)*xq;
+	long double yyoyq = (y-yo)*yq;
+	long double zzozq = (z-zo)*zq;
+	long double parenth = (xxoxq+yyoyq+zzozq);
 
-	normalCilinder.x = 
-					2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
-					2*(yo + parethesesWithYq - y)*(yq*xq)+
-					2*(zo + parethesesWithZq - z)*(zq*xq) -0;
+	long double pxq = 2*(xo + parenth*xq - x);
+	long double pyq = 2*(yo + parenth*yq - y);
+	long double pzq = 2*(zo + parenth*zq - z);
 
-	normalCilinder.y = 
-					2*(xo + parethesesWithXq - x)*(xq*yq)+
-					2*(yo + parethesesWithYq - y)*(pow(yq,2)-1)+
-					2*(zo + parethesesWithZq - z)*(zq*yq) -0;
+	normalCilinder.x = pxq*(pow(xq,2) - 1) +
+					   pyq*(yq*xq) +
+					   pzq*(zq*xq);
 
-	normalCilinder.z = 
-					2*(xo + parethesesWithXq - x)*(xq*zq)+
-					2*(yo + parethesesWithYq - y)*(yq*zq)+
-					2*(zo + parethesesWithZq - z)*(pow(zq,2)-1) -0;
+	normalCilinder.y = pxq*(xq*yq) +
+					   pyq*(pow(yq,2) - 1) +
+					   pzq*(zq*yq);
+
+	normalCilinder.z = pxq*(xq*zq) +
+					   pyq*(yq*zq) +
+					   pzq*(pow(zq,2) - 1);
 
 	normalCilinder = normalize(normalCilinder);
 
@@ -595,18 +614,31 @@ struct Intersection coneIntersection(struct Vector anchor, struct Vector directi
 	long double ze = anchor.z;
 
 	//Los mismos del cilindro
-	long double coef1 = xd*xq*xq + yd*yq*xq + zd*zq*xq - xd;
-	long double coef2 = xd*xq*yq + yd*yq*yq + zd*zq*yq - yd;
-	long double coef3 = xd*xq*zq + yd*yq*zq + zd*zq*zq - zd;
+	//Cálculo
+	long double xdxq = xd*xq;
+	long double ydyq = yd*yq;
+	long double zdzq = zd*zq;
 
-	long double coef4 = xo + xe*xq*xq - xo*xq*xq + ye*yq*xq - yo*yq*xq + ze*zq*xq - zo*zq*xq - xe;
-	long double coef5 = yo + xe*xq*yq - xo*xq*yq + ye*yq*yq - yo*yq*yq + ze*zq*yq - zo*zq*yq - ye;
-	long double coef6 = zo + xe*xq*zq - xo*xq*zq + ye*yq*zq - yo*yq*zq + ze*zq*zq - zo*zq*zq - ze;
+	long double xexq = xe*xq;
+	long double yeyq = ye*yq;
+	long double zezq = ze*zq;
+
+	long double xoxq = xo*xq;
+	long double yoyq = yo*yq;
+	long double zozq = zo*zq;
+
+	long double coef1 = xdxq*xq + ydyq*xq + zdzq*xq - xd;
+	long double coef2 = xdxq*yq + ydyq*yq + zdzq*yq - yd;
+	long double coef3 = xdxq*zq + ydyq*zq + zdzq*zq - zd;
+
+	long double coef4 = xo + xexq*xq - xoxq*xq + yeyq*xq - yoyq*xq + zezq*xq - zozq*xq - xe;
+	long double coef5 = yo + xexq*yq - xoxq*yq + yeyq*yq - yoyq*yq + zezq*yq - zozq*yq - ye;
+	long double coef6 = zo + xexq*zq - xoxq*zq + yeyq*zq - yoyq*zq + zezq*zq - zozq*zq - ze;
 
 	//En lugar del radio usa una combinación de estos
 	long double coefk = pow(k2/k1,2);
-	long double coef7 = xd*xq + yd*yq + zd*zq;
-	long double coef8 = xe*xq - xo*xq + ye*yq - yo*yq + ze*zq - zo*zq;
+	long double coef7 = xdxq + ydyq + zdzq;
+	long double coef8 = xexq - xoxq + yeyq - yoyq + zezq - zozq;
 
 	long double A = pow(coef1,2) + pow(coef2,2) + pow(coef3,2) - (coefk * pow(coef7,2));
 	long double B =  2*((coef1*coef4 + coef2*coef5 + coef3*coef6) - (coefk* coef7*coef8));
@@ -725,31 +757,35 @@ struct Vector coneNormal(struct Object object, struct Vector intersectionPoint){
 	long double k1 = object.K1;
 	long double k2 = object.K2;
 
-	long double parethesesWithXq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*xq;
-	long double parethesesWithYq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*yq;
-	long double parethesesWithZq = ((x-xo)*xq+(y-yo)*yq+(z-zo)*zq)*zq;
+
+	long double xxoxq = (x-xo)*xq;
+	long double yyoyq = (y-yo)*yq;
+	long double zzozq = (z-zo)*zq;
+	long double parenth = (xxoxq+yyoyq+zzozq);
+
+	long double pxq = 2*(xo + parenth*xq - x);
+	long double pyq = 2*(yo + parenth*yq - y);
+	long double pzq = 2*(zo + parenth*zq - z);
+
+	long double k1sq = pow(k1,2);
+	long double k2sq2 = 2*pow(k2,2);
+
+	long double lastFactorDerivedX = (k2sq2*xq*parenth)/k1sq;
+	long double lastFactorDerivedY = (k2sq2*yq*parenth)/k1sq;
+	long double lastFactorDerivedZ = (k2sq2*zq*parenth)/k1sq;
 
 
-	long double factCoefsK = ( (yq*(y-yo) )+(zq*(z-zo))+(xq*(-xo+x)));
+	normalCone.x = pxq*(pow(xq,2) - 1) +
+				   pyq*(yq*xq) +
+				   pzq*(zq*xq) - lastFactorDerivedX;
 
-	long double lastFactorDerivedX = (((2*(pow(k2,2))*xq)*factCoefsK)/(pow(k1,2)));
-	long double lastFactorDerivedY = (((2*(pow(k2,2))*yq)*factCoefsK)/(pow(k1,2)));
-	long double lastFactorDerivedZ = (((2*(pow(k2,2))*zq)*factCoefsK)/(pow(k1,2)));
+	normalCone.y = pxq*(xq*yq) +
+				   pyq*(pow(yq,2) - 1) +
+				   pzq*(zq*yq) - lastFactorDerivedY;
 
-	normalCone.x = 2*(xo + parethesesWithXq - x)*(pow(xq,2)-1)+
-					2*(yo + parethesesWithYq - y)*(xq*yq)+
-					2*(zo + parethesesWithZq - z)*(xq*zq) -
-					lastFactorDerivedX;
-
-	normalCone.y = 2*(xo + parethesesWithXq - x)*(xq*yq)+
-					2*(yo + parethesesWithYq - y)*(pow(yq,2)-1)+
-					2*(zo + parethesesWithZq - z)*(yq*zq) -
-					lastFactorDerivedY;
-
-	normalCone.z = 2*(xo + parethesesWithXq - x)*(zq*xq)+
-					2*(yo + parethesesWithYq - y)*(yq*zq)+
-					2*(zo + parethesesWithZq - z)*(pow(zq,2)-1) 
-					- lastFactorDerivedZ;
+	normalCone.z = pxq*(xq*zq) +
+				   pyq*(yq*zq) +
+				   pzq*(pow(zq,2) - 1) - lastFactorDerivedZ;
 
 	normalCone = normalize(normalCone);
 
