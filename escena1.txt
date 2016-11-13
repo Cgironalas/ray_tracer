@@ -11,7 +11,55 @@ Epsilon = 0.00005
 Eye = 400, 275, -500
 Background = 0.6392, 0.6588, 0.6509
 
+
 # Stand 
+# Muro izquierdo
+        Polygon_Object izquierdo 
+            Color del fondo = 0.4062, 0.2039, 0.0235
+            Kd = 0.8
+            Ka = 0.7
+            Kn = 30.0
+            Ks = 0.5
+            Vertice Inicial = -400, 600.0, 1000
+            Vertice = -400, 600, 700
+            Vertice = -400, -300, 700
+            Vertice = -400, -300, 1000
+            END_Vertices
+        Polygon_Object izquierdo +20
+            Color del fondo = 0.4062, 0.2039, 0.0235
+            Kd = 0.8
+            Ka = 0.7
+            Kn = 30.0
+            Ks = 0.5
+            Vertice Inicial = -380, 600.0, 1000
+            Vertice = -380, 600, 700
+            Vertice = -380, -300, 700
+            Vertice = -380, -300, 1000
+            END_Vertices
+        
+        # Muro derecho
+        Polygon_Object Lado derecho
+            Color del fondo = 0.4062, 0.2039, 0.0235
+            Kd = 0.8
+            Ka = 0.7
+            Kn = 30.0
+            Ks = 0.5
+            Vertice Inicial = 1200, 600.0, 1000
+            Vertice = 1200, 600, 700
+            Vertice = 1200, -300, 700
+            Vertice = 1200, -300, 1000
+            END_Vertices
+        Polygon_Object Lado derecho -20
+            Color del fondo = 0.4062, 0.2039, 0.0235
+            Kd = 0.8
+            Ka = 0.7
+            Kn = 30.0
+            Ks = 0.5
+            Vertice Inicial = 1179, 600.0, 1000
+            Vertice = 1180, 600, 700
+            Vertice = 1180, -300, 700
+            Vertice = 1180, -300, 1000
+            END_Vertices
 
   # Suelo del stand
     Polygon_Object suelo superior
@@ -25,7 +73,7 @@ Background = 0.6392, 0.6588, 0.6509
     Vertice = 1200, 0.0, 300
     Vertice = 1200, 0.0, 1100
     END_Vertices
-    
+
 # Lights
 	Light_Object Luz de prueba
     	Posicion = 400, 150, 200
@@ -36,11 +84,19 @@ Background = 0.6392, 0.6588, 0.6509
 
 # Kirby
 	Sphere_Object body
-        Posicion = 400, 100, 800
+        Posicion = 300, 100, 800
         Radio = 200
         Kd = 0.8
         Ka = 0.3
         Kn = 10
         Ks = 0.4
-        Color = 1, 0.67450980392, 0.67450980392
+        Color = 1,0,0
     
+    Sphere_Object body
+        Posicion = 500, 100, 800
+        Radio = 200
+        Kd = 0.8
+        Ka = 0.3
+        Kn = 10
+        Ks = 0.4
+        Color = 0,0,1

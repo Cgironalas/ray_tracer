@@ -10,15 +10,20 @@ static int Hres;
 static int Vres;
 
 //Advanced limits
-static int maxAA = 0;
-static int maxReflection = 1;
+static int maxAA = 6;
+static long double similar = 0;
+static int maxReflection = 10;
 static int maxTransparency = 0;
+static long double rays = 0;
 
 //Window
 static long double Xmax;
 static long double Ymax;
 static long double Xmin;
 static long double Ymin;
+static long double Xdif;
+static long double Ydif;
+
 
 //Others
 static long double Ia;
@@ -830,6 +835,8 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	int k;
 	int objectsAmount = numberObjects;
 
+	//struct Intersection allIntersections[numberObjects];
+
 	long double tmin;
 	struct Intersection intersection;
 	struct Intersection tempIntersection;
@@ -853,13 +860,9 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 struct Color ponderColor(struct Color baseColor, struct Color reflectionColor, long double o1, long double o2){
 	struct Color color;
 
-	if(reflectionColor.r == background.r && reflectionColor.g == background.g && reflectionColor.b == background.b){
-		color = baseColor;
-	}else{
-		color.r = baseColor.r * o1 + reflectionColor.r * o2;
-		color.g = baseColor.g * o1 + reflectionColor.g * o2;
-		color.b = baseColor.b * o1 + reflectionColor.b * o2;
-	}
+	color.r = baseColor.r * o1 + reflectionColor.r * o2;
+	color.g = baseColor.g * o1 + reflectionColor.g * o2;
+	color.b = baseColor.b * o1 + reflectionColor.b * o2;
 
 	return color;
 }
@@ -940,6 +943,8 @@ struct Color getColor(struct Vector anchor, struct Vector direction, int rLevel)
 			R = normalize(R);
 			struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
 			color = ponderColor(color, reflectionColor, 0.8, 0.2);
+		}else{
+			color = ponderColor(color, background, 0.8, 0.2);
 		}
 	}
 	return (color);
@@ -1665,6 +1670,96 @@ void howManyObjectsLights(){
 }
 // ==============================================================
 
+struct Vector throwRay(long double x, long double y){
+	rays +=1;
+	struct Vector direction;
+	long double Xw, Yw;
+	
+	Xw = (long double) ((x) * Xdif)/Hres + Xmin;
+	Yw = (long double) ((y) * Ydif)/Vres + Ymin;
+
+	direction.x = Xw - eye.x;
+	direction.y = Yw - eye.y;
+	direction.z = -eye.z;
+
+	direction = normalize(direction);
+
+	V.x = -direction.x;
+	V.y = -direction.y;
+	V.z = -direction.z;
+
+	return direction;
+}
+
+struct Color ponderAAcolors(struct Color c1, struct Color c2, struct Color c3, struct Color c4){
+	struct Color color;
+
+	color.r = (c1.r + c2.r + c3.r + c4.r) / 4;
+	color.g = (c1.g + c2.g + c3.g + c4.g) / 4;
+	color.b = (c1.b + c2.b + c3.b + c4.b) / 4;
+
+	return color;
+}
+
+long double getDistance(struct Color c1, struct Color c2){
+	return sqrt(pow(c1.r - c2.r,2) + pow(c1.g - c2.g,2) + pow(c1.b - c2.b,2));
+}
+
+int theyOK(struct Color c1, struct Color c2, struct Color c3, struct Color c4){
+	long double dist, dist1, dist2, dist3, dist4, dist5, dist6;
+	dist1 = getDistance(c1, c2);
+	dist2 = getDistance(c1, c3);
+	dist3 = getDistance(c1, c4);
+	dist4 = getDistance(c2, c3);
+	dist5 = getDistance(c2, c4);
+	dist6 = getDistance(c3, c4);
+	dist = (dist1 + dist2 + dist3 + dist4 + dist5 + dist6) / 6;
+	if(dist <= similar){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+struct Color getAAColor(long double x, long double y, int aaLevel){
+	//printf("Level: %i - x: %i - y: %i\n", aaLevel, x, y);
+	int areOK;
+	int level = aaLevel;
+	struct Color color, color1, color2, color3, color4;
+	
+	struct Vector direction;
+
+	long double sum = 1/pow(2, level);
+	level++;
+	long double nextSum =  1/pow(2, level);
+	
+	direction = throwRay(x, y);
+	color1 = getColor(eye, direction, maxReflection);
+
+	direction = throwRay(x, y + sum);
+	color2 = getColor(eye, direction, maxReflection);
+
+	direction = throwRay(x + sum, y);
+	color3 = getColor(eye, direction, maxReflection);
+
+	direction = throwRay(x + sum, y + sum);
+	color4 = getColor(eye, direction, maxReflection);
+
+	areOK = theyOK(color1, color2, color3, color4);
+	
+	if(areOK == 0 && level <= maxAA){
+		color1 = getAAColor(x          , y          , level);
+		color2 = getAAColor(x          , y + nextSum, level);
+		color3 = getAAColor(x + nextSum, y          , level);
+		color4 = getAAColor(x + nextSum, y + nextSum, level);
+		color = ponderAAcolors(color1, color2, color3, color4);
+	}else {
+		color = ponderAAcolors(color1, color2, color3, color4);
+	}
+	
+	return color;
+}
+
 // OP main: =====================================================
 int main(int argc, char *arcgv[]){
 	howManyObjectsLights();
@@ -1674,7 +1769,6 @@ int main(int argc, char *arcgv[]){
 	
 	int i, j;
 
-	long double L;
 	long double Xw, Yw;
 	long double Xd, Yd, Zd;
 
@@ -1682,23 +1776,27 @@ int main(int argc, char *arcgv[]){
 	
 	struct Vector direction;
 	
-	long double Xdif = Xmax - Xmin;
-	long double Ydif = Ymax - Ymin;
-
-	Zd = -eye.z;
+	Xdif = Xmax - Xmin;
+	Ydif = Ymax - Ymin;
+	similar = sqrt(3)/32;
 
 	printf("\nRay Tracing\n...\n...\n");
-	for (i = 0; i < Vres; i++){
-		Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
-		Yd = Yw - eye.y;
-		
+	for (i = 0; i < Vres; i++){		
 		for (j = 0; j < Hres; j++){
+			color.r = 0;
+			color.g = 0;
+			color.b = 0;
+			color = getAAColor((long double) j, (long double) i, 0);
+
+			/*
 			Xw = (long double) ((j + (1/2)) * Xdif)/Hres + Xmin;
 			Xd = Xw - eye.x;
+			Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
+			Yd = Yw - eye.y;
 
 			direction.x = Xd;
 			direction.y = Yd;
-			direction.z = Zd;
+			direction.z = -eye.z;
 
 			direction = normalize(direction);
 
@@ -1708,12 +1806,12 @@ int main(int argc, char *arcgv[]){
 
 			//V = normalize(V);
 
-			color = getColor(eye, direction, maxReflection);
+			color = getColor(eye, direction, maxReflection);*/
 
 			Framebuffer[i][j] = color;
 		}
 	}
-
+	printf("Rays Thrown: %LF\n", rays);
 	saveFile();
 	free(Objects);
 	free(Lights);
