@@ -9,6 +9,11 @@
 static int Hres;
 static int Vres;
 
+//Advanced limits
+static int maxAA = 0;
+static int maxReflection = 1;
+static int maxTransparency = 0;
+
 //Window
 static long double Xmax;
 static long double Ymax;
@@ -845,7 +850,21 @@ struct Intersection getFirstIntersection(struct Vector anchor, struct Vector dir
 	return intersection;
 }
 
-struct Color getColor(struct Vector anchor, struct Vector direction){
+struct Color ponderColor(struct Color baseColor, struct Color reflectionColor, long double o1, long double o2){
+	struct Color color;
+
+	if(reflectionColor.r == background.r && reflectionColor.g == background.g && reflectionColor.b == background.b){
+		color = baseColor;
+	}else{
+		color.r = baseColor.r * o1 + reflectionColor.r * o2;
+		color.g = baseColor.g * o1 + reflectionColor.g * o2;
+		color.b = baseColor.b * o1 + reflectionColor.b * o2;
+	}
+
+	return color;
+}
+
+struct Color getColor(struct Vector anchor, struct Vector direction, int rLevel){
 	struct Color color;
 	struct Intersection intersection;
 	struct Intersection *tempIntersection;
@@ -911,6 +930,17 @@ struct Color getColor(struct Vector anchor, struct Vector direction){
 
 		E = min(1.0, E);
 		color = specularHighlight(E, color);
+
+
+		if(rLevel > 0){
+			long double pNV = pointProduct(N, V);
+			R.x = (2 * N.x * pNV) - V.x;
+			R.y = (2 * N.y * pNV) - V.y;
+			R.z = (2 * N.z * pNV) - V.z;
+			R = normalize(R);
+			struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
+			color = ponderColor(color, reflectionColor, 0.8, 0.2);
+		}
 	}
 	return (color);
 }
@@ -1678,7 +1708,7 @@ int main(int argc, char *arcgv[]){
 
 			//V = normalize(V);
 
-			color = getColor(eye, direction);
+			color = getColor(eye, direction, maxReflection);
 
 			Framebuffer[i][j] = color;
 		}
