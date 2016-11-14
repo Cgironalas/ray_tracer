@@ -580,14 +580,15 @@
 
 			B *= -1;
 
-			t1 = (B + root)/(2*A);
-			t2 = (B - root)/(2*A);
+			t1 = (B - root)/(2*A);
+			t2 = (B + root)/(2*A);
 
 			long double Xi;
 			long double Yi;
 			long double Zi;
 			long double d1 = object.D1;
 			long double d2 = object.D2;
+
 			if(t1 > e){
 				if(t2 > e){
 					t = min(t1, t2);
@@ -604,7 +605,27 @@
 
 							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
 							if(accept == 0){
-								tempIntersect.null = 1;
+								t = max(t1,t2);
+								Xi = xe + (t * xd);
+								Yi = ye + (t * yd);
+								Zi = ze + (t * zd);
+
+								if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ 
+									tempIntersect.Xi = Xi;
+									tempIntersect.Yi = Yi;
+									tempIntersect.Zi = Zi;
+									tempIntersect.distance = t;
+									tempIntersect.object = object;
+
+									int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+									if(accept == 0){
+										tempIntersect.null = 1;
+									}
+									return tempIntersect;
+								}else{
+									tempIntersect.null = 1;
+									return tempIntersect;
+								}
 							}
 							return tempIntersect;
 					}else{
@@ -620,15 +641,15 @@
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
 
-							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
-							if(accept == 0){
-								tempIntersect.null = 1;
-							}
-							return tempIntersect;
+							
 						}else{
 							tempIntersect.null = 1;
-							return tempIntersect;
 						}
+						int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+						if(accept == 0){
+							tempIntersect.null = 1;
+						}
+						return tempIntersect;
 					}
 				}else{
 					t = t1;
@@ -808,17 +829,37 @@
 					Zi = ze + (t * zd);
 
 					if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ 
-							tempIntersect.Xi = Xi;
-							tempIntersect.Yi = Yi;
-							tempIntersect.Zi = Zi;
-							tempIntersect.distance = t;
-							tempIntersect.object = object;
+						tempIntersect.Xi = Xi;
+						tempIntersect.Yi = Yi;
+						tempIntersect.Zi = Zi;
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
 
-							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
-							if(accept == 0){
+						int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+						if(accept == 0){
+							t = max(t1,t2);
+							Xi = xe + (t * xd);
+							Yi = ye + (t * yd);
+							Zi = ze + (t * zd);
+
+							if ( d2 >= ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) && ((Xi-xo)*xq + (Yi-yo)*yq + (Zi-zo)*zq) >= d1){ 
+								tempIntersect.Xi = Xi;
+								tempIntersect.Yi = Yi;
+								tempIntersect.Zi = Zi;
+								tempIntersect.distance = t;
+								tempIntersect.object = object;
+
+								int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+								if(accept == 0){
+									tempIntersect.null = 1;
+								}
+								return tempIntersect;
+							}else{
 								tempIntersect.null = 1;
+								return tempIntersect;
 							}
-							return tempIntersect;
+						}
+						return tempIntersect;
 					}else{
 						t = max(t1,t2);
 						Xi = xe + (t * xd);
@@ -3081,15 +3122,6 @@
 	getSceneObjects();
 	int i, j;
 	
-	for ( i = 1; i < numberObjects; ++i)
-	{
-		printf("%LF\n", Objects[i].directionVector.x);
-		printf("%LF\n", Objects[i].directionVector.y);
-		printf("%LF\n", Objects[i].directionVector.z);
-		printf("%LF\n", Objects[i].extraD);
-	
-		//printf("%LF\n", Objects[i].o1);
-	}
 	struct Color color;
 	struct Vector direction;
 	

@@ -14,16 +14,56 @@ Epsilon = 0.00005
 Eye = 400, 275, -5000
 Background = 0.6392, 0.6588, 0.6509
 
+    Polygon_Object suelo superior 
+        Color del fondo = 0.4062, 0.2039, 0.0235 
+        o1 = 0.2 
+        o2 = 0.8 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 12.0 
+        Vertice Inicial = -1000, -1000.0, 1000
+        Vertice = 2000, -1000, 1000
+        Vertice = 2000, 1000, 1000
+        Vertice = -1000, 1000, 1000
+        END_Vertices 
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345 
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347 
+        Plano_Esquina_Superior_Derecha= 434, 348, 349 
+        Plano_Esquina_SUperior_Izquierda= 434, 350, 351
 
-  Light_Object Luz de prueba
+    Light_Object Luz de prueba
         Posicion = 400, 150, 200
         c1 = 0.0
         c2 = 0.001
         c3 = 0.0
         Ip = 0.7
+
+    Cylinder_Object lower head
+        Ancla = 551.5, 100, 69.5
+        Q = 0, 1, 0.3
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 30.0
+        d1 = 0
+        d2 = 100.0
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Planos_Corte:
+        NumberPlanes = 1
+        Plano_1
+            Punto = 551.5, 100, 69.5
+            Normal = 1, 0, 0.3
+        END_Planos
+
     Cone_Object lower_leg_1
-        Ancla = 551.5, 200, 69.5
-        Q = 0, 1, 0
+        Ancla = 251.5, 100, 69.5
+        Q = 0, 1, 0.3
         o1 = 1
         o2 = 0
         o3 = 0
@@ -39,25 +79,7 @@ Background = 0.6392, 0.6588, 0.6509
         Planos_Corte:
             NumberPlanes = 1
             Plano_1
-                Punto = 550, 240, 69.5
-                Normal = 0, -1, 0
+                Punto = 251.5, 100, 69.5
+                Normal = 1, 0, -0.3
         END_Planos
 
-
-Elipse_Object ELipse Prueba
-            Foco_1 = 400, 149, 400
-            Foco_2 = 400, 50, 400
-            Normal = 0,0,-1
-            Color = 1,0,0 
-            K = 100
-            o1 = 0.5
-            o2 = 0.3
-            o3 = 0.2
-            Kd = 0.6
-            Ka = 0.5
-            Kn = 30
-            Ks = 0.6
-            Plano_Esquina_Inferior_Izquierda= 434, 344, 345
-            Plano_Esquina_Inferior_Derecha= 434, 346, 347
-            Plano_Esquina_Superior_Izquierda= 434, 348, 349
-            Plano_Esquina_SUperior_Derecha= 434, 350, 35
