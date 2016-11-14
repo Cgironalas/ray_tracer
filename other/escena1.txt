@@ -1,0 +1,81 @@
+Scene_Data
+# Datos de la escena
+MaxReflects = 4
+MaxTransparency = 2
+Max_AA = 2
+Ia = 0.5
+Xmin = 0.0
+Ymin = 0.0
+Xmax = 800.0
+Ymax = 450.0
+Hres = 1600.0
+Vres = 900.0
+Epsilon = 0.00005
+Eye = 400, 275, -5000
+Background = 0.6392, 0.6588, 0.6509
+
+    Polygon_Object suelo superior
+        Color del fondo = 0.4062, 0.2039, 0.0235
+        o1 = 0.5
+        o2 = 0.3
+        o3 = 0.2
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = -900, 0, 5100
+        Vertice = -900, 0.0, 0
+        Vertice = 1200, 0.0, 0
+        Vertice = 1200, 0.0, 5100
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 343, 343
+        Plano_Esquina_Inferior_Derecha= 434, 343, 343
+        Plano_Esquina_Superior_Izquierda= 434, 343, 343
+        Plano_Esquina_SUperior_Derecha= 434, 343, 343
+        Planos_Corte:
+                NumberPlanes = 2
+                Plano_1
+                    Punto = 20.3, 40.3, 40.2
+                    Normal = 20.4, 23.4, 232.2
+                Plano_1
+                    Punto = 20.3, 40.3, 40.2
+                    Normal = 20.4, 23.4, 232.2
+            END_Planos
+
+
+
+  Light_Object Luz de prueba
+        Posicion = 400, 150, 200
+        c1 = 0.0
+        c2 = 0.001
+        c3 = 0.0
+        Ip = 0.7
+# Kirby
+    Sphere_Object body
+        Posicion = 400, 200, 800
+        o1 = 0.5
+        o2 = 0.3
+        o3 = 0.2
+        Radio = 100
+        Kd = 0.6
+        Ka = 0.8
+        Kn = 10
+        Ks = 0
+        Color = 1, 0.67450980392, 0.67450980392
+        Planos_Corte:
+                NumberPlanes = 2
+                Plano_1
+                    Punto = 20.3, 40.3, 40.2
+                    Normal = 20.4, 23.4, 232.2
+                Plano_1
+                    Punto = 20.3, 40.3, 40.2
+                    Normal = 20.4, 23.4, 232.2
+            END_Planos
+        Textures: 
+                NumberTextures = 1
+                Texture_1:
+                    Filename = sddssd
+                    Greenwich = 334, 343, 343
+            END_Textures
+
+    

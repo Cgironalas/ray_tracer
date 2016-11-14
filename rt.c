@@ -831,11 +831,25 @@ struct Object getABCD(struct Object object){
 }
 //================================================================
 
+struct Intersection *getAllIntersection(struct Vector anchor, struct Vector direction){
+	int k;
+	int objectsAmount = numberObjects;
+	struct Intersection intersections[numberObjects];
+
+	struct Intersection tempIntersection;
+
+	tempIntersection.null = 1;
+	
+	for(k = 0; k < objectsAmount; k++){		
+		tempIntersection = Objects[k].intersectionFuncion(anchor, direction, Objects[k]);
+		intersections[k] = tempIntersection;
+	}
+	return intersections;
+}
+
 struct Intersection getFirstIntersection(struct Vector anchor, struct Vector direction){
 	int k;
 	int objectsAmount = numberObjects;
-
-	//struct Intersection allIntersections[numberObjects];
 
 	long double tmin;
 	struct Intersection intersection;
@@ -950,815 +964,818 @@ struct Color getColor(struct Vector anchor, struct Vector direction, int rLevel)
 	return (color);
 }
 
-// Lectura de archivos ===========================================
-void createObjectFromData(long double *data, int whichObjectCreate, int quantityData){
-	/*whichObjectCreate indica qué objeto crear
-		Si está en 0, altera valores de la escena
-		Si está en 1, crea luces
-		Si está en 2, crea esferas
-		Si está en 3, crea polígonos, 
-		Si está en 4, crea cilindros
-		Si está en 5, crea conos.
-		data es el arreglo de valores del objeto a crear. Se asume que estará completo.*/
-	
-	switch(whichObjectCreate){
-		case 0: { //Escena 
-			if (debug == 1) {
-				printf("Insertando datos de escena \n");
-				printf("Iluminación ambiente: %LF \n", data[0]);
-				printf("Plano de proyección (Xmin, Ymin) (Xmax, Ymax) : (%LF, %LF) (%LF, %LF) \n", data[1], data[2],data[3],data[4]);
-				printf("Resolución:  %LFx%LF \n", data[5], data[6]);
-				printf("Epsilon %LF \n", data[7]);
-				printf("Ojo: (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
-				printf("Color background: (%LF, %LF, %LF) \n", data[11],data[12],data[13]);
-			}
+// Lectura de archivos ==========================================
+	void createObjectFromData(long double *data, int whichObjectCreate, int quantityData){
+		/*whichObjectCreate indica qué objeto crear
+			Si está en 0, altera valores de la escena
+			Si está en 1, crea luces
+			Si está en 2, crea esferas
+			Si está en 3, crea polígonos, 
+			Si está en 4, crea cilindros
+			Si está en 5, crea conos.
+			data es el arreglo de valores del objeto a crear. Se asume que estará completo.*/
+		
+		switch(whichObjectCreate){
+			case 0: { //Escena 
+				if (debug == 1) {
+					printf("Insertando datos de escena \n");
+					printf("Iluminación ambiente: %LF \n", data[0]);
+					printf("Plano de proyección (Xmin, Ymin) (Xmax, Ymax) : (%LF, %LF) (%LF, %LF) \n", data[1], data[2],data[3],data[4]);
+					printf("Resolución:  %LFx%LF \n", data[5], data[6]);
+					printf("Epsilon %LF \n", data[7]);
+					printf("Ojo: (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
+					printf("Color background: (%LF, %LF, %LF) \n", data[11],data[12],data[13]);
+				}
 
-			Ia = data[0];
-			Xmin = data[1];
-			Ymin = data[2];
-			Xmax = data[3];
-			Ymax = data[4];
-			Hres = data[5];
-			Vres = data[6];
-			e = data[7];
+				Ia = data[0];
+				Xmin = data[1];
+				Ymin = data[2];
+				Xmax = data[3];
+				Ymax = data[4];
+				Hres = data[5];
+				Vres = data[6];
+				e = data[7];
 
-			eye.x = data[8];
-			eye.y = data[9];
-			eye.z = data[10];
+				eye.x = data[8];
+				eye.y = data[9];
+				eye.z = data[10];
 
-			background.r = data[11];
-			background.g = data[12];
-			background.b = data[13];
+				background.r = data[11];
+				background.g = data[12];
+				background.b = data[13];
 
-			Framebuffer[Hres][Vres];
-			Framebuffer = (struct Color **)malloc(Vres * sizeof(struct Color*));
-			for (int i = 0; i<Vres; i++){
-				Framebuffer[i] = (struct Color *)malloc(Hres*sizeof(struct Color));
-			}
-			
-			//printf("Scene data read correctly.\n");
-			return;
-			}
-		case 1: { //Luces
-			if (debug == 1) {
-			
-				printf("Insertando Luz...\n");
-	
-				printf("Pos luz (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
-				printf("c1: %LF, c2: %LF, c3 %LF \n", data[3],data[4],data[5]);
-				printf("Ip luz: %LF \n", data[6]);
-			}
-
-			struct Object polygon;
-			struct Color colorPolygon;
-
-
-			struct Light luz;
-			luz.Xp=data[0];
-			luz.Yp=data[1];
-			luz.Zp=data[2];
-			luz.c1=data[3];
-			luz.c2=data[4];
-			luz.c3=data[5];
-			luz.Ip=data[6];
-
-			Lights[lightIndex]=luz;
-			lightIndex++;
-
-			// printf("Light processed. \n \n");
-			return;
-			}
-		case 2: { //Esferas
-			if (debug == 1) {
-				printf("Insertando Esfera...");
-				printf("Pos esfera (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
-				printf("Radio esfera: %LF \n", data[3]);
-				printf("Esfera Kd: %LF \n", data[3]);
-				printf("Esfera Ka: %LF \n", data[4]);
-				printf("Esfera Kn: %LF \n", data[5]);
-				printf("Esfera Ks: %LF \n", data[6]);
-				printf("Color esfera (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
-				
-			}
-			
-			struct Object polygon;
-			struct Color colorPolygon;
-			
-			struct Object esfera;
-			esfera.Xc=data[0];
-			esfera.Yc=data[1];
-			esfera.Zc=data[2];
-			esfera.other=data[3]; //Radio
-			esfera.Kd=data[4]; 
-			esfera.Ka=data[5];
-			esfera.Kn=data[6];
-			esfera.Ks=data[7];
-			esfera.normalVector = sphereNormal;
-			esfera.intersectionFuncion = sphereIntersection;
-			struct Color colorSphere;
-			colorSphere.r = data[8];
-			colorSphere.g = data[9];
-			colorSphere.b = data[10];
-			esfera.color=colorSphere;
-			Objects[objectIndex]=esfera;
-			objectIndex++;
-			//printf("Sphere processed \n \n");
-			return;
-			}
-		case 3: { //Polígonos
-			if (debug == 1){
-				printf("Insertando polígono...");
-				printf("Color polígono (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
-				printf("Poligono Kd: %LF \n", data[3]);
-				printf("Poligono Ka: %LF \n", data[4]);
-				printf("Poligono Kn: %LF \n", data[5]);
-				printf("Poligono Ks: %LF \n", data[6]);
-			}
-
-			struct Point3D vertex;
-			struct Point2D squashedVertex;
-
-			//7 Elementos adicionales a los vertices
-			//Creo un objeto temporal
-			int vertexPolygonIndex = 0;
-			struct Object temp;
-			int numVertexesPolygon = (quantityData-7) / 3 + 1; //+1 para repetir el último vértice
-			
-			temp.points3D = malloc(sizeof(struct Point3D)*3);
-	
-			for (int i =0; i+7 < quantityData;){
-				if(vertexPolygonIndex==3){
-					break;
+				Framebuffer[Hres][Vres];
+				Framebuffer = (struct Color **)malloc(Vres * sizeof(struct Color*));
+				for (int i = 0; i<Vres; i++){
+					Framebuffer[i] = (struct Color *)malloc(Hres*sizeof(struct Color));
 				}
 				
-				vertex.x = data[7+i];
-				i++;
-				vertex.y = data[7+i];
-				i++;
-				vertex.z = data[7+i];
-				i++;
+				//printf("Scene data read correctly.\n");
+				return;
+				}
+			case 1: { //Luces
+				if (debug == 1) {
+				
+					printf("Insertando Luz...\n");
+		
+					printf("Pos luz (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+					printf("c1: %LF, c2: %LF, c3 %LF \n", data[3],data[4],data[5]);
+					printf("Ip luz: %LF \n", data[6]);
+				}
 
-				temp.points3D[vertexPolygonIndex]=vertex;
-				vertexPolygonIndex++;
-			}
+				struct Object polygon;
+				struct Color colorPolygon;
 
-			struct Object polygon;
-			vertexPolygonIndex = 0;
-			//printf("numVertexesPolygon %i \n", numVertexesPolygon);
-			polygon = getABCD(temp);
 
-			if (debug == 1) {
-				printf("A del poligono %LF\n", polygon.Xc);
-				printf("B del poligono %LF\n", polygon.Yc);
-				printf("C del poligono %LF\n", polygon.Zc);
-				printf("D del poligono %LF\n", polygon.other);
-			}
+				struct Light luz;
+				luz.Xp=data[0];
+				luz.Yp=data[1];
+				luz.Zp=data[2];
+				luz.c1=data[3];
+				luz.c2=data[4];
+				luz.c3=data[5];
+				luz.Ip=data[6];
 
-			polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
-			polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
-			
-			struct Color colorPolygon;
-			colorPolygon.r = data[0];
-			colorPolygon.g = data[1];
-			colorPolygon.b = data[2];
-			polygon.color =  colorPolygon;
-			polygon.Kd = data[3];
-			polygon.Ka = data[4];
-			polygon.Kn = data[5];
-			polygon.Ks = data[6];
+				Lights[lightIndex]=luz;
+				lightIndex++;
 
-			polygon.pointAmount = numVertexesPolygon;
-			polygon.normalVector = polygonNormal;
-			polygon.intersectionFuncion = polygonIntersection;
-			
-			long double u;
-			long double v;
+				// printf("Light processed. \n \n");
+				return;
+				}
+			case 2: { //Esferas
+				if (debug == 1) {
+					printf("Insertando Esfera...");
+					printf("Pos esfera (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+					printf("Radio esfera: %LF \n", data[3]);
+					printf("Esfera Kd: %LF \n", data[3]);
+					printf("Esfera Ka: %LF \n", data[4]);
+					printf("Esfera Kn: %LF \n", data[5]);
+					printf("Esfera Ks: %LF \n", data[6]);
+					printf("Color esfera (%LF, %LF, %LF) \n", data[8],data[9],data[10]);
 					
-			long double maxA_B = max(fabs(polygon.Xc), fabs(polygon.Yc)); //maximo entre A y B
-			long double maxA_B_C = max(maxA_B, fabs(polygon.Zc)); //maximo entre los tres
-			
-			int choice = 0;
-			if(maxA_B_C == fabs(polygon.Xc)){ choice = 0; }
-			else if(maxA_B_C == fabs(polygon.Yc) ){ choice = 1; }
-			else if(maxA_B_C == fabs(polygon.Zc)){ choice = 2; } 
+				}
+				
+				struct Object polygon;
+				struct Color colorPolygon;
+				
+				struct Object esfera;
+				esfera.Xc=data[0];
+				esfera.Yc=data[1];
+				esfera.Zc=data[2];
+				esfera.other=data[3]; //Radio
+				esfera.Kd=data[4]; 
+				esfera.Ka=data[5];
+				esfera.Kn=data[6];
+				esfera.Ks=data[7];
+				esfera.normalVector = sphereNormal;
+				esfera.intersectionFuncion = sphereIntersection;
+				struct Color colorSphere;
+				colorSphere.r = data[8];
+				colorSphere.g = data[9];
+				colorSphere.b = data[10];
+				esfera.color=colorSphere;
+				Objects[objectIndex]=esfera;
+				objectIndex++;
+				//printf("Sphere processed \n \n");
+				return;
+				}
+			case 3: { //Polígonos
+				if (debug == 1){
+					printf("Insertando polígono...");
+					printf("Color polígono (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
+					printf("Poligono Kd: %LF \n", data[3]);
+					printf("Poligono Ka: %LF \n", data[4]);
+					printf("Poligono Kn: %LF \n", data[5]);
+					printf("Poligono Ks: %LF \n", data[6]);
+				}
 
-			for (int i =0; i+7 < quantityData;){
-				vertex.x = data[7+i];
-				i++;
-				vertex.y = data[7+i];
-				i++;
-				vertex.z = data[7+i];
-				i++;
+				struct Point3D vertex;
+				struct Point2D squashedVertex;
+
+				//7 Elementos adicionales a los vertices
+				//Creo un objeto temporal
+				int vertexPolygonIndex = 0;
+				struct Object temp;
+				int numVertexesPolygon = (quantityData-7) / 3 + 1; //+1 para repetir el último vértice
+				
+				temp.points3D = malloc(sizeof(struct Point3D)*3);
+		
+				for (int i =0; i+7 < quantityData;){
+					if(vertexPolygonIndex==3){
+						break;
+					}
+					
+					vertex.x = data[7+i];
+					i++;
+					vertex.y = data[7+i];
+					i++;
+					vertex.z = data[7+i];
+					i++;
+
+					temp.points3D[vertexPolygonIndex]=vertex;
+					vertexPolygonIndex++;
+				}
+
+				struct Object polygon;
+				vertexPolygonIndex = 0;
+				//printf("numVertexesPolygon %i \n", numVertexesPolygon);
+				polygon = getABCD(temp);
+
+				if (debug == 1) {
+					printf("A del poligono %LF\n", polygon.Xc);
+					printf("B del poligono %LF\n", polygon.Yc);
+					printf("C del poligono %LF\n", polygon.Zc);
+					printf("D del poligono %LF\n", polygon.other);
+				}
+
+				polygon.points3D = malloc(sizeof(struct Point3D)*numVertexesPolygon);
+				polygon.points2D = malloc(sizeof(struct Point2D)*numVertexesPolygon);
+				
+				struct Color colorPolygon;
+				colorPolygon.r = data[0];
+				colorPolygon.g = data[1];
+				colorPolygon.b = data[2];
+				polygon.color =  colorPolygon;
+				polygon.Kd = data[3];
+				polygon.Ka = data[4];
+				polygon.Kn = data[5];
+				polygon.Ks = data[6];
+
+				polygon.pointAmount = numVertexesPolygon;
+				polygon.normalVector = polygonNormal;
+				polygon.intersectionFuncion = polygonIntersection;
+				
+				long double u;
+				long double v;
+						
+				long double maxA_B = max(fabs(polygon.Xc), fabs(polygon.Yc)); //maximo entre A y B
+				long double maxA_B_C = max(maxA_B, fabs(polygon.Zc)); //maximo entre los tres
+				
+				int choice = 0;
+				if(maxA_B_C == fabs(polygon.Xc)){ choice = 0; }
+				else if(maxA_B_C == fabs(polygon.Yc) ){ choice = 1; }
+				else if(maxA_B_C == fabs(polygon.Zc)){ choice = 2; } 
+
+				for (int i =0; i+7 < quantityData;){
+					vertex.x = data[7+i];
+					i++;
+					vertex.y = data[7+i];
+					i++;
+					vertex.z = data[7+i];
+					i++;
+					
+					if(choice == 0){ u = vertex.z; v = vertex.y; }
+					else if(choice  == 1){ u = vertex.x; v = vertex.z; }
+					else if(choice == 2){ u = vertex.x; v = vertex.y; } 
+						
+					squashedVertex.u = u;
+					squashedVertex.v = v;
+					
+					polygon.points3D[vertexPolygonIndex]=vertex;
+					
+					polygon.points2D[vertexPolygonIndex]=squashedVertex;
+					vertexPolygonIndex++;
+				}
+
+				vertex.x = data[7];
+				vertex.y = data[8];
+				vertex.z = data[9];
 				
 				if(choice == 0){ u = vertex.z; v = vertex.y; }
 				else if(choice  == 1){ u = vertex.x; v = vertex.z; }
 				else if(choice == 2){ u = vertex.x; v = vertex.y; } 
-					
+
 				squashedVertex.u = u;
 				squashedVertex.v = v;
-				
-				polygon.points3D[vertexPolygonIndex]=vertex;
-				
-				polygon.points2D[vertexPolygonIndex]=squashedVertex;
-				vertexPolygonIndex++;
-			}
+					
+				polygon.points3D[vertexPolygonIndex]=vertex;	
+				polygon.points2D[vertexPolygonIndex]=squashedVertex;				
+				Objects[objectIndex] = polygon;
+				objectIndex++;
 
-			vertex.x = data[7];
-			vertex.y = data[8];
-			vertex.z = data[9];
-			
-			if(choice == 0){ u = vertex.z; v = vertex.y; }
-			else if(choice  == 1){ u = vertex.x; v = vertex.z; }
-			else if(choice == 2){ u = vertex.x; v = vertex.y; } 
-
-			squashedVertex.u = u;
-			squashedVertex.v = v;
-				
-			polygon.points3D[vertexPolygonIndex]=vertex;	
-			polygon.points2D[vertexPolygonIndex]=squashedVertex;				
-			Objects[objectIndex] = polygon;
-			objectIndex++;
-
-			//printf("Polygon processed. \n \n");
-			return;
-			}
-		case 4: { //Cilindros
-			if (debug == 1) {
-				printf("Insertando cilindro...");
-
-				printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
-				printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
-				printf("Cilindro Radio: %LF \n", data[6]);
-				printf("Cilindro d1: %LF Cilindro d2: %LF \n", data[7],data[8]);
-				printf("Cilindro Kd: %LF \n", data[9]);
-				printf("Cilindro Ka: %LF \n", data[10]);
-				printf("Cilindro Kn: %LF \n", data[11]);
-				printf("Cilindro Ks: %LF \n", data[12]);
-				printf("RGB Cilindro: (%LF, %LF, %LF) \n", data[13], data[14],data[15]);
-	
-			}
-			
-			struct Object cilinder;
-			cilinder.Xc = data[0];
-			cilinder.Yc = data[1];
-			cilinder.Zc = data[2];
-
-			struct Vector cilinderVector; 
-			cilinderVector.x = data[3];
-			cilinderVector.y = data[4];
-			cilinderVector.z = data[5];
-			cilinderVector = normalize(cilinderVector);
-			//printf("Vector normalizado del: (%LF, %LF, %LF) \n", cilinderVector.x, cilinderVector.y,cilinderVector.z);
-			cilinder.directionVector = cilinderVector;
-
-			cilinder.other = data[6];
-			cilinder.D1 = data[7];
-			cilinder.D2 = data[8];
-			cilinder.Kd = data[9];
-			cilinder.Ka = data[10];
-			cilinder.Kn = data[11];
-			cilinder.Ks = data[12];
-			cilinder.normalVector = cilinderNormal;
-			cilinder.intersectionFuncion = cilinderIntersection;
-
-			struct Color cilinderColor;
-			cilinderColor.r = data[13];
-			cilinderColor.g = data[14];
-			cilinderColor.b = data[15];
-			cilinder.color = cilinderColor;
-			
-			Objects[objectIndex] = cilinder;
-			objectIndex++;
-			//printf("Cylinder processed.\n \n");
-			return;
-			}
-		case 5: { //Conos
-			if (debug == 1) {
-				printf("Insertando cono...");
-				printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
-				printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
-				printf("Cono k1: %LF COno k2: %LF \n", data[6],data[7]);
-				printf("Cono d1: %LF COno d2: %LF \n", data[8],data[9]);
-				printf("Cono Kd: %LF \n", data[10]);
-				printf("Cono Ka: %LF \n", data[11]);
-				printf("Cono Kn: %LF \n", data[12]);
-				printf("Cono Ks: %LF \n", data[13]);
-				printf("RGB Cono: (%LF, %LF, %LF) \n", data[14], data[15],data[16]);
-				
-			}
-				
-			struct Object cone;
-			cone.Xc = data[0];
-			cone.Yc = data[1];
-			cone.Zc = data[2];
-			
-			struct Vector coneVector; 
-			coneVector.x = data[3];
-			coneVector.y = data[4];
-			coneVector.z = data[5];
-			coneVector = normalize(coneVector);
-			
-			cone.directionVector = coneVector;
-
-			cone.K1 = data[6];
-			cone.K2 = data[7];
-			cone.D1 = data[8];
-			cone.D2 = data[9];
-			cone.Kd = data[10];
-			cone.Ka = data[11];
-			cone.Kn = data[12];
-			cone.Ks = data[13];
-			cone.intersectionFuncion = coneIntersection;
-			cone.normalVector = coneNormal;
-
-			struct Color coneColor;
-			coneColor.r = data[14];
-			coneColor.g = data[15];
-			coneColor.b = data[16];
-			cone.color = coneColor;
-			
-			Objects[objectIndex] = cone;
-			objectIndex++;
-			//printf("Cone processed.\n \n");
-			return;
-			}
-	}
-}
-
-long double *obtainPointFromString(char stringPoint[]){
-	/*Devuelve los tres valores long double de un punto tridimensional 
-	a partir de la forma Xp,Yp,Zp. RECORDAR UTILIZAR free(valorDevuelto) tras
-	 usarla.*/
-	char *token;
-	char *search = "=";
-	long double numericValue;
-	// Token will point to "Eye ".
-	token = strtok(stringPoint, search);
-	// Token will point to " 0.4, 0.5, 0.7".
-	token = strtok(NULL, search);
-	char *pch;
-	long double *pointDimensions = malloc(sizeof(long double) * 3);
-	int currentDimension=0;
-	pch = strtok (token,",");
-	while (pch != NULL)
-	{
-		sscanf(pch, "%LF", &pointDimensions[currentDimension]);
-		pch = strtok (NULL, ",");
-		currentDimension++;
-	}
-	return pointDimensions;
-}
-
-long double obtainSingleValueFromLine(char line[]){
-	/*Devuelve el valor flotante leído de una línea, realizando el proceso de
-	separación entre dicho valor y el valor a asignarse*/
-	/*Ejemplo Kn = 0.3 */
-	char *token;
-	char *search = "=";
-	long double numericValue;
-	// Token will point to "Kn ".
-	token = strtok(line, search);
-	// Token will point to "0.3".
-	token = strtok(NULL, search);
-	sscanf(token, "%LF", &numericValue);
-	return numericValue;
-}
-
-long double *readValueFromLine(int state, int *counterValueSegment, char* lineRead, int *numberValuesRead){
-	/* RECIBE POR REFERENCIA EL VALOR DE counterValueSegment.
-	Decide que hacer con cada linea de datos dependiendo de en cuál estado se encuentre
-	el lector y en qué valor de dicho segmento se encuentra. RETORNA MÁXIMO 20 VALORES. 
-	MODIFICAR PARA POLÍGONOS.  */ 
-	//long double *values = malloc(sizeof(long double)*20);
-	long double *values;
-	//RECORDAR LIBERARLA TRAS USO.
-	switch(state){
-		case 0: //Escena
-			if ((*counterValueSegment) >= 0 && (*counterValueSegment) <= 7){ //Lee Ilum. AMbiente
-				values = malloc(sizeof(long double));
-				values[0] = obtainSingleValueFromLine(lineRead);
-				(*counterValueSegment)++;
-				*numberValuesRead = 1;
-				return values;
-			}else if ((*counterValueSegment) >= 8 && (*counterValueSegment) <= 9){
-
-				long double *point = obtainPointFromString(lineRead);
-				values = malloc(sizeof(long double)*3);
-				values[0] = point[0];
-				values[1] = point[1];
-				values[2] = point[2];
-				*numberValuesRead = 3;
-				free (point);
-				if((*counterValueSegment) == 9){//ES Ip, último valor
-					(*counterValueSegment) = 0;
-				}else{
-					(*counterValueSegment)++;
+				//printf("Polygon processed. \n \n");
+				return;
 				}
-				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
-				return values;
-			}
-		case 1: //Luces
-			if ((*counterValueSegment)== 0){
-				long double *positionLight = obtainPointFromString(lineRead);
-				values = malloc(sizeof(long double)*3);
-				values[0] = positionLight[0];
-				values[1] = positionLight[1];
-				values[2] = positionLight[2];
-				//memcpy(values, positionLight, 3);
-				//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
-				(*counterValueSegment)++;
-				*numberValuesRead = 3;
-				free (positionLight);
-				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
-				return values;
-			}else if((*counterValueSegment) >= 1 && (*counterValueSegment <= 4)){ 
+			case 4: { //Cilindros
+				if (debug == 1) {
+					printf("Insertando cilindro...");
 
-				values = malloc(sizeof(long double));
-				values[0] = obtainSingleValueFromLine(lineRead);
-				if((*counterValueSegment) == 4){//ES Ip, último valor
-					(*counterValueSegment) = 0;
-				}else{
-					(*counterValueSegment)++;
+					printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
+					printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+					printf("Cilindro Radio: %LF \n", data[6]);
+					printf("Cilindro d1: %LF Cilindro d2: %LF \n", data[7],data[8]);
+					printf("Cilindro Kd: %LF \n", data[9]);
+					printf("Cilindro Ka: %LF \n", data[10]);
+					printf("Cilindro Kn: %LF \n", data[11]);
+					printf("Cilindro Ks: %LF \n", data[12]);
+					printf("RGB Cilindro: (%LF, %LF, %LF) \n", data[13], data[14],data[15]);
+		
 				}
-				*numberValuesRead = 1;
-				return values;
-				}
-		case 2: //Esferas
-			if ((*counterValueSegment)== 0 || (*counterValueSegment) ==6){ //Nombre o posición de la esfera
-				long double *positionSphere = obtainPointFromString(lineRead);
-				values = malloc(sizeof(long double)*3);
-				values[0] = positionSphere[0];
-				values[1] = positionSphere[1];
-				values[2] = positionSphere[2];
+				
+				struct Object cilinder;
+				cilinder.Xc = data[0];
+				cilinder.Yc = data[1];
+				cilinder.Zc = data[2];
 
-				free (positionSphere);
-				*numberValuesRead = 3;
-				if((*counterValueSegment)==6){
-					(*counterValueSegment)=0;
-				}else{
-					(*counterValueSegment)++;
+				struct Vector cilinderVector; 
+				cilinderVector.x = data[3];
+				cilinderVector.y = data[4];
+				cilinderVector.z = data[5];
+				cilinderVector = normalize(cilinderVector);
+				//printf("Vector normalizado del: (%LF, %LF, %LF) \n", cilinderVector.x, cilinderVector.y,cilinderVector.z);
+				cilinder.directionVector = cilinderVector;
+
+				cilinder.other = data[6];
+				cilinder.D1 = data[7];
+				cilinder.D2 = data[8];
+				cilinder.Kd = data[9];
+				cilinder.Ka = data[10];
+				cilinder.Kn = data[11];
+				cilinder.Ks = data[12];
+				cilinder.normalVector = cilinderNormal;
+				cilinder.intersectionFuncion = cilinderIntersection;
+
+				struct Color cilinderColor;
+				cilinderColor.r = data[13];
+				cilinderColor.g = data[14];
+				cilinderColor.b = data[15];
+				cilinder.color = cilinderColor;
+				
+				Objects[objectIndex] = cilinder;
+				objectIndex++;
+				//printf("Cylinder processed.\n \n");
+				return;
 				}
-				return values;
-			}else if((*counterValueSegment) >= 1 && (*counterValueSegment )<= 5 ){ 
-				values = malloc(sizeof(long double));
-				values[0] = obtainSingleValueFromLine(lineRead);
-				(*counterValueSegment)++;
-				*numberValuesRead = 1;
-				return values;
-			}
-		case 3: //Poligonos
-			if ((*counterValueSegment)== 0){ //Nombre o RGB del poligono
-				values = malloc(sizeof(long double)*3);	
-				long double *rgbColors = obtainPointFromString(lineRead);
-				values[0] = rgbColors[0];
-				values[1] = rgbColors[1];
-				values[2] = rgbColors[2];
-				free (rgbColors);
-				*numberValuesRead = 3;
-				(*counterValueSegment)++;
-				//printf("counterValueSegment tras asignar RGB %i \n",(*counterValueSegment));
-				return values;
-			}else if((*counterValueSegment) >= 1 && (*counterValueSegment) <= 4){ //Ks
-				values = malloc(sizeof(long double));
-				values[0] = obtainSingleValueFromLine(lineRead);
-				(*counterValueSegment)++;
-				*numberValuesRead = 1;
-				return values;
-			}else if((*counterValueSegment) == 5){ //Poligono Vertice
-				if (strstr(lineRead,"END_Vertices")!=NULL){
-					(*counterValueSegment)=0;
-					return values;
-				}else{
-					values = malloc(sizeof(long double)*3);	
-					long double *vertexPolygon = obtainPointFromString(lineRead);
-					values[0] = vertexPolygon[0];
-					values[1] = vertexPolygon[1];
-					values[2] = vertexPolygon[2];
-					free (vertexPolygon);
-					*numberValuesRead = 3;
-					//printf("counterValueSegment tras asignar RGB %i \n",(*counterValueSegment));
-					return values;
-				}
-			}
-		case 4: //Cilindros
-			if(*counterValueSegment == 0 || *counterValueSegment == 1|| *counterValueSegment == 9){
-				/*Lee el ancla, color del cilindro o el vector del cilindro. Tripleta*/
-				long double *positionCilinder = obtainPointFromString(lineRead);
-				values = malloc(sizeof(long double)*3);
-				values[0] = positionCilinder[0];
-				values[1] = positionCilinder[1];
-				values[2] = positionCilinder[2];
-				//memcpy(values, positionLight, 3);
-				//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
-				if(*counterValueSegment == 9){
-					(*counterValueSegment) = 0;
-				}else{
-					(*counterValueSegment)++;
+			case 5: { //Conos
+				if (debug == 1) {
+					printf("Insertando cono...");
+					printf("Ancla: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
+					printf("Vector: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+					printf("Cono k1: %LF COno k2: %LF \n", data[6],data[7]);
+					printf("Cono d1: %LF COno d2: %LF \n", data[8],data[9]);
+					printf("Cono Kd: %LF \n", data[10]);
+					printf("Cono Ka: %LF \n", data[11]);
+					printf("Cono Kn: %LF \n", data[12]);
+					printf("Cono Ks: %LF \n", data[13]);
+					printf("RGB Cono: (%LF, %LF, %LF) \n", data[14], data[15],data[16]);
+					
 				}
 					
-				*numberValuesRead = 3;
-				free (positionCilinder);
-				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
-				return values;
-			}else if(*counterValueSegment >= 2 && *counterValueSegment <= 8){
-				values = malloc(sizeof(long double));
-				values[0] = obtainSingleValueFromLine(lineRead);
-				(*counterValueSegment)++;
-				*numberValuesRead = 1;
-				return values;
-				/*Lee radio o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
-			}
-		case 5: //Conos
-			if(*counterValueSegment == 0 || *counterValueSegment == 1|| *counterValueSegment == 10){
-				/*Lee el ancla, color del cono o el vector del cono. Tripleta*/
-				long double *positionCone = obtainPointFromString(lineRead);
-				values = malloc(sizeof(long double)*3);
-				values[0] = positionCone[0];
-				values[1] = positionCone[1];
-				values[2] = positionCone[2];
-				//memcpy(values, positionLight, 3);
-				//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
-				if(*counterValueSegment == 10){
-					(*counterValueSegment) = 0;
-				}else{
-					(*counterValueSegment)++;
+				struct Object cone;
+				cone.Xc = data[0];
+				cone.Yc = data[1];
+				cone.Zc = data[2];
+				
+				struct Vector coneVector; 
+				coneVector.x = data[3];
+				coneVector.y = data[4];
+				coneVector.z = data[5];
+				coneVector = normalize(coneVector);
+				
+				cone.directionVector = coneVector;
+
+				cone.K1 = data[6];
+				cone.K2 = data[7];
+				cone.D1 = data[8];
+				cone.D2 = data[9];
+				cone.Kd = data[10];
+				cone.Ka = data[11];
+				cone.Kn = data[12];
+				cone.Ks = data[13];
+				cone.intersectionFuncion = coneIntersection;
+				cone.normalVector = coneNormal;
+
+				struct Color coneColor;
+				coneColor.r = data[14];
+				coneColor.g = data[15];
+				coneColor.b = data[16];
+				cone.color = coneColor;
+				
+				Objects[objectIndex] = cone;
+				objectIndex++;
+				//printf("Cone processed.\n \n");
+				return;
 				}
-				*numberValuesRead = 3;
-				free (positionCone);
-				//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
-				return values;
-			}else if(*counterValueSegment >= 2 && *counterValueSegment <= 9){
-				values = malloc(sizeof(long double));
-				values[0] = obtainSingleValueFromLine(lineRead);
-				(*counterValueSegment)++;
-				*numberValuesRead = 1;
-				return values;
-				/*Lee radio o k1 i k2 o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
-			}
+		}
 	}
-}
+
+	long double *obtainPointFromString(char stringPoint[]){
+		/*Devuelve los tres valores long double de un punto tridimensional 
+		a partir de la forma Xp,Yp,Zp. RECORDAR UTILIZAR free(valorDevuelto) tras
+		 usarla.*/
+		char *token;
+		char *search = "=";
+		long double numericValue;
+		// Token will point to "Eye ".
+		token = strtok(stringPoint, search);
+		// Token will point to " 0.4, 0.5, 0.7".
+		token = strtok(NULL, search);
+		char *pch;
+		long double *pointDimensions = malloc(sizeof(long double) * 3);
+		int currentDimension=0;
+		pch = strtok (token,",");
+		while (pch != NULL)
+		{
+			sscanf(pch, "%LF", &pointDimensions[currentDimension]);
+			pch = strtok (NULL, ",");
+			currentDimension++;
+		}
+		return pointDimensions;
+	}
+
+	long double obtainSingleValueFromLine(char line[]){
+		/*Devuelve el valor flotante leído de una línea, realizando el proceso de
+		separación entre dicho valor y el valor a asignarse*/
+		/*Ejemplo Kn = 0.3 */
+		char *token;
+		char *search = "=";
+		long double numericValue;
+		// Token will point to "Kn ".
+		token = strtok(line, search);
+		// Token will point to "0.3".
+		token = strtok(NULL, search);
+		sscanf(token, "%LF", &numericValue);
+		return numericValue;
+	}
+
+	long double *readValueFromLine(int state, int *counterValueSegment, char* lineRead, int *numberValuesRead){
+		/* RECIBE POR REFERENCIA EL VALOR DE counterValueSegment.
+		Decide que hacer con cada linea de datos dependiendo de en cuál estado se encuentre
+		el lector y en qué valor de dicho segmento se encuentra. RETORNA MÁXIMO 20 VALORES. 
+		MODIFICAR PARA POLÍGONOS.  */ 
+		//long double *values = malloc(sizeof(long double)*20);
+		long double *values;
+		//RECORDAR LIBERARLA TRAS USO.
+		switch(state){
+			case 0: //Escena
+				if ((*counterValueSegment) >= 0 && (*counterValueSegment) <= 7){ //Lee Ilum. AMbiente
+					values = malloc(sizeof(long double));
+					values[0] = obtainSingleValueFromLine(lineRead);
+					(*counterValueSegment)++;
+					*numberValuesRead = 1;
+					return values;
+				}else if ((*counterValueSegment) >= 8 && (*counterValueSegment) <= 9){
+
+					long double *point = obtainPointFromString(lineRead);
+					values = malloc(sizeof(long double)*3);
+					values[0] = point[0];
+					values[1] = point[1];
+					values[2] = point[2];
+					*numberValuesRead = 3;
+					free (point);
+					if((*counterValueSegment) == 9){//ES Ip, último valor
+						(*counterValueSegment) = 0;
+					}else{
+						(*counterValueSegment)++;
+					}
+					//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+					return values;
+				}
+			case 1: //Luces
+				if ((*counterValueSegment)== 0){
+					long double *positionLight = obtainPointFromString(lineRead);
+					values = malloc(sizeof(long double)*3);
+					values[0] = positionLight[0];
+					values[1] = positionLight[1];
+					values[2] = positionLight[2];
+					//memcpy(values, positionLight, 3);
+					//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
+					(*counterValueSegment)++;
+					*numberValuesRead = 3;
+					free (positionLight);
+					//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+					return values;
+				}else if((*counterValueSegment) >= 1 && (*counterValueSegment <= 4)){ 
+
+					values = malloc(sizeof(long double));
+					values[0] = obtainSingleValueFromLine(lineRead);
+					if((*counterValueSegment) == 4){//ES Ip, último valor
+						(*counterValueSegment) = 0;
+					}else{
+						(*counterValueSegment)++;
+					}
+					*numberValuesRead = 1;
+					return values;
+					}
+			case 2: //Esferas
+				if ((*counterValueSegment)== 0 || (*counterValueSegment) ==6){ //Nombre o posición de la esfera
+					long double *positionSphere = obtainPointFromString(lineRead);
+					values = malloc(sizeof(long double)*3);
+					values[0] = positionSphere[0];
+					values[1] = positionSphere[1];
+					values[2] = positionSphere[2];
+
+					free (positionSphere);
+					*numberValuesRead = 3;
+					if((*counterValueSegment)==6){
+						(*counterValueSegment)=0;
+					}else{
+						(*counterValueSegment)++;
+					}
+					return values;
+				}else if((*counterValueSegment) >= 1 && (*counterValueSegment )<= 5 ){ 
+					values = malloc(sizeof(long double));
+					values[0] = obtainSingleValueFromLine(lineRead);
+					(*counterValueSegment)++;
+					*numberValuesRead = 1;
+					return values;
+				}
+			case 3: //Poligonos
+				if ((*counterValueSegment)== 0){ //Nombre o RGB del poligono
+					values = malloc(sizeof(long double)*3);	
+					long double *rgbColors = obtainPointFromString(lineRead);
+					values[0] = rgbColors[0];
+					values[1] = rgbColors[1];
+					values[2] = rgbColors[2];
+					free (rgbColors);
+					*numberValuesRead = 3;
+					(*counterValueSegment)++;
+					//printf("counterValueSegment tras asignar RGB %i \n",(*counterValueSegment));
+					return values;
+				}else if((*counterValueSegment) >= 1 && (*counterValueSegment) <= 4){ //Ks
+					values = malloc(sizeof(long double));
+					values[0] = obtainSingleValueFromLine(lineRead);
+					(*counterValueSegment)++;
+					*numberValuesRead = 1;
+					return values;
+				}else if((*counterValueSegment) == 5){ //Poligono Vertice
+					if (strstr(lineRead,"END_Vertices")!=NULL){
+						(*counterValueSegment)=0;
+						return values;
+					}else{
+						values = malloc(sizeof(long double)*3);	
+						long double *vertexPolygon = obtainPointFromString(lineRead);
+						values[0] = vertexPolygon[0];
+						values[1] = vertexPolygon[1];
+						values[2] = vertexPolygon[2];
+						free (vertexPolygon);
+						*numberValuesRead = 3;
+						//printf("counterValueSegment tras asignar RGB %i \n",(*counterValueSegment));
+						return values;
+					}
+				}
+			case 4: //Cilindros
+				if(*counterValueSegment == 0 || *counterValueSegment == 1|| *counterValueSegment == 9){
+					/*Lee el ancla, color del cilindro o el vector del cilindro. Tripleta*/
+					long double *positionCilinder = obtainPointFromString(lineRead);
+					values = malloc(sizeof(long double)*3);
+					values[0] = positionCilinder[0];
+					values[1] = positionCilinder[1];
+					values[2] = positionCilinder[2];
+					//memcpy(values, positionLight, 3);
+					//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
+					if(*counterValueSegment == 9){
+						(*counterValueSegment) = 0;
+					}else{
+						(*counterValueSegment)++;
+					}
+						
+					*numberValuesRead = 3;
+					free (positionCilinder);
+					//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+					return values;
+				}else if(*counterValueSegment >= 2 && *counterValueSegment <= 8){
+					values = malloc(sizeof(long double));
+					values[0] = obtainSingleValueFromLine(lineRead);
+					(*counterValueSegment)++;
+					*numberValuesRead = 1;
+					return values;
+					/*Lee radio o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
+				}
+			case 5: //Conos
+				if(*counterValueSegment == 0 || *counterValueSegment == 1|| *counterValueSegment == 10){
+					/*Lee el ancla, color del cono o el vector del cono. Tripleta*/
+					long double *positionCone = obtainPointFromString(lineRead);
+					values = malloc(sizeof(long double)*3);
+					values[0] = positionCone[0];
+					values[1] = positionCone[1];
+					values[2] = positionCone[2];
+					//memcpy(values, positionLight, 3);
+					//printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
+					if(*counterValueSegment == 10){
+						(*counterValueSegment) = 0;
+					}else{
+						(*counterValueSegment)++;
+					}
+					*numberValuesRead = 3;
+					free (positionCone);
+					//printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+					return values;
+				}else if(*counterValueSegment >= 2 && *counterValueSegment <= 9){
+					values = malloc(sizeof(long double));
+					values[0] = obtainSingleValueFromLine(lineRead);
+					(*counterValueSegment)++;
+					*numberValuesRead = 1;
+					return values;
+					/*Lee radio o k1 i k2 o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
+				}
+		}
+	}
 // ==============================================================
 
 //Leer archivos con la escena ===================================
-void getSceneObjects(){
+	void getSceneObjects(){
 
-	int i, j, c;
-	int state = 0;
-	/*  State indica qué segmento lee de la escena
-		Si está en 0, lee variables de escena
-		Si está en 1, lee luces
-		Si está en 2, lee esferas
-		Si está en 3, lee polígonos, 
-		Si está en 4, lee cilindros
-		Si está en 5, lee conos. */
+		int i, j, c;
+		int state = 0;
+		/*  State indica qué segmento lee de la escena
+			Si está en 0, lee variables de escena
+			Si está en 1, lee luces
+			Si está en 2, lee esferas
+			Si está en 3, lee polígonos, 
+			Si está en 4, lee cilindros
+			Si está en 5, lee conos. */
 
-	int counterValueSegment = 0; 
-	// Contador que indica qué valor del objeto está leyendo del actual objeto de un segmento. 
-	
-	char temporalBuffer[100]; //Aquí se guardará lo leído cada línea
-	long double *valuesRead;  //Se guarda los valores del objeto para finalmente crearlo.
-	int indexValuesRead = 0;  //Pos de valuesRead 
-	int currentTypeObjectReading = 1;
-	
-	/*  Si está en 1, crea luces
-		Si está en 2, crea esferas
-		Si está en 3, crea polígonos, 
-		Si está en 4, crea cilindros
-		Si está en 5, crea conos. */
+		int counterValueSegment = 0; 
+		// Contador que indica qué valor del objeto está leyendo del actual objeto de un segmento. 
+		
+		char temporalBuffer[100]; //Aquí se guardará lo leído cada línea
+		long double *valuesRead;  //Se guarda los valores del objeto para finalmente crearlo.
+		int indexValuesRead = 0;  //Pos de valuesRead 
+		int currentTypeObjectReading = 1;
+		
+		/*  Si está en 1, crea luces
+			Si está en 2, crea esferas
+			Si está en 3, crea polígonos, 
+			Si está en 4, crea cilindros
+			Si está en 5, crea conos. */
 
-	FILE* file; //archivo
-	if (file = fopen(escenaFile, "r")){
+		FILE* file; //archivo
+		if (file = fopen(escenaFile, "r")){
 
-		while (fgets(temporalBuffer, 100, file)!=NULL){ //Mientras el archivo siga teniendo algo
+			while (fgets(temporalBuffer, 100, file)!=NULL){ //Mientras el archivo siga teniendo algo
 
-			if (temporalBuffer[0] == '\n'){
-				continue;
+				if (temporalBuffer[0] == '\n'){
+					continue;
+				}
+				if (strstr(temporalBuffer, "#")!=NULL){
+					continue;
+				}
+
+				if (strstr(temporalBuffer, "Scene_Data")!=NULL){
+				//Entra en state = 0. Escena
+					state = 0;
+					counterValueSegment = 0;
+					indexValuesRead=0;
+					valuesRead=NULL;
+					valuesRead = malloc(sizeof(long double)*14);  
+					currentTypeObjectReading=0;
+					//printf("%s",temporalBuffer);
+					continue;
+				}else if (strstr(temporalBuffer,"Light_Object")!=NULL){
+				//Entra en state = 1. Luces
+					state = 1;
+					counterValueSegment = 0;
+					indexValuesRead=0;
+					free(valuesRead);
+					valuesRead = malloc(sizeof(long double)*7); //Las luces siempre seran 7 valores
+					currentTypeObjectReading=1;
+					//printf("%s",temporalBuffer);
+					continue;
+				}else if (strstr(temporalBuffer, "Sphere_Object")!=NULL){
+				//Entra en state = 2. Esferas
+					state = 2;
+					indexValuesRead=0;
+					free(valuesRead);
+					valuesRead=malloc(sizeof(long double)*11); //Esferas siempre serán 11 valores
+					counterValueSegment = 0;
+					currentTypeObjectReading=2;
+					//printf("%s",temporalBuffer);
+					continue;
+				}else if (strstr(temporalBuffer, "Polygon_Object")!=NULL){
+				//Entra en state = 3. Poligonos
+					//printf("Leyó polígonos");
+					state = 3;
+					counterValueSegment = 0;
+					indexValuesRead=0;
+					free(valuesRead);
+					valuesRead=malloc(sizeof(long double)*2000000); //Polígonos max size 
+					currentTypeObjectReading=3;
+					//printf("%s",temporalBuffer);
+					continue;
+				}else if (strstr(temporalBuffer, "Cylinder_Object")!=NULL){
+				//Entra en state = 4. Cilindros
+					state = 4;
+					counterValueSegment = 0;
+					indexValuesRead=0;
+					free(valuesRead);
+					valuesRead = malloc(sizeof(long double)*16);
+					currentTypeObjectReading=4;
+					//printf("%s",temporalBuffer);
+					continue;
+				}else if (strstr(temporalBuffer, "Cone_Object")!=NULL){
+				//Entra en state = 5. Conos
+					state = 5;
+					counterValueSegment = 0;
+					indexValuesRead=0;
+					free(valuesRead);
+					valuesRead = malloc(sizeof(long double)*17);
+					currentTypeObjectReading=5;
+					//printf("%s",temporalBuffer);
+					continue;
+				}
+				
+				int numberValuesRead = 0;
+				//printf("%s \n",temporalBuffer);
+				//printf("state %i \n" ,state);
+				//printf("counterValueSegment %i \n", counterValueSegment);
+				long double *valuesReadTemp = readValueFromLine(state, &counterValueSegment, temporalBuffer, &numberValuesRead);
+				if (valuesReadTemp == NULL){ //Se devolvió NULL
+					//printf("readValueFromLine devolvió NULL \n");
+					continue;
+				}
+				int i = 0;
+				for (i = 0; i < numberValuesRead; i++){
+					valuesRead[indexValuesRead+i] = valuesReadTemp[i];
+				}
+				indexValuesRead+=numberValuesRead;
+				/*SI counterValueSegment vuelve como un 0, quiere decir que ya
+				 se leyeron los datos de dicho objeto/luz, ergo, se crea.*/
+				if (counterValueSegment == 0){
+					createObjectFromData(valuesRead, currentTypeObjectReading, indexValuesRead);
+					//printf("Sup \n");
+					indexValuesRead=0;
+				}
 			}
-			if (strstr(temporalBuffer, "#")!=NULL){
-				continue;
-			}
+			free(valuesRead);
+		}
+		fclose(file);	
+		//Pendiente
+	}
 
-			if (strstr(temporalBuffer, "Scene_Data")!=NULL){
-			//Entra en state = 0. Escena
-				state = 0;
-				counterValueSegment = 0;
-				indexValuesRead=0;
-				valuesRead=NULL;
-				valuesRead = malloc(sizeof(long double)*14);  
-				currentTypeObjectReading=0;
-				//printf("%s",temporalBuffer);
-				continue;
-			}else if (strstr(temporalBuffer,"Light_Object")!=NULL){
-			//Entra en state = 1. Luces
-				state = 1;
-				counterValueSegment = 0;
-				indexValuesRead=0;
-				free(valuesRead);
-				valuesRead = malloc(sizeof(long double)*7); //Las luces siempre seran 7 valores
-				currentTypeObjectReading=1;
-				//printf("%s",temporalBuffer);
-				continue;
-			}else if (strstr(temporalBuffer, "Sphere_Object")!=NULL){
-			//Entra en state = 2. Esferas
-				state = 2;
-				indexValuesRead=0;
-				free(valuesRead);
-				valuesRead=malloc(sizeof(long double)*11); //Esferas siempre serán 11 valores
-				counterValueSegment = 0;
-				currentTypeObjectReading=2;
-				//printf("%s",temporalBuffer);
-				continue;
-			}else if (strstr(temporalBuffer, "Polygon_Object")!=NULL){
-			//Entra en state = 3. Poligonos
-				//printf("Leyó polígonos");
-				state = 3;
-				counterValueSegment = 0;
-				indexValuesRead=0;
-				free(valuesRead);
-				valuesRead=malloc(sizeof(long double)*2000000); //Polígonos max size 
-				currentTypeObjectReading=3;
-				//printf("%s",temporalBuffer);
-				continue;
-			}else if (strstr(temporalBuffer, "Cylinder_Object")!=NULL){
-			//Entra en state = 4. Cilindros
-				state = 4;
-				counterValueSegment = 0;
-				indexValuesRead=0;
-				free(valuesRead);
-				valuesRead = malloc(sizeof(long double)*16);
-				currentTypeObjectReading=4;
-				//printf("%s",temporalBuffer);
-				continue;
-			}else if (strstr(temporalBuffer, "Cone_Object")!=NULL){
-			//Entra en state = 5. Conos
-				state = 5;
-				counterValueSegment = 0;
-				indexValuesRead=0;
-				free(valuesRead);
-				valuesRead = malloc(sizeof(long double)*17);
-				currentTypeObjectReading=5;
-				//printf("%s",temporalBuffer);
-				continue;
-			}
-			
-			int numberValuesRead = 0;
-			//printf("%s \n",temporalBuffer);
-			//printf("state %i \n" ,state);
-			//printf("counterValueSegment %i \n", counterValueSegment);
-			long double *valuesReadTemp = readValueFromLine(state, &counterValueSegment, temporalBuffer, &numberValuesRead);
-			if (valuesReadTemp == NULL){ //Se devolvió NULL
-				//printf("readValueFromLine devolvió NULL \n");
-				continue;
-			}
-			int i = 0;
-			for (i = 0; i < numberValuesRead; i++){
-				valuesRead[indexValuesRead+i] = valuesReadTemp[i];
-			}
-			indexValuesRead+=numberValuesRead;
-			/*SI counterValueSegment vuelve como un 0, quiere decir que ya
-			 se leyeron los datos de dicho objeto/luz, ergo, se crea.*/
-			if (counterValueSegment == 0){
-				createObjectFromData(valuesRead, currentTypeObjectReading, indexValuesRead);
-				//printf("Sup \n");
-				indexValuesRead=0;
+	void howManyObjectsLights(){
+		/*Lee el número de objetos del archivo de texto para inicializar la 
+		memoria de los arreglos globales de luces y objetos de manera
+		dinámica*/
+		char temporalBuffer[100]; //Aquí se guardará lo leído cada línea
+		FILE* file; //archivo
+		if (file = fopen(escenaFile, "r")){
+
+			while (fgets(temporalBuffer, 100, file)!=NULL){//Mientras el archivo siga teniendo algo
+
+				if (temporalBuffer[0] == '\n'){
+					continue;
+				}
+				if (strstr(temporalBuffer, "#")!=NULL){
+					continue;
+				}
+				if (strstr(temporalBuffer, "Light_Object")!=NULL){
+					numberLights++;
+					continue;
+				}else if (strstr(temporalBuffer,"Sphere_Object")!=NULL){
+					numberObjects++;
+					continue;
+				}else if (strstr(temporalBuffer, "Polygon_Object")!=NULL){
+					numberObjects++;
+					continue;
+				}else if (strstr(temporalBuffer, "Cone_Object")!=NULL){
+					numberObjects++;
+					continue;
+				}else if (strstr(temporalBuffer, "Cylinder_Object")!=NULL){
+					numberObjects++;
+					continue;
+				}
+
 			}
 		}
-		free(valuesRead);
+		fclose(file);
+		Objects = malloc(sizeof(struct Object)*numberObjects);
+		Lights= malloc(sizeof(struct Light)*numberLights);
 	}
-	fclose(file);	
-	//Pendiente
-}
-
-void howManyObjectsLights(){
-	/*Lee el número de objetos del archivo de texto para inicializar la 
-	memoria de los arreglos globales de luces y objetos de manera
-	dinámica*/
-	char temporalBuffer[100]; //Aquí se guardará lo leído cada línea
-	FILE* file; //archivo
-	if (file = fopen(escenaFile, "r")){
-
-		while (fgets(temporalBuffer, 100, file)!=NULL){//Mientras el archivo siga teniendo algo
-
-			if (temporalBuffer[0] == '\n'){
-				continue;
-			}
-			if (strstr(temporalBuffer, "#")!=NULL){
-				continue;
-			}
-			if (strstr(temporalBuffer, "Light_Object")!=NULL){
-				numberLights++;
-				continue;
-			}else if (strstr(temporalBuffer,"Sphere_Object")!=NULL){
-				numberObjects++;
-				continue;
-			}else if (strstr(temporalBuffer, "Polygon_Object")!=NULL){
-				numberObjects++;
-				continue;
-			}else if (strstr(temporalBuffer, "Cone_Object")!=NULL){
-				numberObjects++;
-				continue;
-			}else if (strstr(temporalBuffer, "Cylinder_Object")!=NULL){
-				numberObjects++;
-				continue;
-			}
-
-		}
-	}
-	fclose(file);
-	Objects = malloc(sizeof(struct Object)*numberObjects);
-	Lights= malloc(sizeof(struct Light)*numberLights);
-}
 // ==============================================================
 
-struct Vector throwRay(long double x, long double y){
-	rays +=1;
-	struct Vector direction;
-	long double Xw, Yw;
-	
-	Xw = (long double) ((x) * Xdif)/Hres + Xmin;
-	Yw = (long double) ((y) * Ydif)/Vres + Ymin;
+//Anti-aliasing
+	struct Vector throwRay(long double x, long double y){
+		rays +=1;
+		struct Vector direction;
+		long double Xw, Yw;
+		
+		Xw = (long double) ((x) * Xdif)/Hres + Xmin;
+		Yw = (long double) ((y) * Ydif)/Vres + Ymin;
 
-	direction.x = Xw - eye.x;
-	direction.y = Yw - eye.y;
-	direction.z = -eye.z;
+		direction.x = Xw - eye.x;
+		direction.y = Yw - eye.y;
+		direction.z = -eye.z;
 
-	direction = normalize(direction);
+		direction = normalize(direction);
 
-	V.x = -direction.x;
-	V.y = -direction.y;
-	V.z = -direction.z;
+		V.x = -direction.x;
+		V.y = -direction.y;
+		V.z = -direction.z;
 
-	return direction;
-}
-
-struct Color ponderAAcolors(struct Color c1, struct Color c2, struct Color c3, struct Color c4){
-	struct Color color;
-
-	color.r = (c1.r + c2.r + c3.r + c4.r) / 4;
-	color.g = (c1.g + c2.g + c3.g + c4.g) / 4;
-	color.b = (c1.b + c2.b + c3.b + c4.b) / 4;
-
-	return color;
-}
-
-long double getDistance(struct Color c1, struct Color c2){
-	return sqrt(pow(c1.r - c2.r,2) + pow(c1.g - c2.g,2) + pow(c1.b - c2.b,2));
-}
-
-int theyOK(struct Color c1, struct Color c2, struct Color c3, struct Color c4){
-	long double dist, dist1, dist2, dist3, dist4, dist5, dist6;
-	dist1 = getDistance(c1, c2);
-	dist2 = getDistance(c1, c3);
-	dist3 = getDistance(c1, c4);
-	dist4 = getDistance(c2, c3);
-	dist5 = getDistance(c2, c4);
-	dist6 = getDistance(c3, c4);
-	dist = (dist1 + dist2 + dist3 + dist4 + dist5 + dist6) / 6;
-	if(dist <= similar){
-		return 1;
-	}else{
-		return 0;
+		return direction;
 	}
-}
 
-struct Color getAAColor(long double x, long double y, int aaLevel){
-	//printf("Level: %i - x: %i - y: %i\n", aaLevel, x, y);
-	int areOK;
-	int level = aaLevel;
-	struct Color color, color1, color2, color3, color4;
-	
-	struct Vector direction;
+	struct Color ponderAAcolors(struct Color c1, struct Color c2, struct Color c3, struct Color c4){
+		struct Color color;
 
-	long double sum = 1/pow(2, level);
-	level++;
-	long double nextSum =  1/pow(2, level);
-	
-	direction = throwRay(x, y);
-	color1 = getColor(eye, direction, maxReflection);
+		color.r = (c1.r + c2.r + c3.r + c4.r) / 4;
+		color.g = (c1.g + c2.g + c3.g + c4.g) / 4;
+		color.b = (c1.b + c2.b + c3.b + c4.b) / 4;
 
-	direction = throwRay(x, y + sum);
-	color2 = getColor(eye, direction, maxReflection);
-
-	direction = throwRay(x + sum, y);
-	color3 = getColor(eye, direction, maxReflection);
-
-	direction = throwRay(x + sum, y + sum);
-	color4 = getColor(eye, direction, maxReflection);
-
-	areOK = theyOK(color1, color2, color3, color4);
-	
-	if(areOK == 0 && level <= maxAA){
-		color1 = getAAColor(x          , y          , level);
-		color2 = getAAColor(x          , y + nextSum, level);
-		color3 = getAAColor(x + nextSum, y          , level);
-		color4 = getAAColor(x + nextSum, y + nextSum, level);
-		color = ponderAAcolors(color1, color2, color3, color4);
-	}else {
-		color = ponderAAcolors(color1, color2, color3, color4);
+		return color;
 	}
-	
-	return color;
-}
+
+	long double getDistance(struct Color c1, struct Color c2){
+
+		return sqrt(pow(c1.r - c2.r,2) + pow(c1.g - c2.g,2) + pow(c1.b - c2.b,2));
+	}
+
+	int theyOK(struct Color c1, struct Color c2, struct Color c3, struct Color c4){
+		long double dist, dist1, dist2, dist3, dist4, dist5, dist6;
+		dist1 = getDistance(c1, c2);
+		dist2 = getDistance(c1, c3);
+		dist3 = getDistance(c1, c4);
+		dist4 = getDistance(c2, c3);
+		dist5 = getDistance(c2, c4);
+		dist6 = getDistance(c3, c4);
+		dist = (dist1 + dist2 + dist3 + dist4 + dist5 + dist6) / 6;
+		if(dist <= similar){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+
+	struct Color getAAColor(long double x, long double y, int aaLevel){
+		//printf("Level: %i - x: %i - y: %i\n", aaLevel, x, y);
+		int areOK;
+		int level = aaLevel;
+		struct Color color, color1, color2, color3, color4;
+		
+		struct Vector direction;
+
+		long double sum = 1/pow(2, level);
+		level++;
+		long double nextSum =  1/pow(2, level);
+		
+		direction = throwRay(x, y);
+		color1 = getColor(eye, direction, maxReflection);
+
+		direction = throwRay(x, y + sum);
+		color2 = getColor(eye, direction, maxReflection);
+
+		direction = throwRay(x + sum, y);
+		color3 = getColor(eye, direction, maxReflection);
+
+		direction = throwRay(x + sum, y + sum);
+		color4 = getColor(eye, direction, maxReflection);
+
+		areOK = theyOK(color1, color2, color3, color4);
+		
+		if(areOK == 0 && level <= maxAA){
+			color1 = getAAColor(x          , y          , level);
+			color2 = getAAColor(x          , y + nextSum, level);
+			color3 = getAAColor(x + nextSum, y          , level);
+			color4 = getAAColor(x + nextSum, y + nextSum, level);
+			color = ponderAAcolors(color1, color2, color3, color4);
+		}else {
+			color = ponderAAcolors(color1, color2, color3, color4);
+		}
+		
+		return color;
+	}
+// ==============================================================
 
 // OP main: =====================================================
 int main(int argc, char *arcgv[]){
@@ -1768,11 +1785,6 @@ int main(int argc, char *arcgv[]){
 	getSceneObjects();
 	
 	int i, j;
-
-	long double Xw, Yw;
-	long double Xd, Yd, Zd;
-
-	struct Color color;
 	
 	struct Vector direction;
 	
@@ -1783,34 +1795,11 @@ int main(int argc, char *arcgv[]){
 	printf("\nRay Tracing\n...\n...\n");
 	for (i = 0; i < Vres; i++){		
 		for (j = 0; j < Hres; j++){
-			color.r = 0;
-			color.g = 0;
-			color.b = 0;
 			color = getAAColor((long double) j, (long double) i, 0);
-
-			/*
-			Xw = (long double) ((j + (1/2)) * Xdif)/Hres + Xmin;
-			Xd = Xw - eye.x;
-			Yw = (long double) ((i + (1/2)) * Ydif)/Vres + Ymin;
-			Yd = Yw - eye.y;
-
-			direction.x = Xd;
-			direction.y = Yd;
-			direction.z = -eye.z;
-
-			direction = normalize(direction);
-
-			V.x = -direction.x;
-			V.y = -direction.y;
-			V.z = -direction.z;
-
-			//V = normalize(V);
-
-			color = getColor(eye, direction, maxReflection);*/
-
 			Framebuffer[i][j] = color;
 		}
 	}
+
 	printf("Rays Thrown: %LF\n", rays);
 	saveFile();
 	free(Objects);
