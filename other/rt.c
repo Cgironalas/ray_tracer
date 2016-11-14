@@ -73,7 +73,8 @@
 	
 		long double other;  //Radius of the sphere, cylinder, discs and elipses (k)
 	  	struct Vector directionVector; //for the cylinder, cone, discs and elipses
-		  
+		long double extraD; //used in disc and elipses for calculating the d of the normal
+
 	  	long double Xother; //For the elipse
 		long double Yother;
 	  	long double Zother;
@@ -100,7 +101,7 @@
 	  	struct Vector (*normalVector)();
 	  	struct Intersection (*intersectionFuncion)();
 	  	
-	  	struct Vector leftLowerCorner;
+	  	struct Vector leftLowerCorner; //Usadas para evaluar el plano de texturas en objetos referentes en un pano
 	  	struct Vector rightLowerCorner;
 	  	struct Vector rightUpperCorner;
 	  	struct Vector leftUpperCorner;
@@ -117,6 +118,7 @@
 	struct PlaneCut{
 	  struct Vector normal;
 	  struct Vector point;
+	  long double d;
 	};
 
 	struct Texture{
@@ -849,6 +851,12 @@
 		return theD;
 	}
 
+	long double whatsTheDGeneral(struct Vector normalNotNormalized, struct Vector point){
+		
+		long double theD = -((normalNotNormalized.x * point.x) + (normalNotNormalized.y * point.y) + (normalNotNormalized.z * point.z));
+		
+		return theD;
+	}
 	struct Object getABCD(struct Object object){
 		struct Vector normal = polygonNormal(object);
 
@@ -869,7 +877,8 @@
 
 // Discs: ========================================================
 	struct Intersection discIntersection(struct Vector anchor, struct Vector direction, struct Object object){
-		long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
+		//LA normal normalizada se guardará en directionVector
+		long double denominator = (direction.x * object.directionVector.x) + (direction.y * object.directionVector.y) + (direction.z * object.directionVector.z);
 
 		struct Intersection tempIntersect;
 		tempIntersect.null = 0;
@@ -879,7 +888,7 @@
 			return tempIntersect;
 
 		}else{
-			long double numerator = -(anchor.x*object.Xc + anchor.y*object.Yc + anchor.z*object.Zc + object.other);
+			long double numerator = -(anchor.x*object.Xc + anchor.y*object.Yc + anchor.z*object.Zc + object.extraD);
 			long double t = numerator / denominator;
 
 			struct Vector intePoint;
@@ -1286,8 +1295,11 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
             esfera.numberTextures = numberTextures;
 
             Objects[objectIndex]=esfera;
-            printPlaneCuts(Objects[objectIndex]);
-            printTextures(Objects[objectIndex], whichObjectCreate);
+            if (debug == 1){
+            	printPlaneCuts(Objects[objectIndex]);
+            	printTextures(Objects[objectIndex], whichObjectCreate);
+            }
+            
             objectIndex++;
             //printf("Sphere processed \n \n");
             return;
@@ -1295,12 +1307,12 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
         case 3: { //Polígonos
 
             int vertexPolygonIndex = 0;
-            printf("quantityData: %i \n", quantityData);
             int numVertexesPolygon = (quantityData-10-12) / 3 + 1; //+1 para repetir el último vértice
-            printf("numVertexesPolygon: %i \n", numVertexesPolygon);
-
+            
+            int inicioPlano = 10+(numVertexesPolygon-1)*3;
             if (debug == 1){
-                int inicioPlano = 10+(numVertexesPolygon-1)*3;
+            	printf("quantityData: %i \n", quantityData);
+                printf("numVertexesPolygon: %i \n", numVertexesPolygon);
                 printf("%i inicioPlano \n", inicioPlano);
                 printf("Insertando polígono...");
                 printf("Color polígono (%LF, %LF, %LF) \n", data[0],data[1],data[2]);
@@ -1324,6 +1336,23 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
             struct Object temp;
             
             
+            struct Vector leftLowerCorner;
+            leftLowerCorner.x = data[inicioPlano];
+            leftLowerCorner.y = data[inicioPlano+1];
+            leftLowerCorner.z = data[inicioPlano+2];
+		  	struct Vector rightLowerCorner;
+		  	rightLowerCorner.x = data[inicioPlano+3];
+            rightLowerCorner.y = data[inicioPlano+4];
+            rightLowerCorner.z = data[inicioPlano+5];
+		  	struct Vector rightUpperCorner;
+		  	rightUpperCorner.x = data[inicioPlano+6];
+            rightUpperCorner.y = data[inicioPlano+7];
+            rightUpperCorner.z = data[inicioPlano+8];
+		  	struct Vector leftUpperCorner;
+		  	leftUpperCorner.x = data[inicioPlano+9];
+            leftUpperCorner.y = data[inicioPlano+10];
+            leftUpperCorner.z = data[inicioPlano+11];
+
             temp.points3D = malloc(sizeof(struct Point3D)*3);
     
             for (int i =0; i+10 < quantityData-12;){  //Los 12 del plano se ignoran
@@ -1392,7 +1421,9 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
                 i++;
                 vertex.z = data[10+i];
                 i++;
-                printf("Vertice: (%LF,%LF,%LF) \n", vertex.x, vertex.y, vertex.z);
+                if(debug ==1){
+                	printf("Vertice: (%LF,%LF,%LF) \n", vertex.x, vertex.y, vertex.z);
+                }
                 if(choice == 0){ u = vertex.z; v = vertex.y; }
                 else if(choice  == 1){ u = vertex.x; v = vertex.z; }
                 else if(choice == 2){ u = vertex.x; v = vertex.y; } 
@@ -1424,9 +1455,19 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
             polygon.numberPlaneCuts = numberPlaneCuts;
             polygon.textures = texturesFound;
             polygon.numberTextures = numberTextures;
+
+            polygon.leftLowerCorner = leftLowerCorner;
+            polygon.rightLowerCorner = rightLowerCorner;
+            polygon.rightUpperCorner = rightUpperCorner;
+            polygon.leftUpperCorner = leftUpperCorner;
+
+
             Objects[objectIndex] = polygon;
-            printPlaneCuts(Objects[objectIndex]);
-            printTextures(Objects[objectIndex], whichObjectCreate);
+            if (debug == 1){
+            	printPlaneCuts(Objects[objectIndex]);
+            	printTextures(Objects[objectIndex], whichObjectCreate);
+            }
+            
             objectIndex++;
 
             //printf("Polygon processed. \n \n");
@@ -1488,8 +1529,10 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
             cilinder.numberTextures = numberTextures;
 
             Objects[objectIndex] = cilinder;
-            printPlaneCuts(Objects[objectIndex]);
-            printTextures(Objects[objectIndex], whichObjectCreate);
+           if (debug == 1){
+            	printPlaneCuts(Objects[objectIndex]);
+            	printTextures(Objects[objectIndex], whichObjectCreate);
+            }
             objectIndex++;
             //printf("Cylinder processed.\n \n");
             return;
@@ -1549,12 +1592,108 @@ void createObjectFromData(long double *data, int whichObjectCreate, int quantity
             cone.textures = texturesFound;
             cone.numberTextures = numberTextures;
             Objects[objectIndex] = cone;
-            printPlaneCuts(Objects[objectIndex]);
-            printTextures(Objects[objectIndex], whichObjectCreate);
+            if (debug == 1){
+            	printPlaneCuts(Objects[objectIndex]);
+            	printTextures(Objects[objectIndex], whichObjectCreate);
+            }
             objectIndex++;
             //printf("Cone processed.\n \n");
             return;
             }
+
+        case 6:{
+        	//Discos
+        	if (debug == 1) {
+                printf("Insertando disco...");
+
+                printf("Punto Central: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
+                printf("Normal: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+                printf("Color: (%LF, %LF, %LF) \n", data[6], data[7],data[8]);
+                
+                printf("Disco Radio: %LF \n", data[9]);
+                printf("o1:  %LF, o2: %LF, o3: %LF \n", data[10],data[11],data[12]);
+                printf("DIscos Kd: %LF \n", data[13]);
+                printf("DIscos Ka: %LF \n", data[14]);
+                printf("DIscos Kn: %LF \n", data[15]);
+                printf("Discos Ks: %LF \n", data[16]);
+                printf("Esquina inferior izquierda (%LF, %LF, %LF) \n", data[17],data[18],data[19]);
+                printf("Esquina inferior derecha (%LF, %LF, %LF) \n", data[20],data[21],data[22]);
+                printf("Esquina superior derecha (%LF, %LF, %LF) \n", data[23],data[24],data[25]);
+                printf("Esquina superior izquierda (%LF, %LF, %LF) \n",data[26],data[27],data[28]);
+            }
+
+
+            struct Object disco;
+            
+            
+            struct Vector leftLowerCorner;
+            leftLowerCorner.x = data[17];
+            leftLowerCorner.y = data[18];
+            leftLowerCorner.z = data[19];
+		  	struct Vector rightLowerCorner;
+		  	rightLowerCorner.x = data[20];
+            rightLowerCorner.y = data[21];
+            rightLowerCorner.z = data[22];
+		  	struct Vector rightUpperCorner;
+		  	rightUpperCorner.x = data[23];
+            rightUpperCorner.y = data[24];
+            rightUpperCorner.z = data[25];
+		  	struct Vector leftUpperCorner;
+		  	leftUpperCorner.x = data[26];
+            leftUpperCorner.y = data[27];
+            leftUpperCorner.z = data[28];
+
+
+            disco.Xc = data[0];
+            disco.Yc = data[1];
+            disco.Zc = data[2];
+
+            disco.intersectionFuncion = discIntersection;
+            disco.normalVector = discNormal;
+
+            struct Vector puntoCentral;
+            puntoCentral.x = data[0];
+            puntoCentral.y = data[1];
+            puntoCentral.z = data[2];
+
+            struct Vector normalNotNormalized;
+            normalNotNormalized.x = data[3];
+            normalNotNormalized.y = data[4];
+            normalNotNormalized.z = data[5];
+
+            long double dPlano= whatsTheDGeneral(normalNotNormalized, puntoCentral);
+            dPlano = dPlano / getNorm(normalNotNormalized);
+            disco.extraD = dPlano;
+            normalNotNormalized = normalize(normalNotNormalized);
+
+            disco.directionVector = normalNotNormalized;
+            disco.other = data[9];
+            disco.o1 = data[10];
+            disco.o2 = data[11];
+            disco.o3 = data[12];
+            disco.Kd = data[13];
+            disco.Ks = data[14];
+            disco.Kn = data[15];
+            disco.Ks = data[16];
+
+            disco.planeCuts = planeCutsFound;
+            disco.numberPlaneCuts = numberPlaneCuts;
+            disco.textures = texturesFound;
+            disco.numberTextures = numberTextures;
+            Objects[objectIndex] = disco; 
+            if (debug == 1){
+            	printPlaneCuts(Objects[objectIndex]);
+            	printTextures(Objects[objectIndex], whichObjectCreate);
+            }
+            objectIndex++;
+            return;
+            }
+        case 7:{
+        	//ELipses
+        	}
+        case 8:{
+        	//CUadráticas
+        	}
     }
 }
 
@@ -1670,8 +1809,12 @@ struct PlaneCut *readPlaneCuts(long int pos, int *numberPlanes, long int *posAft
                 temp.x = datosPlanos[0];
                 temp.y = datosPlanos[1];
                 temp.z = datosPlanos[2];
+                long double dEquation = whatsTheDGeneral(temp,planeCutsFound[indexPlaneCut].point);
+                dEquation = dEquation/getNorm(temp);
                 temp = normalize(temp); 
+
                 planeCutsFound[indexPlaneCut].normal = temp;
+                planeCutsFound[indexPlaneCut].d = dEquation;
                 free(datosPlanos);
                 continue;
             }
@@ -2027,10 +2170,10 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
 	                values[1] = vertexPolygon[1];
 	                values[2] = vertexPolygon[2];
 	                free (vertexPolygon);
-	                printf("Tripleta: %LF, %LF, %LF \n", values[0], values[1], values[2]);
+	                //printf("Tripleta: %LF, %LF, %LF \n", values[0], values[1], values[2]);
 	                *numberValuesRead = 3;
 	                if ((*counterValueSegment) == 12){ //Terminó de leer el plano
-	                    printf("Se terminó de leer el plano \n");
+	                    //printf("Se terminó de leer el plano \n");
 	                    (*counterValueSegment)=0;
 	                    return values;
 	                }
@@ -2105,6 +2248,34 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
                 //printf("%LF %LF %LF \n", values[0], values[1],values[2]);
                 return values;
             }else if(*counterValueSegment >= 2 && *counterValueSegment <= 12){
+                values = malloc(sizeof(long double));
+                values[0] = obtainSingleValueFromLine(lineRead);
+                (*counterValueSegment)++;
+                *numberValuesRead = 1;
+                return values;
+                /*Lee radio o k1 i k2 o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
+            }
+        case 6:  //Discos
+        	if((*counterValueSegment >= 0 && *counterValueSegment <= 2) || (*counterValueSegment >= 11 && *counterValueSegment <= 15)){
+        		//Lee centro, normal, color y vertices del plano de la textura
+        		printf("lineRead");
+                long double *tripleta = obtainPointFromString(lineRead);
+                values = malloc(sizeof(long double)*3);
+                values[0] = tripleta[0];
+                values[1] = tripleta[1];
+                values[2] = tripleta[2];
+                //memcpy(values, positionLight, 3);
+                //printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
+                if(*counterValueSegment == 15){
+                    (*counterValueSegment) = 0;
+                }else{
+                    (*counterValueSegment)++;
+                }
+                *numberValuesRead = 3;
+                free (tripleta);
+                //printf("%LF %LF %LF \n", values[0], values[1],values[2]);
+                return values;
+            }else if((*counterValueSegment >= 3 && *counterValueSegment <= 10)){
                 values = malloc(sizeof(long double));
                 values[0] = obtainSingleValueFromLine(lineRead);
                 (*counterValueSegment)++;
@@ -2270,7 +2441,7 @@ void getSceneObjects(){
     if (file = fopen(escenaFile, "r")){
 
         while (fgets(temporalBuffer, 300, file)!=NULL){ //Mientras el archivo siga teniendo algo
-            //printf("%s \n",temporalBuffer);
+            printf("%s \n",temporalBuffer);
             if (temporalBuffer[0] == '\n'){
                 continue;
             }
@@ -2349,7 +2520,7 @@ void getSceneObjects(){
                 free(valuesRead);
                 valuesRead = malloc(sizeof(long double)*55);
                 currentTypeObjectReading=6;
-                //printf("%s",temporalBuffer);
+                printf("%s",temporalBuffer);
                 continue;
             }else if (strstr(temporalBuffer, "Elipse_Object")!=NULL){
                 state = 7;
