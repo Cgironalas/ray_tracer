@@ -1032,38 +1032,36 @@
 
 // Elipses: ======================================================
 	struct Intersection elipseIntersection(struct Vector anchor, struct Vector direction, struct Object object){
-		long double denominator = (direction.x * object.Xc) + (direction.y * object.Yc) + (direction.z * object.Zc);
+		//La normal normalizada se guardará en directionVector
+		long double denominator = (direction.x * object.directionVector.x) + (direction.y * object.directionVector.y) + (direction.z * object.directionVector.z);
 
 		struct Intersection tempIntersect;
-		tempIntersect.null = 0;
+		tempIntersect.null = 1;
 
 		if(denominator == 0){
 			tempIntersect.null = 1;
 			return tempIntersect;
 
 		}else{
+
 			long double numerator = -( (anchor.x*object.directionVector.x) + (anchor.y*object.directionVector.y) + (anchor.z*object.directionVector.z) + object.extraD);
 			long double t = numerator / denominator;
 
-			struct Vector intePoint;
-			intePoint.x = anchor.x + (t * direction.x);
-			intePoint.y = anchor.x + (t * direction.x);
-			intePoint.z = anchor.x + (t * direction.x);
+			tempIntersect.distance = t;
+			tempIntersect.object = object;
+			tempIntersect.Xi = anchor.x + (t * direction.x);
+			tempIntersect.Yi = anchor.y + (t * direction.y);
+			tempIntersect.Zi = anchor.z + (t * direction.z);
 
-			long double distanceToD1 = sqrt(pow(intePoint.x - object.Xc,2) + 
-											pow(intePoint.y - object.Yc,2) + 
-											pow(intePoint.z - object.Zc,2));
+			long double distanceToD1 = sqrt(pow(tempIntersect.Xi - object.Xc,2) + 
+											pow(tempIntersect.Yi - object.Yc,2) + 
+											pow(tempIntersect.Zi - object.Zc,2));
 
-			long double distanceToD2 = sqrt(pow(intePoint.x - object.Xother,2) + 
-											pow(intePoint.y - object.Yother,2) + 
-											pow(intePoint.z - object.Zother,2));
-			
-			if (distanceToD1 + distanceToD2 < object.other) {
-				tempIntersect.distance = t;
-				tempIntersect.object = object;
-				tempIntersect.Xi = intePoint.x;
-				tempIntersect.Yi = intePoint.y;
-				tempIntersect.Zi = intePoint.z;
+			long double distanceToD2 = sqrt(pow(tempIntersect.Xi - object.Xother,2) + 
+											pow(tempIntersect.Yi - object.Yother,2) + 
+											pow(tempIntersect.Zi - object.Zother,2));
+
+			if ( (distanceToD1 + distanceToD2) < object.other) {
 				tempIntersect.null = 0;
 			}
 			else {

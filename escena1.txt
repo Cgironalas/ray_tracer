@@ -2,7 +2,7 @@ Scene_Data
 # Datos de la escena
 MaxReflects = 2
 MaxTransparency = 2
-Max_AA = 3
+Max_AA = 2
 Ia = 0.5
 Xmin = 0.0
 Ymin = 0.0
@@ -45,11 +45,11 @@ Background = 0.6392, 0.6588, 0.6509
 
 
 Elipse_Object ELipse Prueba
-            Foco_1 = 43, 45, 400
-            Foco_2 = 43, 343, 343
+            Foco_1 = 400, 149, 400
+            Foco_2 = 400, 50, 400
             Normal = 0,0,-1
-            Color = 1, 0.5, 0.2
-            K = 40.2
+            Color = 1,0,0 
+            K = 100
             o1 = 0.5
             o2 = 0.3
             o3 = 0.2
