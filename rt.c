@@ -981,39 +981,31 @@
 		long double denominator = (direction.x * object.directionVector.x) + (direction.y * object.directionVector.y) + (direction.z * object.directionVector.z);
 
 		struct Intersection tempIntersect;
-		tempIntersect.null = 0;
+		tempIntersect.null = 1;
 
 		if(denominator == 0){
 			tempIntersect.null = 1;
 			return tempIntersect;
 
 		}else{
-			long double numerator = -(anchor.x*object.Xc + anchor.y*object.Yc + anchor.z*object.Zc + object.extraD);
+
+			long double numerator = -( (anchor.x*object.directionVector.x) + (anchor.y*object.directionVector.y) + (anchor.z*object.directionVector.z) + object.extraD);
 			long double t = numerator / denominator;
 
-			struct Vector intePoint;
-			intePoint.x = anchor.x + (t * direction.x);
-			intePoint.y = anchor.y + (t * direction.y);
-			intePoint.z = anchor.z + (t * direction.z);
+			tempIntersect.distance = t;
+			tempIntersect.object = object;
+			tempIntersect.Xi = anchor.x + (t * direction.x);
+			tempIntersect.Yi = anchor.y + (t * direction.y);
+			tempIntersect.Zi = anchor.z + (t * direction.z);
 
-			long double distanceToCenter = sqrt(pow(intePoint.x - object.Xc,2) + 
-												pow(intePoint.y - object.Yc,2) + 
-												pow(intePoint.z - object.Zc,2));
+			long double distanceToCenter = sqrt(pow(tempIntersect.Xi - object.Xc,2) + 
+												pow(tempIntersect.Yi - object.Yc,2) + 
+												pow(tempIntersect.Zi - object.Zc,2));
 
-			
-			//printf("Distance to center %LF\n", distanceToCenter);
-			
 			if (distanceToCenter < object.other) {
-				tempIntersect.distance = t;
-				tempIntersect.object = object;
-				tempIntersect.Xi = intePoint.x;
-				tempIntersect.Yi = intePoint.y;
-				tempIntersect.Zi = intePoint.z;
 				tempIntersect.null = 0;
 			}
-			else {
-				tempIntersect.null = 1;
-			}
+			
 			return tempIntersect;
 		}
 	}
@@ -1035,7 +1027,7 @@
 			return tempIntersect;
 
 		}else{
-			long double numerator = -(anchor.x*object.Xc + anchor.y*object.Yc + anchor.z*object.Zc + object.extraD);
+			long double numerator = -( (anchor.x*object.directionVector.x) + (anchor.y*object.directionVector.y) + (anchor.z*object.directionVector.z) + object.extraD);
 			long double t = numerator / denominator;
 
 			struct Vector intePoint;
@@ -1116,7 +1108,7 @@
 		if(intersection.null == 1){
 			color = background;
 		}else{
-		
+			
 			int k;
 			int lightsAmount = numberLights;
 			
@@ -1137,6 +1129,8 @@
 			long double I = 0.0;
 			long double E = 0.0;
 
+
+				
 			for(k = 0; k < numberLights; k++){
 				struct Intersection obstacle;
 				struct Vector light = {Lights[k].Xp - intersection.Xi, Lights[k].Yp - intersection.Yi, Lights[k].Zp - intersection.Zi};
@@ -1170,10 +1164,11 @@
 			I = min(1.0, I);
 			color = difusseColor(I, Q.color);
 
+			
 			E = min(1.0, E);
 			color = specularHighlight(E, color);
 
-
+			
 			if(rLevel > 0){
 				long double pNV = pointProduct(N, V);
 				R.x = (2 * N.x * pNV) - V.x;
@@ -1181,9 +1176,11 @@
 				R.z = (2 * N.z * pNV) - V.z;
 				R = normalize(R);
 				struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
-				color = ponderColor(color, reflectionColor, intersection.object.o1, intersection.object.o2);
+				color = ponderColor(color, reflectionColor, Q.o1, Q.o2);
+
+
 			}else{
-				color = ponderColor(color, background, intersection.object.o1, intersection.object.o2);
+				color = ponderColor(color, background, Q.o1, Q.o2);
 			}
 
 			struct Color transparencyColor = background;
@@ -1197,6 +1194,7 @@
 			} 
 			color = ponderColor(color, transparencyColor, 1, intersection.object.o3);
 		}
+		
 		return (color);
 	}
 // ===============================================================
@@ -1698,9 +1696,7 @@
 	            //printf("Cone processed.\n \n");
 	            return;
 	            }
-
-	        case 6:{
-	        	//Discos
+	        case 6: { //Discos
 	        	if (debug == 1) {
 	                printf("Insertando disco...");
 
@@ -1710,9 +1706,9 @@
 	                
 	                printf("Disco Radio: %LF \n", data[9]);
 	                printf("o1:  %LF, o2: %LF, o3: %LF \n", data[10],data[11],data[12]);
-	                printf("DIscos Kd: %LF \n", data[13]);
-	                printf("DIscos Ka: %LF \n", data[14]);
-	                printf("DIscos Kn: %LF \n", data[15]);
+	                printf("Discos Kd: %LF \n", data[13]);
+	                printf("Discos Ka: %LF \n", data[14]);
+	                printf("Discos Kn: %LF \n", data[15]);
 	                printf("Discos Ks: %LF \n", data[16]);
 	                printf("Esquina inferior izquierda (%LF, %LF, %LF) \n", data[17],data[18],data[19]);
 	                printf("Esquina inferior derecha (%LF, %LF, %LF) \n", data[20],data[21],data[22]);
@@ -1758,6 +1754,12 @@
 	            normalNotNormalized.x = data[3];
 	            normalNotNormalized.y = data[4];
 	            normalNotNormalized.z = data[5];
+				
+				struct Color colorDisco; 
+            	colorDisco.r = data[6]; 
+            	colorDisco.g = data[7]; 
+            	colorDisco.b = data[8]; 
+            	disco.color = colorDisco;
 
 	            long double dPlano= whatsTheDGeneral(normalNotNormalized, puntoCentral);
 	            dPlano = dPlano / getNorm(normalNotNormalized);
@@ -1770,7 +1772,7 @@
 	            disco.o2 = data[11];
 	            disco.o3 = data[12];
 	            disco.Kd = data[13];
-	            disco.Ks = data[14];
+	            disco.Ka = data[14];
 	            disco.Kn = data[15];
 	            disco.Ks = data[16];
 
@@ -1787,8 +1789,106 @@
 	            return;
 	            }
 	        case 7:{
-	        	//ELipses
-	        	}
+	        	//Elipses
+	        	if (debug == 1) {
+		                printf("Insertando Elipses...");
+
+		                printf("Foco 1: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
+		                 printf("Foco 2: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+		                printf("Normal no normalizada: (%LF, %LF, %LF) \n", data[6], data[7],data[8]);
+		                printf("Color: (%LF, %LF, %LF) \n", data[9], data[8],data[9]);
+		                
+		                printf("K del elipse: %LF \n", data[12]);
+		                printf("o1:  %LF, o2: %LF, o3: %LF \n", data[13],data[14],data[15]);
+		                printf("Elipse Kd: %LF \n", data[16]);
+		                printf("Elipse Ka: %LF \n", data[17]);
+		                printf("Elipse Kn: %LF \n", data[18]);
+		                printf("Elipse Ks: %LF \n", data[19]);
+		                printf("Esquina inferior izquierda (%LF, %LF, %LF) \n", data[20],data[21],data[22]);
+		                printf("Esquina inferior derecha (%LF, %LF, %LF) \n", data[23],data[24],data[25]);
+		                printf("Esquina superior derecha (%LF, %LF, %LF) \n", data[26],data[27],data[28]);
+		                printf("Esquina superior izquierda (%LF, %LF, %LF) \n",data[29],data[30],data[31]);
+		            }
+
+
+		            struct Object elipse;
+		            
+		            struct Vector leftLowerCorner;
+		            leftLowerCorner.x = data[20];
+		            leftLowerCorner.y = data[21];
+		            leftLowerCorner.z = data[22];
+		       	 	struct Vector rightLowerCorner;
+		        	rightLowerCorner.x = data[23];
+		            rightLowerCorner.y = data[24];
+		            rightLowerCorner.z = data[25];
+		        	struct Vector rightUpperCorner;
+		        	rightUpperCorner.x = data[26];
+		            rightUpperCorner.y = data[27];
+		            rightUpperCorner.z = data[28];
+		        	struct Vector leftUpperCorner;
+		        	leftUpperCorner.x = data[29];
+		            leftUpperCorner.y = data[30];
+		            leftUpperCorner.z = data[31];
+
+
+
+		            elipse.intersectionFuncion = elipseIntersection;
+		            elipse.normalVector = elipseNormal;
+
+		            //Se crea un punto para obtener el D de la normal
+		            struct Vector foco1;
+		            foco1.x = data[0];
+		            foco1.y = data[1];
+		            foco1.z = data[2];
+		            //Se ingresa el D1 tal y como se solciita en las funciones de intersección
+		            elipse.Xc = data[0];
+		            elipse.Yc = data[1];
+		            elipse.Zc = data[2];
+		      		//Se ingresa el D2 tal y como se solciita en las funciones de intersección
+		            elipse.Xother = data[3];
+		            elipse.Yother = data[4];
+		            elipse.Zother = data[5];
+
+
+		            struct Vector normalNotNormalized;
+		            normalNotNormalized.x = data[6];
+		            normalNotNormalized.y = data[7];
+		            normalNotNormalized.z = data[8];
+
+
+		            struct Color colorElipse;
+		            colorElipse.r = data[9];
+		            colorElipse.g = data[10];
+		            colorElipse.b = data[11];
+		            elipse.color = colorElipse;
+
+		            long double dPlano= whatsTheDGeneral(normalNotNormalized, foco1);
+		            dPlano = dPlano / getNorm(normalNotNormalized);
+		            elipse.extraD = dPlano;
+		            normalNotNormalized = normalize(normalNotNormalized);
+
+		            elipse.directionVector = normalNotNormalized;
+		            elipse.other = data[12];
+		            elipse.o1 = data[13];
+		            elipse.o2 = data[14];
+		            elipse.o3 = data[15];
+		            elipse.Kd = data[16];
+		            elipse.Ka = data[17];
+		            elipse.Kn = data[18];
+		            elipse.Ks = data[19];
+
+		            elipse.planeCuts = planeCutsFound;
+		            elipse.numberPlaneCuts = numberPlaneCuts;
+		            elipse.textures = texturesFound;
+		            elipse.numberTextures = numberTextures;
+		            Objects[objectIndex] = elipse; 
+		            if (debug == 1){
+		              printPlaneCuts(Objects[objectIndex]);
+		              printTextures(Objects[objectIndex], whichObjectCreate);
+		            }
+		            objectIndex++;
+		            return;
+   	        	}
 	        case 8:{
 	        	//CUadráticas
 	        	}
@@ -2843,7 +2943,6 @@
 	printf("Lights: %i \n", numberLights);
 	printf("Objects: %i \n", numberObjects);
 	getSceneObjects();
-	
 	int i, j;
 	
 	struct Color color;
@@ -2856,7 +2955,7 @@
 	printf("\nRay Tracing\n...\n...\n");
 	for (i = 0; i < Vres; i++){	
 		for (j = 0; j < Hres; j++){
-			//printf("[%i, %i]\n", j, i);
+			//printf("[%i, %i]\n", j+1, i+1);
 			color = getAAColor((long double) j, (long double) i, 0);
 			Framebuffer[i][j] = color;
 		}
