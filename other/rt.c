@@ -169,6 +169,30 @@
 		if(a > b) { return a; }
 		else { return b; }
 	}
+
+int testPlaneCut(struct PlaneCut plane, long double x, long double y, long double z){
+	int val = (plane.normal.x * x) + (plane.normal.y * y) + (plane.normal.z * z) + plane.d;
+	if(val > 0){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+int testIntersection(long double x, long double y, long double z, struct Object object){
+	int k, sign;
+	int accept = 1;
+	int amount = object.numberPlaneCuts;
+	for(k = 0; k < amount; k++){
+		sign = testPlaneCut(object.planeCuts[k], x, y, z);
+		if(sign == 1){
+			accept = 0;
+		}
+	}
+
+	return accept;
+}
+
 // ===============================================================
 
 // Vectors =======================================================
@@ -307,26 +331,56 @@
 			if(t1 > e){
 				if(t2 > e){
 					t = min(t1, t2);
+					tempIntersect.distance = t;
+					tempIntersect.object = object;
+					tempIntersect.Xi = anchor.x + (t * direction.x);
+					tempIntersect.Yi = anchor.y + (t * direction.y);
+					tempIntersect.Zi = anchor.z + (t * direction.z);
+
+					int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+					if(accept == 0){
+						t = max(t1, t2);
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
+						tempIntersect.Xi = anchor.x + (t * direction.x);
+						tempIntersect.Yi = anchor.y + (t * direction.y);
+						tempIntersect.Zi = anchor.z + (t * direction.z);
+
+						int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+						if(accept == 0){
+							tempIntersect.null = 1;
+						}
+					}
 				}else{
 					t = t1;
+					tempIntersect.distance = t;
+					tempIntersect.object = object;
+					tempIntersect.Xi = anchor.x + (t * direction.x);
+					tempIntersect.Yi = anchor.y + (t * direction.y);
+					tempIntersect.Zi = anchor.z + (t * direction.z);
+
+					int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+					if(accept == 0){
+						tempIntersect.null = 1;
+					}
 				}
 			}else{
 				if(t2 > e){
 					t = t2;
+					tempIntersect.distance = t;
+					tempIntersect.object = object;
+					tempIntersect.Xi = anchor.x + (t * direction.x);
+					tempIntersect.Yi = anchor.y + (t * direction.y);
+					tempIntersect.Zi = anchor.z + (t * direction.z);
+
+					int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+					if(accept == 0){
+						tempIntersect.null = 1;
+					}
 				}else{
 					tempIntersect.null = 1;
 				}
 			}
-			
-			if (tempIntersect.null != 1) {
-				tempIntersect.distance = t;
-				tempIntersect.object = object;
-				tempIntersect.Xi = anchor.x + (t * direction.x);
-				tempIntersect.Yi = anchor.y + (t * direction.y);
-				tempIntersect.Zi = anchor.z + (t * direction.z);
-		
-			}
-			
 			return tempIntersect;
 		}else{
 			tempIntersect.null = 1;
@@ -530,6 +584,11 @@
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 					}else{
 						t = max(t1,t2);
@@ -543,6 +602,11 @@
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 						}else{
 							tempIntersect.null = 1;
@@ -561,6 +625,11 @@
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 					}else{
 						tempIntersect.null = 1;
@@ -579,6 +648,11 @@
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 					}else{
 						tempIntersect.null = 1;
@@ -1078,9 +1152,9 @@
 				R.z = (2 * N.z * pNV) - V.z;
 				R = normalize(R);
 				struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
-				color = ponderColor(color, reflectionColor, 1, 0);
+				color = ponderColor(color, reflectionColor, intersection.object.o1, intersection.object.o2);
 			}else{
-				color = ponderColor(color, background, 1, 0);
+				color = ponderColor(color, background, intersection.object.o1, intersection.object.o2);
 			}
 
 			struct Color transparencyColor = background;
@@ -1092,7 +1166,7 @@
 					break;
 				}
 			} 
-			color = ponderColor(color, transparencyColor, 1, 0);
+			color = ponderColor(color, transparencyColor, 1, intersection.object.o3);
 		}
 		return (color);
 	}
@@ -2256,7 +2330,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
                 /*Lee radio o k1 i k2 o d1 o d2 o Kd o Kd o Ka o Kn o Ks*/
             }
         case 6:  //Discos
-        	if((*counterValueSegment >= 0 && *counterValueSegment <= 2) || (*counterValueSegment >= 11 && *counterValueSegment <= 15)){
+        	if((*counterValueSegment >= 0 && *counterValueSegment <= 2) || (*counterValueSegment >= 11 && *counterValueSegment <= 14)){
         		//Lee centro, normal, color y vertices del plano de la textura
         		printf("lineRead");
                 long double *tripleta = obtainPointFromString(lineRead);
@@ -2266,7 +2340,7 @@ long double *readValueFromLine(int state, int *counterValueSegment, char* lineRe
                 values[2] = tripleta[2];
                 //memcpy(values, positionLight, 3);
                 //printf("Pos luz leída (%LF, %LF, %LF) \n", values[0],values[1],values[2]);
-                if(*counterValueSegment == 15){
+                if(*counterValueSegment == 14){
                     (*counterValueSegment) = 0;
                 }else{
                     (*counterValueSegment)++;
