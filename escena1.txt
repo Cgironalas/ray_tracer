@@ -43,28 +43,11 @@ Background = 0.6392, 0.6588, 0.6509
                 Normal = 0, -1, 0
         END_Planos
 
-#no se ve
-    Disc_Object Disco Prueba
-        PuntoCentral =  400, 100, 400
-        Normal = 0.7, 0, -1
-        Color = 1,0,0
-        Radio = 40
-        o1 = 1
-        o2 = 0
-        o3 = 0
-        Kd = 0.6
-        Ka = 0.5
-        Kn = 30
-        Ks = 0.6
-        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
-        Plano_Esquina_Inferior_Derecha= 434, 346, 347
-        Plano_Esquina_Superior_Derecha= 434, 350, 35
-        Plano_Esquina_Superior_Izquierda= 434, 348, 349
 
 Elipse_Object ELipse Prueba
-            Foco_1 = 43, 45, 400, 
+            Foco_1 = 43, 45, 400
             Foco_2 = 43, 343, 343
-            Normal = 343, 45, 454
+            Normal = 0,0,-1
             Color = 1, 0.5, 0.2
             K = 40.2
             o1 = 0.5
