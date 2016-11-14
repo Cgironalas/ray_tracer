@@ -480,6 +480,11 @@ int testIntersection(long double x, long double y, long double z, struct Object 
 			if (NC%2 == 0){ tempIntersect.null = 1; }
 			else{ tempIntersect.null = 0; }
 
+			int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+			if(accept == 0){
+				tempIntersect.null = 1;
+			}
+
 			free(points2DArrayTemp);
 			return tempIntersect;	
 		}
@@ -796,6 +801,11 @@ int testIntersection(long double x, long double y, long double z, struct Object 
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 					}else{
 						t = max(t1,t2);
@@ -809,6 +819,11 @@ int testIntersection(long double x, long double y, long double z, struct Object 
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 						}else{
 							tempIntersect.null = 1;
@@ -827,6 +842,11 @@ int testIntersection(long double x, long double y, long double z, struct Object 
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 					}else{
 						tempIntersect.null = 1;
@@ -845,6 +865,11 @@ int testIntersection(long double x, long double y, long double z, struct Object 
 							tempIntersect.Zi = Zi;
 							tempIntersect.distance = t;
 							tempIntersect.object = object;
+
+							int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+							if(accept == 0){
+								tempIntersect.null = 1;
+							}
 							return tempIntersect;
 					}else{
 						tempIntersect.null = 1;
