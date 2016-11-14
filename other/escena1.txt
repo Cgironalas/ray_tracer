@@ -1,5 +1,8 @@
 Scene_Data
 # Datos de la escena
+MaxReflects = 4
+MaxTransparency = 2
+Max_AA = 2
 Ia = 0.5
 Xmin = 0.0
 Ymin = 0.0
@@ -13,6 +16,9 @@ Background = 0.6392, 0.6588, 0.6509
 
     Polygon_Object suelo superior
         Color del fondo = 0.4062, 0.2039, 0.0235
+        o1 = 0.5
+    o2 = 0.3
+    o3 = 0.2
         Kd = 0.8
         Ka = 0.7
         Kn = 30.0
@@ -22,6 +28,10 @@ Background = 0.6392, 0.6588, 0.6509
         Vertice = 1200, 0.0, 0
         Vertice = 1200, 0.0, 5100
         END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351
 
 
 
@@ -35,6 +45,9 @@ Background = 0.6392, 0.6588, 0.6509
 # Kirby
     Sphere_Object body
         Posicion = 400, 200, 800
+        o1 = 0.5
+    o2 = 0.3
+    o3 = 0.2
         Radio = 100
         Kd = 0.6
         Ka = 0.8
