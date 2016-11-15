@@ -3,7 +3,7 @@ CC=gcc
 SOURCE= rt.c
 OUTPUT=rt
 OBJECT=rt.o
-LDFLAGS= -lm
+LDFLAGS= -lpthread -lm
 
 
 $(OUTPUT): $(OBJECT)

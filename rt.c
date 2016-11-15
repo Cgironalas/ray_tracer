@@ -4,6 +4,8 @@
 #include <math.h>
 #include "malloc.h"
 #include <time.h>
+#include <pthread.h>
+#include <unistd.h>
 #define PI 3.14159265
 
 // Constants and data types: =====================================
@@ -13,10 +15,10 @@
 
 	//Advanced limits
 	static int maxAA;
-	static long double similar = 0;
 	static int maxReflection;
 	static int maxTransparency;
 	static long double rays = 0;
+	static long double similar = 0;
 
 	//Window
 	static long double Xmax;
@@ -163,7 +165,7 @@
 
 	static struct Light *Lights;
 	static struct Object *Objects;
-	static struct Vector V;
+	//static struct Vector V;
 	static struct Vector eye;
 	static struct Color **Framebuffer;
 	static struct Color background;
@@ -1510,7 +1512,7 @@
 		return color;
 	}
 
-	struct Color getColor(struct Vector anchor, struct Vector direction, int rLevel){
+	struct Color getColor(struct Vector anchor, struct Vector direction, struct Vector V, int rLevel){
 		struct Color color;
 		struct Intersection intersection;
 		struct Intersection *tempIntersection;
@@ -1588,14 +1590,15 @@
 				R.y = (2 * N.y * pNV) - V.y;
 				R.z = (2 * N.z * pNV) - V.z;
 				R = normalize(R);
-				struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
+				struct Vector otherV = {-R.x, -R.y, -R.z};
+				struct Color reflectionColor = getColor(intersectVector, R, otherV, rLevel - 1);
 				color = ponderColor(color, reflectionColor, Q.o1, Q.o2);
 			}
 
 			struct Color transparencyColor = background;
 			int levelsAllowed = maxTransparency;
 			while (levelsAllowed > 0 && intersection.object.o3 > 0) {
-				transparencyColor = getColor(intersectVector, direction, maxReflection);
+				transparencyColor = getColor(intersectVector, direction, V, maxReflection);
 				levelsAllowed--;
 				if (transparencyColor.r == background.r && transparencyColor.g == background.g && transparencyColor.b == background.b){
 					break;
@@ -3524,10 +3527,6 @@
 
 		direction = normalize(direction);
 
-		V.x = -direction.x;
-		V.y = -direction.y;
-		V.z = -direction.z;
-
 		return direction;
 	}
 
@@ -3568,23 +3567,35 @@
 		int level = aaLevel;
 		struct Color color, color1, color2, color3, color4;
 		
-		struct Vector direction;
+		struct Vector direction, V;
 
 		long double sum = 1/pow(2, level);
 		level++;
 		long double nextSum =  1/pow(2, level);
 		
 		direction = throwRay(x, y);
-		color1 = getColor(eye, direction, maxReflection);
+		V.x = -direction.x;
+		V.y = -direction.y;
+		V.z = -direction.z;
+		color1 = getColor(eye, direction, V, maxReflection);
 
 		direction = throwRay(x, y + sum);
-		color2 = getColor(eye, direction, maxReflection);
+		V.x = -direction.x;
+		V.y = -direction.y;
+		V.z = -direction.z;
+		color2 = getColor(eye, direction, V, maxReflection);
 
 		direction = throwRay(x + sum, y);
-		color3 = getColor(eye, direction, maxReflection);
+		V.x = -direction.x;
+		V.y = -direction.y;
+		V.z = -direction.z;
+		color3 = getColor(eye, direction, V, maxReflection);
 
 		direction = throwRay(x + sum, y + sum);
-		color4 = getColor(eye, direction, maxReflection);
+		V.x = -direction.x;
+		V.y = -direction.y;
+		V.z = -direction.z;
+		color4 = getColor(eye, direction, V, maxReflection);
 
 		areOK = theyOK(color1, color2, color3, color4);
 		
@@ -3602,28 +3613,42 @@
 	}
 // ===============================================================
 
+void *runRT(void *x){
+	int start, i, j;
+	struct Color color;
+	i = *((int *) x);
+	printf("%i\n", i);
+	for(i; i < Vres; i += 4){
+		for(j = 0; j < Hres; j++){
+			color = getAAColor((long double) j, (long double) i, 0);
+			Framebuffer[i][j] = color;
+		}
+	}
+
+	return NULL;
+}
+
 // OP main: ======================================================
 	int main(int argc, char *arcgv[]){
 		howManyObjectsLights();
 		printf("Lights: %i \n", numberLights);
 		printf("Objects: %i \n", numberObjects);
 		getSceneObjects();
-		int i, j;
 		
-		struct Color color;
-		struct Vector direction;
+		int i;
+		pthread_t threads[4];
 		
 		Xdif = Xmax - Xmin;
 		Ydif = Ymax - Ymin;
 		similar = sqrt(3)/32;
 
 		printf("\nRay Tracing\n...\n...\n");
-		for (i = 0; i < Vres; i++){	
-			for (j = 0; j < Hres; j++){
-				//printf("[%i, %i]\n", j+1, i+1);
-				color = getAAColor((long double) j, (long double) i, 0);
-				Framebuffer[i][j] = color;
-			}
+		for(i = 0; i < 4; i++){
+			pthread_create(&(threads[i]), NULL, &runRT, &i);
+			sleep(1);
+		}
+		for(i = 0; i < 4; i++){
+			pthread_join(threads[i], NULL);
 		}
 
 		printf("Rays: %LF\n", rays);

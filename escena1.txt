@@ -1,8 +1,8 @@
 Scene_Data
 # Datos de la escena
-Max_AA = 0
-MaxReflects = 4
-MaxTransparency = 0
+Max_AA = 4
+MaxReflects = 10
+MaxTransparency = 10
 Ia = 0.5
 Xmin = 0.0
 Ymin = 0.0
@@ -11,54 +11,669 @@ Ymax = 450.0
 Hres = 1600.0
 Vres = 900.0
 Epsilon = 0.00005
-Eye = 400, 275, -50000
+Eye = 400, 275, -5000
 Background = 0.6392, 0.6588, 0.6509
 
-    Light_Object Luz de prueba
+    Polygon_Object suelo superior
+        Color del fondo = 0.4062, 0.2039, 0.0235
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = -900, 0, 5100
+        Vertice = -900, 0.0, 0
+        Vertice = 1200, 0.0, 0
+        Vertice = 1200, 0.0, 5100
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351
+
+    Polygon_Object espejo fondo
+        Color del fondo = 0, 0.2, 0
+        o1 = 0
+        o2 = 1
+        o3 = 0
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = 300, 0, 1000
+        Vertice = 500, 0, 1000
+        Vertice = 500, 700, 1000
+        Vertice = 300, 700, 1000
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351
+
+    Polygon_Object espejo izq
+        Color del fondo = 0, 0.2, 0
+        o1 = 0
+        o2 = 1
+        o3 = 0
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = 300, 0, 1000
+        Vertice = 300, 0, -7000
+        Vertice = 300, 700, -7000
+        Vertice = 300, 700, 1000
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351 
+        
+    Polygon_Object espejo der
+        Color del fondo = 0, 0, 0.2
+        o1 = 0
+        o2 = 1
+        o3 = 0
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = 500, 0, 1000
+        Vertice = 500, 0, -7000
+        Vertice = 500, 700, -7000
+        Vertice = 500, 700, 1000
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351 
+        
+#Light
+  Light_Object Luz de prueba
         Posicion = 400, 150, 200
-        c1 = 0.0
+        c1 = 1
         c2 = 0.001
         c3 = 0.0
         Ip = 0.7
 
-    Polygon_Object backwall 
-        Color del fondo = 0.4062, 0.2039, 0.0235 
-        o1 = 0.2 
-        o2 = 0.8 
-        o3 = 0 
-        Kd = 0.8 
-        Ka = 0.7 
-        Kn = 30.0
-        Ks = 0 
-        Vertice = 200, 75, 1000
-        Vertice = 600, 75, 1000
-        Vertice = 600, 750, 800
-        Vertice = 200, 750, 800
-        END_Vertices 
-        x0y0z0 = 200, 75, 1000
-        x1y1z1 = 600, 75, 1000
-        x2y2z2 = 600, 375, 1000
-        x3y3z3 = 200, 375, 1000
+#Josef
+    #Body
+        Cylinder_Object body
+            Position = 400, 160, 600
+            Q = 0, -1, 0
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            Radio = 25
+            d1 = 0
+            d2 = 70
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+    #Arms
+        #Right arm
+            #Shoulder
+                Cone_Object shoulder
+                    Ancla = 452, 145, 600
+                    Q = -1, 0, 0
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    k1 = 4
+                    k2 = 1
+                    d1 = 20
+                    d2 = 30
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 1, 0, 0.7921568627
+
+                Sphere_Object shoulder-upper_arm joint
+                    Posicion = 430, 145, 600
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 5.3
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 1, 0.8117647059, 0
+
+                Cylinder_Object upper arm
+                    Posicion = 430, 145, 600
+                    Q = 35, 10, -10
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 4.5
+                    d1 = 0
+                    d2 = 20
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+                Sphere_Object upper_arm-forearm joint
+                    Posicion = 447.5, 150.5, 595.5
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 4.5
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0, 0.8117647059, 0
+
+                Cylinder_Object forearm
+                    Posicion = 447.5, 150.5, 596
+                    Q = 15, 20, -10
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 4.5
+                    d1 = 0
+                    d2 = 20
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0.8078431373, 0, 0
+
+                Cone_Object wrist
+                    Ancla = 449, 153, 595
+                    Q = 15, 20, -10
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    k1 = 4
+                    k2 = 1
+                    d1 = 17
+                    d2 = 22
+                    Kd = 0.7
+                    Ka = 0.3
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0, 0, 1
+
+                Cylinder_Object hand
+                    Posicion = 461, 169, 587
+                    Q = 15, 20, -10
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 5.1
+                    d1 = 0
+                    d2 = 8
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0, 1, 0
+
+                Disc_Object asd
+                    Punto Central = 466.1, 175, 584
+                    Normal = 15, 20, -10
+                    Color = 1,0,0
+                    Radio = 5.1
+                    o1 = 1
+                    o2 = 0
+                    o3 = 0    
+                    Kd = 0.5
+                    Ka = 0.5
+                    Kn = 50
+                    Ks = 0.5
+                    x0y0z0 = 461.0, 169.9, 568
+                    x1y1z1 = 471.2, 169.9, 568
+                    x2y2z2 = 471.2, 180.1, 568
+                    x3y3z3 = 461.0, 180.1, 568 
+                    Textures: 
+                        NumberTextures = 1
+                        Texture_1:
+                            Filename =textures/sea_monster.ppm
+                    END_Textures
+        #Left arm
+            #Shoulder
+                Cone_Object shoulder
+                    Ancla = 348, 145, 600
+                    Q = 1, 0, 0
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    k1 = 4
+                    k2 = 1
+                    d1 = 20
+                    d2 = 30
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+                Sphere_Object shoulder-upper_arm joint
+                    Posicion = 370, 145, 600
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 5.3
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+                Cylinder_Object upper arm
+                    Posicion = 369, 145, 600
+                    Q = 0, -30, -30
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 4.5
+                    d1 = -1
+                    d2 = 20
+                    Kd = 1
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.8
+                    Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+                Sphere_Object upper arm-forearm join
+                    Posicion = 369, 130, 586
+                    o1 = 1
+                    o2 = 0
+                    o3 = 0
+                    Radio = 4.5
+                    Kd = 1
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.8
+                    Color = 0.8078431373, 0, 0.7921568627
+
+                Cylinder_Object forearm
+                    Posicion = 369, 130, 586
+                    Q = 16, 3, -15
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 4.5
+                    d1 = -1
+                    d2 = 20
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0.8078431373, 0.8117647059, 0
+
+                Cone_Object wrist
+                    Ancla = 371, 130.5, 583
+                    Q = 16, 3, -15
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    nk1 = 4
+                    k2 = 1
+                    d1 = 16
+                    d2 = 23
+                    Kd = 0.7
+                    Ka = 0.3
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0, 0, 1
+
+                Cylinder_Object hand
+                    Posicion = 386.5, 133.5, 569.3
+                    Q = 16, 3, -15
+                    o1 = 0.9
+                    o2 = 0
+                    o3 = 0
+                    Radio = 5.1
+                    d1 = 0
+                    d2 = 8
+                    Kd = 0.7
+                    Ka = 0.5
+                    Kn = 20
+                    Ks = 0.2
+                    Color = 0, 1, 0
+
+                Disc_Object asd
+                    Punto Central = 392.3, 134.5, 563.5
+                    Normal = 16, 3, -15
+                    Color = 1,0,0
+                    Radio = 5.2
+                    o1 = 1
+                    o2 = 0
+                    o3 = 0    
+                    Kd = 0.5
+                    Ka = 0.5
+                    Kn = 50
+                    Ks = 0.5
+                    x0y0z0 = 387.2, 124.9, 570
+                    x1y1z1 = 397.4, 124.9, 570
+                    x2y2z2 = 397.4, 135.1, 570
+                    x3y3z3 = 387.2, 135.1, 570 
+
+    #Head
+        Cylinder_Object pipe begining
+            Position = 402, 235, 595
+            Q = 0, 1, 0
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            Radio = 5
+            d1 = 0
+            d2 = 20
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+        Cone_Object pipe joint
+            Ancla = 402, 245, 595
+            Q = 0, 1, 0
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            k1 = 1.5
+            k2 = 1
+            d1 = 0.0
+            d2 = 10.0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 1, 0, 0
+
+        Cylinder_Object pipe end
+            Position = 402, 255, 595
+            Q = 0, 1, 0
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            Radio = 7
+            d1 = 0
+            d2 = 10
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 0.8078431373, 0.8117647059, 0
+            Planos_Corte:
+                NumberPlanes = 1
+                Plano_1
+                    Punto = 402, 270, 595
+                    Normal = 0, 1, 0.2
+                END_Planos
+
+        Sphere_Object upper head
+            Posicion = 400, 200, 600
+            o1 = 0.9
+            o2 = 0.1
+            o3 = 0
+            Radio = 40
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 0.8078431373, 0.8117647059, 0.7921568627
+            Planos_Corte:
+                NumberPlanes = 1
+                Plano_1
+                    Punto = 400, 200, 600
+                    Normal = 0, -1, 0
+                END_Planos
+
+        Cylinder_Object lower head
+            Position = 400, 200, 600
+            Q = 0, -1, 0
+            o1 = 0.9
+            o2 = 0.1
+            o3 = 0
+            Radio = 40.0
+            d1 = 0
+            d2 = 40.0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 0.8078431373, 0.8117647059, 0.7921568627
         
-    Cone_Object wrist
-        Ancla = 374, 126, 579
-        Q = 0, 1, 0.3
-        o1 = 1
-        o2 = 0
-        o3 = 0
-        k1 = 4
-        k2 = 1
-        d1 = 0
-        d2 = 200
-        Kd = 0.7
-        Ka = 0.3
-        Kn = 20
-        Ks = 0.2
-        Color = 0, 0, 1
-        Textures: 
-            NumberTextures = 1
-            Texture_1:
-                Filename =textures/sea_monster.ppm
-                Greenwich = -1, 0, 0
-                Norte = 0,1,0
-        END_Textures
+        Disc_Object end head
+            Punto Central = 400, 160, 600
+            Normal = 0, 1, 0
+            Color = 0.8078431373, 0.8117647059, 0.7921568627
+            Radio = 40
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            x0y0z0 = 360, 160, 600
+            x1y1z1 = 440, 160, 600
+            x2y2z2 = 440, 160, 600
+            x3y3z3 = 360, 160, 600 
+
+        Cone_Object outer right eye
+            Ancla = 447, 185, 505
+            Q = -9, -2, 27
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            k1 = 5
+            k2 = 1
+            d1 = 40.0
+            d2 = 80.0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 1, 0, 0
+
+        Disc_Object end right eye
+            Punto Central = 429, 182.5, 525
+            Normal = -9, -2, 27
+            Color = 1, 0, 0
+            Radio = 7
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            x0y0z0 = 440, 175, 490
+            x1y1z1 = 460, 175, 490
+            x2y2z2 = 460, 195, 490
+            x3y3z3 = 440, 195, 490
+
+        Cone_Object outer left eye
+            Ancla = 400, 185, 495
+            Q = -4, -2, 27
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            k1 = 5
+            k2 = 1
+            d1 = 40.0
+            d2 = 90.0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            Color = 0, 1, 0
+
+        Disc_Object end left eye
+            Punto Central = 393.5, 182, 510
+            Normal = -4, -2, 27
+            Color = 0, 1, 0
+            Radio = 7
+            o1 = 0.9
+            o2 = 0
+            o3 = 0
+            Kd = 0.7
+            Ka = 0.5
+            Kn = 20
+            Ks = 0.2
+            x0y0z0 = 395, 175, 490
+            x1y1z1 = 415, 175, 490
+            x2y2z2 = 415, 195, 490
+            x3y3z3 = 395, 195, 490
+
+    #Legs
+        #Right leg
+            Cylinder_Object tight
+                Position = 420, 90, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 5
+                d1 = 0
+                d2 = 20
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+            Sphere_Object tight-leg joint
+                Posicion = 420, 70, 600
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 5
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0
+
+            Cylinder_Object leg
+                Position = 420, 70, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 5
+                d1 = 0
+                d2 = 20
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+            Cone_Object leg-foot joint
+                Ancla = 420, 55, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                k1 = 1
+                k2 = 1
+                d1 = 0.0
+                d2 = 10.0
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 1, 0, 0
+
+            Cylinder_Object foot
+                Position = 420, 45, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 10
+                d1 = 0
+                d2 = 8
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+        #Left leg
+            Cylinder_Object tight
+                Position = 380, 90, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 5
+                d1 = 0
+                d2 = 20
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+            Sphere_Object tight-leg joint
+                Posicion = 380, 70, 600
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 5
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0, 0.7921568627
+
+            Cylinder_Object leg
+                Position = 380, 70, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 5
+                d1 = 0
+                d2 = 20
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0.7921568627
+
+            Cone_Object leg-foot joint
+                Ancla = 380, 55, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                k1 = 1
+                k2 = 1
+                d1 = 0.0
+                d2 = 10.0
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 1, 0, 0
+
+            Cylinder_Object foot
+                Position = 380, 45, 600
+                Q = 0, -1, 0
+                o1 = 0.9
+                o2 = 0
+                o3 = 0
+                Radio = 10
+                d1 = 0
+                d2 = 8
+                Kd = 0.7
+                Ka = 0.5
+                Kn = 20
+                Ks = 0.2
+                Color = 0.8078431373, 0.8117647059, 0.7921568627
