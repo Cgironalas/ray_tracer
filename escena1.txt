@@ -54,11 +54,18 @@ Background = 0.6392, 0.6588, 0.6509
         o1 = 1
         o2 = 0
         o3 = 0           
-        Kd: %LF \n", data[13]);
-        Ka: %LF \n", data[14]);
-        Kn: %LF \n", data[15]);
-        Ks: %LF \n", data[16]);
+        Kd = 0.6
+        Ka = 0.3
+        Kn = 30
+        Ks = 0.4
         x0y0z0 = 150, 75, 1000
         x0y0z0 = 250, 75, 1000
         x0y0z0 = 250, 275, 1000
         x0y0z0 = 150, 275, 1000 
+        Textures: 
+                NumberTextures = 1
+                Texture_1:
+                    Filename =textures/sea_monster.ppm
+                    Greenwich = 334, 343, 343
+            END_Textures
+

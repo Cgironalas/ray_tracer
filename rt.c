@@ -29,7 +29,7 @@
 	static long double Ia;
 	static long double e;
 
-	static int debug = 0;
+	static int debug = 1;
 	static int rec = 0;
 
 	struct Color { 
@@ -1303,7 +1303,7 @@
 				struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
 				color = ponderColor(color, reflectionColor, Q.o1, Q.o2);
 			}
-			
+
 			struct Color transparencyColor = background;
 			int levelsAllowed = maxTransparency;
 			while (levelsAllowed > 0 && intersection.object.o3 > 0) {
@@ -1849,6 +1849,11 @@
 	            x3y3z3.y = data[27];
 	            x3y3z3.z = data[28];
 
+	            disco.x0y0z0= x0y0z0;
+	            disco.x1y1z1= x1y1z1;
+	            disco.x2y2z2= x2y2z2;
+	            disco.x3y3z3= x3y3z3;
+
 
 	            disco.Xc = data[0];
 	            disco.Yc = data[1];
@@ -1943,7 +1948,10 @@
 	            x3y3z3.y = data[30];
 	            x3y3z3.z = data[31];
 
-
+	            elipse.x0y0z0= x0y0z0;
+	            elipse.x1y1z1= x1y1z1;
+	            elipse.x2y2z2= x2y2z2;
+	            elipse.x3y3z3= x3y3z3;
 
 	            elipse.intersectionFuncion = elipseIntersection;
 	            elipse.normalVector = elipseNormal;
