@@ -1,7 +1,7 @@
 Scene_Data
 # Datos de la escena
 Max_AA = 0
-MaxReflects = 0
+MaxReflects = 1
 MaxTransparency = 0
 Ia = 0.5
 Xmin = 0.0
@@ -14,27 +14,8 @@ Epsilon = 0.00005
 Eye = 400, 275, -5000
 Background = 0.6392, 0.6588, 0.6509
 
-    Polygon_Object suelo superior
-        Color del fondo = 0.4062, 0.2039, 0.0235
-        o1 = 1
-        o2 = 0
-        o3 = 0
-        Kd = 0.8
-        Ka = 0.7
-        Kn = 30.0
-        Ks = 0.5
-        Vertice Inicial = -900, 0, 5100
-        Vertice = -900, 0.0, 0
-        Vertice = 1200, 0.0, 0
-        Vertice = 1200, 0.0, 5100
-        END_Vertices
-        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
-        Plano_Esquina_Inferior_Derecha= 434, 346, 347
-        Plano_Esquina_Superior_Izquierda= 434, 348, 349
-        Plano_Esquina_SUperior_Derecha= 434, 350, 351
-
     Polygon_Object espejo fondo
-        Color del fondo = 0, 0.2, 0
+        Color del fondo = 0.2, 0, 0
         o1 = 0
         o2 = 1
         o3 = 0
@@ -46,6 +27,45 @@ Background = 0.6392, 0.6588, 0.6509
         Vertice = 500, 0, 1000
         Vertice = 500, 700, 1000
         Vertice = 300, 700, 1000
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351
+
+
+    Polygon_Object techo
+        Color del fondo = 0, 0.2, 0.2
+        o1 = 0
+        o2 = 1
+        o3 = 0
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = -3000, 1000, 10000
+        Vertice = -3000, 1000, 0
+        Vertice = 6000, 1000, 0
+        Vertice = 6000, 1000, 10000
+        END_Vertices
+        Plano_Esquina_Inferior_Izquierda= 434, 344, 345
+        Plano_Esquina_Inferior_Derecha= 434, 346, 347
+        Plano_Esquina_Superior_Izquierda= 434, 348, 349
+        Plano_Esquina_SUperior_Derecha= 434, 350, 351
+
+    Polygon_Object suelo
+        Color del fondo = 0.2, 0, 0.2
+        o1 = 0
+        o2 = 1
+        o3 = 0
+        Kd = 0.8
+        Ka = 0.7
+        Kn = 30.0
+        Ks = 0.5
+        Vertice Inicial = -900, 0, 5100
+        Vertice = -900, 0.0, 0
+        Vertice = 1200, 0.0, 0
+        Vertice = 1200, 0.0, 5100
         END_Vertices
         Plano_Esquina_Inferior_Izquierda= 434, 344, 345
         Plano_Esquina_Inferior_Derecha= 434, 346, 347
@@ -423,7 +443,8 @@ Background = 0.6392, 0.6588, 0.6509
             Ka = 0.5
             Kn = 20
             Ks = 0.2
-            Color = 0.8078431373, 0.8117647059, 0.7921568627
+            #Color = 0.8078431373, 0.8117647059, 0.7921568627
+            Color = 0,0,0
             Planos_Corte:
                 NumberPlanes = 1
                 Plano_1
@@ -444,7 +465,8 @@ Background = 0.6392, 0.6588, 0.6509
             Ka = 0.5
             Kn = 20
             Ks = 0.2
-            Color = 0.8078431373, 0.8117647059, 0.7921568627
+            Color = 0,0,0
+            #Color = 0.8078431373, 0.8117647059, 0.7921568627
         
         Disc_Object end head
             Punto Central = 400, 160, 600
@@ -480,10 +502,10 @@ Background = 0.6392, 0.6588, 0.6509
             Color = 1, 0, 0
 
         Disc_Object end right eye
-            Punto Central = 429, 182.5, 525
+            Punto Central = 434.1, 182.2, 543
             Normal = -9, -2, 27
-            Color = 1, 0, 0
-            Radio = 7
+            Color = 1, 0.5, 0
+            Radio = 7.9
             o1 = 0.9
             o2 = 0
             o3 = 0
@@ -513,10 +535,10 @@ Background = 0.6392, 0.6588, 0.6509
             Color = 0, 1, 0
 
         Disc_Object end left eye
-            Punto Central = 393.5, 182, 510
+            Punto Central = 394.15, 182.1, 533.4
             Normal = -4, -2, 27
-            Color = 0, 1, 0
-            Radio = 7
+            Color = 0, 1, 0.5
+            Radio = 7.9
             o1 = 0.9
             o2 = 0
             o3 = 0
