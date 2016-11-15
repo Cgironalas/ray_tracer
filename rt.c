@@ -144,8 +144,8 @@
 	};
 
 	struct DraftPlane{ //Plano de calado
-	  	char* Filename;
-	  	int ***textureMap;
+	  	char* filename;
+	  	struct Color **textureMap;
 	  	int vRes;
  		int hRes;
 	  	struct Vector greenwich; //No asignado en polígonos 
@@ -1124,6 +1124,117 @@
 	}
 // ===============================================================
 
+// Quadratics ===================================================
+	struct Intersection quadraticIntersection(struct Vector anchor, struct Vector direction, struct Object object){
+		long double t, t1, t2;
+
+		struct Intersection tempIntersect;
+		tempIntersect.null = 0;
+
+
+
+		long double a = (object.A*pow(direction.x,2)) + (object.B*pow(direction.y,2)) + (object.C*pow(direction.z,2)) +
+							2*( (object.D*direction.x*direction.y) * (object.E*direction.y*direction.z) * (object.F*direction.x*direction.z) );
+	
+		long double b = 2*( (object.A*anchor.x*direction.x) + (object.B*anchor.y*direction.y) + (object.C*anchor.z*direction.z) 
+					+ (object.D*anchor.x*direction.y) + (object.D*anchor.y*direction.x) 
+					+ (object.E*anchor.y*direction.z) + (object.E*anchor.z*direction.y) 
+					+ (object.F*anchor.z*direction.x) + (object.F*anchor.x*direction.z) 
+					+ (object.G*direction.x) + (object.H*direction.y) + (object.J*direction.z) );
+
+		long double c = (object.A*pow(anchor.x,2)) + (object.B*pow(anchor.y,2)) + (object.C*pow(anchor.z,2))
+					+ 2*( (object.D*anchor.x*anchor.y) + (object.E*anchor.y*anchor.z) + (object.F*anchor.z*anchor.x) 
+					+ (object.G*anchor.x) + (object.H*anchor.y) + (object.J*anchor.z) ) + object.other; //other es K
+
+		long double discriminant = pow(b, 2) - (4 * a * c);
+
+		if(discriminant >= 0){
+			long double root = sqrt(discriminant);
+
+			b *= -1;
+
+			t1 = (b + root)/(2*a);
+			t2 = (b - root)/(2*a);
+
+			if(t1 > e){
+				if(t2 > e){
+					t = min(t1, t2);
+					tempIntersect.distance = t;
+					tempIntersect.object = object;
+					tempIntersect.Xi = anchor.x + (t * direction.x);
+					tempIntersect.Yi = anchor.y + (t * direction.y);
+					tempIntersect.Zi = anchor.z + (t * direction.z);
+
+					int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+					if(accept == 0){
+						t = max(t1, t2);
+						tempIntersect.distance = t;
+						tempIntersect.object = object;
+						tempIntersect.Xi = anchor.x + (t * direction.x);
+						tempIntersect.Yi = anchor.y + (t * direction.y);
+						tempIntersect.Zi = anchor.z + (t * direction.z);
+
+						int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+						if(accept == 0){
+							tempIntersect.null = 1;
+						}
+					}
+				}else{
+					t = t1;
+					tempIntersect.distance = t;
+					tempIntersect.object = object;
+					tempIntersect.Xi = anchor.x + (t * direction.x);
+					tempIntersect.Yi = anchor.y + (t * direction.y);
+					tempIntersect.Zi = anchor.z + (t * direction.z);
+
+					int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+					if(accept == 0){
+						tempIntersect.null = 1;
+					}
+				}
+			}else{
+				if(t2 > e){
+					t = t2;
+					tempIntersect.distance = t;
+					tempIntersect.object = object;
+					tempIntersect.Xi = anchor.x + (t * direction.x);
+					tempIntersect.Yi = anchor.y + (t * direction.y);
+					tempIntersect.Zi = anchor.z + (t * direction.z);
+
+					int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
+					if(accept == 0){
+						tempIntersect.null = 1;
+					}
+				}else{
+					tempIntersect.null = 1;
+				}
+			}
+			return tempIntersect;
+		}else{
+			tempIntersect.null = 1;
+			return tempIntersect;
+		}
+	}
+		
+
+	struct Vector quadraticNormal (struct Object object, struct Vector intersectionVector){
+
+		long double xElement = ( (object.A*intersectionVector.x) + (object.D*intersectionVector.y) 
+							+ (object.F*intersectionVector.z) + (object.G) );
+
+		long double yElement = ( (object.D*intersectionVector.x) + (object.B*intersectionVector.y)
+							+ (object.E*intersectionVector.z) + (object.H) );
+
+		long double zElement = ( (object.F*intersectionVector.x)+ (object.E*intersectionVector.y)
+							+ (object.C*intersectionVector.z) + (object.C) );
+
+		struct Vector normalNotNormalized = {xElement, yElement, zElement};
+
+		return normalNotNormalized;
+	}
+// ===============================================================
+
+
 // Textures ======================================================
 	long double uRectangle (struct Vector x0y0z0, struct Vector x1y1z1, struct Vector xiyizi) {
 		struct Vector U;
@@ -1424,6 +1535,47 @@
 	        }
 	    }
 	}
+
+	void printDraftPlanes(struct Object objeto, int currentTypeObjectReading){
+
+	    if (objeto.draftPlanes == NULL){
+	        printf("\n Este objeto no tiene planos de calado  asociados. \n");
+	        return;
+	    }else{
+	        int i = 0;
+	        struct Vector norte;
+	        struct Vector greenwich;
+	        
+	        for (i = 0; i < objeto.numberDraftPlanes; i++){
+	        	printf("Número de planos de calado: %i \n", objeto.numberDraftPlanes);
+	            printf("plano de calado %i: \n", i);
+	            printf("Resolución plano de calado: %ix%i \n", objeto.draftPlanes[i].hRes,objeto.draftPlanes[i].vRes);
+	            //struct Color colorPrimerTexel;
+	            //colorPrimerTexel = objeto.draftPlanes[i].textureMap[0][0];
+	            printf("Primer texel del plano de calado: (%LF, %LF, %LF)", objeto.draftPlanes[i].textureMap[0][0].r,objeto.draftPlanes[i].textureMap[0][0].g*255, objeto.draftPlanes[i].textureMap[0][0].b*255);
+	            int lastX = objeto.draftPlanes[i].hRes-1;
+				int lastY = objeto.draftPlanes[i].vRes-1;
+	            printf("Último texel del plano de calado: (%LF, %LF, %LF)", objeto.draftPlanes[i].textureMap[lastX][lastY].r*255,objeto.draftPlanes[i].textureMap[lastX][lastY].g*255, objeto.draftPlanes[i].textureMap[lastX][lastY].b*255);
+	        }
+				/*
+	            for (int f = 0; f<objeto.draftPlanes[i].hRes; f++ ){
+	            	for (int j = 0; j<objeto.draftPlanes[i].vRes-100; j++ ){
+	            		printf("Texel [%i][%i]de la textura: (%LF, %LF, %LF) \n", f, j, objeto.draftPlanes[i].textureMap[f][j].r*255,objeto.draftPlanes[i].textureMap[f][j].g*255, objeto.draftPlanes[i].textureMap[f][j].b*255);
+
+	            	}
+	            }*/
+	            if (currentTypeObjectReading == 2 ||currentTypeObjectReading == 4 ||currentTypeObjectReading == 5 ||currentTypeObjectReading == 8){
+	                greenwich = objeto.draftPlanes[i].greenwich;
+	                printf("\t Greenwich unitario: %LF, %LF, %LF \n", greenwich.x, greenwich.y, greenwich.z);
+	                if (currentTypeObjectReading == 2  || currentTypeObjectReading == 8){
+	                    norte = objeto.draftPlanes[i].north;
+	                printf("\t Norte unitario: %LF, %LF, %LF \n", norte.x, norte.y, norte.z);
+	                }
+
+	            }
+	        }
+	 }
+
 
 	void createObjectFromData(long double *data, int whichObjectCreate, int quantityData, struct PlaneCut* planeCutsFound, struct Texture* texturesFound, struct DraftPlane *draftPlanesFound, int numberPlaneCuts, int numberTextures, int numberDraftPlanes){
 	    /*whichObjectCreate indica qué objeto crear
@@ -2103,7 +2255,7 @@
 	        	cuadratica.o3 = data[13];
 
 	        	cuadratica.Kd = data[14];
-	            cuadratica.Ks = data[15];
+	            cuadratica.Ka = data[15];
 	            cuadratica.Kn = data[16];
 	            cuadratica.Ks = data[17];
 
@@ -2113,10 +2265,10 @@
 	            colorCuadratica.b = data[20];
 	            cuadratica.color = colorCuadratica;
 
-	            /*
+	            
 	            cuadratica.intersectionFuncion = quadraticIntersection;
 	            cuadratica.normalVector = quadraticNormal;
-				*/
+				
 	            cuadratica.planeCuts = planeCutsFound;
 	            cuadratica.numberPlaneCuts = numberPlaneCuts;
 	            cuadratica.textures = texturesFound;
@@ -2124,11 +2276,15 @@
 	            Objects[objectIndex] = cuadratica; 
 	            if (debug == 1){
 	            	printPlaneCuts(Objects[objectIndex]);
+
 	            	printTextures(Objects[objectIndex], whichObjectCreate);
+	            	printf("sup");
 	            }
 	            objectIndex++;
+
 	            return;
 	        	}
+
 	    	}
 		}
 
@@ -2442,6 +2598,87 @@
 	    }
 	}
 
+	struct DraftPlane *readDraftPlanes(int currentTypeReading, long int pos, int *numberDraftPlanes, long int *posAfterReading){
+	    //Para este punto ya leyó Planos_Calado: 
+	    //ENtonces comenzamos con NumberPlanosCalado
+	    //Se lee el número de planos
+	    char temporalBuffer[300]; //Aquí se guardará lo leído cada línea
+	    struct DraftPlane *draftPlanesFound = NULL;
+	    long double *datosDraftPlane; //Siempre serán 6 valores MÁXIMO que leerá de cada plano de corte
+	    int indexDraftPlane = -1; //Cual plano estamos leyendo? 
+	    FILE *file;
+	    //printf("Dentro de readDraftPlanes: Tipo de objeto = %i \n",currentTypeReading);
+	    if (file = fopen(escenaFile, "r")){
+	        fseek(file, pos, SEEK_SET);
+	    while (fgets(temporalBuffer, 300, file)!=NULL){ //Mientras el archivo siga teniendo algo
+	        //printf("%s", temporalBuffer);
+	            if (temporalBuffer[0] == '\n'){
+	                continue;
+	            }
+	            if (temporalBuffer[0] == '\t'){
+	                continue;
+	            }
+	            if (strstr(temporalBuffer, "#")!=NULL){
+	                continue;
+	            }
+	            if (strstr(temporalBuffer, "NumberPlanosCalado")!=NULL || strstr(temporalBuffer, "NumberDraftPlanes")!=NULL){
+	                long double numberDraftPlanes= obtainSingleValueFromLine(temporalBuffer);
+	                draftPlanesFound = malloc(sizeof(struct DraftPlane)*numberDraftPlanes);
+	                continue;
+	            }else if (strstr(temporalBuffer, "Plano_Calado_")!=NULL || strstr(temporalBuffer, "PlanoCalado_")!=NULL ){
+	                indexDraftPlane++;
+	                continue;
+	            }else if ((strstr(temporalBuffer, "END_Planos_Calado")!=NULL)||(strstr(temporalBuffer, "END_PlanosCalado")!=NULL) || (strstr(temporalBuffer, "END_DraftPlanes")!=NULL) || (strstr(temporalBuffer, "END_Draft_Planes")!=NULL)){
+	                *numberDraftPlanes = indexDraftPlane+1;
+	                *posAfterReading = ftell(file);
+	                return draftPlanesFound;
+	            }else if (strstr(temporalBuffer, "Filename")!=NULL || strstr(temporalBuffer, "filename")!=NULL){
+	                char* filename = obtainFilenameTexture(temporalBuffer);
+	                int hRes, vRes;
+	                draftPlanesFound[indexDraftPlane].filename = filename;
+	                struct Color **textureMap=getTexels(draftPlanesFound[indexDraftPlane].filename, &hRes, &vRes);
+	                draftPlanesFound[indexDraftPlane].textureMap = textureMap;
+	                draftPlanesFound[indexDraftPlane].hRes = hRes;
+					draftPlanesFound[indexDraftPlane].vRes = vRes;
+	                //printf("FIlename DraftPlane %s  ggg\n", draftPlanesFound[indexDraftPlane].filename);
+	                //free(filename);
+	                continue;
+	            }
+
+	            if (currentTypeReading == 2 || currentTypeReading == 4 || currentTypeReading == 5 || currentTypeReading == 8){
+	                //COnos, esferas, cilindros o cuadráticas
+	                if (strstr(temporalBuffer, "Greenwich")!=NULL){
+	                    datosDraftPlane = obtainPointFromString(temporalBuffer);
+	                    struct Vector temp;
+	                    temp.x = datosDraftPlane[0];
+	                    temp.y = datosDraftPlane[1];
+	                    temp.z = datosDraftPlane[2];
+	                    temp = normalize(temp);  //NORMALIZO
+	                    draftPlanesFound[indexDraftPlane].greenwich = temp;
+	                    free(datosDraftPlane);
+	                    continue;
+	                }
+	                if (currentTypeReading == 2 ||currentTypeReading == 8){
+	                    //Esferas y cuadráticas
+	                    if(strstr(temporalBuffer, "Norte")!=NULL || strstr(temporalBuffer, "North")!=NULL){
+	                        datosDraftPlane = obtainPointFromString(temporalBuffer);
+	                        struct Vector temp;
+	                        temp.x = datosDraftPlane[0];
+	                        temp.y = datosDraftPlane[1];
+	                        temp.z = datosDraftPlane[2];
+	                        temp = normalize(temp); //NORMALIZO
+	                        draftPlanesFound[indexDraftPlane].north = temp;
+	                        free(datosDraftPlane);
+	                        continue;
+	                    }
+	                }
+	            }
+	        continue;
+	        }
+
+	    }
+	}
+
 	long double *readValueFromLine(int state, int *counterValueSegment, char* lineRead, int *numberValuesRead){
 	    /* RECIBE POR REFERENCIA EL VALOR DE counterValueSegment.
 	    Decide que hacer con cada linea de datos dependiendo de en cuál estado se encuentre
@@ -2695,11 +2932,9 @@
 	                return values;
 	                /*Lee radio o1, o2, o3 k1 i k2 o o Kd o Kd o Ka o Kn o Ks*/
 	            }
-
 	        case 8: //CUadráticas
 	        	if((*counterValueSegment) == 18){
 	        		//Lee color
-	        		//printf("lineRead");
 	                long double *tripleta = obtainPointFromString(lineRead);
 	                values = malloc(sizeof(long double)*3);
 	                values[0] = tripleta[0];
@@ -2718,9 +2953,9 @@
 	                (*counterValueSegment)++; 
 	                *numberValuesRead = 1;
 	                return values;
+
 	                /*Lee coeficientes, los k's, los o's y la constante K.*/
 	            }
-
 	    }
 	}
 
@@ -2805,6 +3040,58 @@
 	            }else if (strstr(temporalBuffer, "Planos_Calado:")!=NULL){
 	            //Entra en state = 2. Esferas
 	                return 0;
+	            }else if (strstr(temporalBuffer, "Sphere_Object")!=NULL){
+	            //Entra en state = 2. Esferas
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Polygon_Object")!=NULL){
+	            //Entra en state = 3. Poligonos
+	                //printf("Leyó polígonos");
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Cylinder_Object")!=NULL){
+	            //Entra en state = 4. Cilindros
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Cone_Object")!=NULL){
+	            //Entra en state = 5. Conos
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Disc_Object")!=NULL){
+	            //Entra en state = 5. Conos
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Elipse_Object")!=NULL){
+	            //Entra en state = 5. Conos
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Quadratic_Object")!=NULL){
+	            //Entra en state = 5. Conos
+	                return 0;
+	            }else if (strstr(temporalBuffer, "Scene_Data")!=NULL){
+	            //Entra en state = 0. Escena
+	                return 0;
+	            }else if (strstr(temporalBuffer,"Light_Object")!=NULL){
+	                return 0;
+	            }
+	        }
+
+	    }
+	    return 0;
+	}
+	int draftPlanesFound(long int pos){
+	    //Retorna 1 si encuentra que al objeto le siguen planos de calado
+	    char temporalBuffer[300]; //Aquí se guardará lo leído cada línea
+	    FILE *file;
+	    if (file = fopen(escenaFile, "r")){
+	        fseek(file, pos, SEEK_SET);
+	        while (fgets(temporalBuffer, 300, file)!=NULL){ //Mientras el archivo siga teniendo algo
+	            //printf("Dentro de draftPlanesFound:  %s \n", temporalBuffer);
+	            if (temporalBuffer[0] == '\n'){
+	                continue;
+	            }
+	            if (temporalBuffer[0] == '\t'){
+	                continue;
+	            }
+	            if (strstr(temporalBuffer, "#")!=NULL){
+	                continue;
+	            }else if ((strstr(temporalBuffer, "Planos_Calado:")!=NULL)||(strstr(temporalBuffer, "PlanosCalado:")!=NULL) || (strstr(temporalBuffer, "DraftPlanes:")!=NULL) || (strstr(temporalBuffer, "Draft_Planes")!=NULL)){
+	            //Entra en state = 2. Esferas
+	                return 1;
 	            }else if (strstr(temporalBuffer, "Sphere_Object")!=NULL){
 	            //Entra en state = 2. Esferas
 	                return 0;
@@ -2994,30 +3281,45 @@
 	                int numberPlaneCuts = 0;
 	                int numberTextures = 0;
 	                int numberDraftPlanes = 0;
+	                long int posAfterReading;
 	                long int pos;
 	                pos = ftell(file);
+	                //printf("pos ; %li \n", pos);
 	                int areTherePlainCuts = plainCutsFound(pos);
+	                //printf("pos ; %li \n", pos);
 	                //printf("%i \n", areTherePlainCuts);
 	                if (areTherePlainCuts==1){
+	                	pos = ftell(file);
 	                    //printf("Planos de corte hallados \n");
-	                    long int posAfterReading;
 	                    arrayPlaneCuts = readPlaneCuts(pos, &numberPlaneCuts, &posAfterReading);
 	                    fseek(file, posAfterReading, SEEK_SET);
 
 	                }
 	                pos = ftell(file);
+	                //printf("pos ; %li \n", pos);
 	                int areThereTextures = texturesFound(pos);
+	                //printf("pos ; %li \n", pos);
 	                if (areThereTextures==1){
+	                	pos = ftell(file);
 	                    //printf("Texturas hallados \n");
-	                    long int posAfterReading;
 	                    arrayTextures = readTextures(currentTypeObjectReading,pos, &numberTextures, &posAfterReading);
 	                    fseek(file, posAfterReading, SEEK_SET);
 
 	                }
+
+	                int areThereDraftPlanes = draftPlanesFound(pos);
+	                //printf("pos ; %li \n", pos);
+	                if (areThereDraftPlanes==1){
+	                	pos = ftell(file);
+	                    //printf("Planos de Calado hallados \n");
+	                    arrayDraftPlanes = readDraftPlanes(currentTypeObjectReading,pos, &numberDraftPlanes, &posAfterReading);
+	                    fseek(file, posAfterReading, SEEK_SET);
+
+	                }
+	               // printf("pos ; %li \n", pos);
 	                //printf("currentTypeObjectReading: %i \n", currentTypeObjectReading);
 	                createObjectFromData(valuesRead, currentTypeObjectReading, indexValuesRead, arrayPlaneCuts, arrayTextures, arrayDraftPlanes, numberPlaneCuts, numberTextures, numberDraftPlanes);
 	                //printf("Sup \n");
-	                indexValuesRead=0;
 	            }
 	        }
 	        free(valuesRead);

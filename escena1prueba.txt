@@ -1,0 +1,60 @@
+Scene_Data
+# Datos de la escena
+Max_AA = 0
+MaxReflects = 0
+MaxTransparency = 0
+Ia = 0.5
+Xmin = -100.0
+Ymin = -50.0
+Xmax = 100 0.0
+Ymax = 50.0
+Hres = 1600.0
+Vres = 900.0
+Epsilon = 0.00005
+Eye = 400, 275, -5000
+Background = 0.6392, 0.6588, 0.6509
+
+
+  Light_Object Luz de prueba
+        Posicion = 0, 0, -100
+        c1 = 0.0
+        c2 = 0.001
+        c3 = 0.0
+        Ip = 0.8
+
+        
+    Quadratic_Object fbffg
+        A = 0.0
+        B = -5
+        C = 0.85
+        D = 0.0
+        E = 0.0
+        F = 0.0
+        G = 0.50
+        H = 0.0
+        I = 0.0
+        J = 0.0
+        K = 0.0
+        o1 = 0.5 
+        o2 = 0.3 
+        o3 = 0.2 
+        Kd = 0.6
+        Ka = 0.5
+        Kn = 30
+        Ks = 0.6
+        Color = 1, 0.5, 0.5
+        Planos_Corte:
+            NumberPlanes = 4
+            Plano_1
+                Punto = 0.0, 20.0, 0.0
+                Normal = 0, 1, 0
+            Plano_1
+                Punto = 0.0, -20.0, 0.0
+                Normal = 0, -1, 0
+            Plano_1
+                Punto = 50.0, 0.0, 0.0
+                Normal = 1, 0, 0
+            Plano_1
+                Punto = -50.0, 0.0, 0.0
+                Normal = -1, 0, 0
+            END_Planos
