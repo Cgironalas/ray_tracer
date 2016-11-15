@@ -35,7 +35,7 @@ Background = 0.6392, 0.6588, 0.6509
         Textures: 
                 NumberTextures = 1
                 Texture_1:
-                    Filename =a/sea_monster.ppm
+                    Filename =textures/sea_monster.ppm
                     Greenwich = 334, 343, 343
             END_Textures
 

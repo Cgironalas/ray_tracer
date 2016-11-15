@@ -1303,11 +1303,6 @@
 				struct Color reflectionColor = getColor(intersectVector, R, rLevel - 1);
 				color = ponderColor(color, reflectionColor, Q.o1, Q.o2);
 
-
-			}else{
-				color = ponderColor(color, background, Q.o1, Q.o2);
-			}
-
 			struct Color transparencyColor = background;
 			int levelsAllowed = maxTransparency;
 			while (levelsAllowed > 0 && intersection.object.o3 > 0) {
