@@ -29,7 +29,7 @@
 	static long double Ia;
 	static long double e;
 
-	static int debug = 1;
+	static int debug = 0;
 	static int rec = 0;
 
 	struct Color { 
@@ -1174,10 +1174,22 @@
 
 			int xs = object.textures[i].hRes*u;
 			int ys = object.textures[i].vRes*v;
-			return color = object.textures[i].textureMap[xs][ys];
+			color = object.textures[i].textureMap[xs][ys];
 		}
 
 		return color;
+	}
+
+	long double uCylinder () {
+
+	}
+
+	long double vCylinder () {
+
+	}
+
+	struct Color cylinderTexture (struct Intersection in) {
+
 	}
 // ===============================================================
 
@@ -1232,9 +1244,9 @@
 			int lightsAmount = numberLights;
 			
 			struct Object Q = intersection.object;
+			
 			if (Q.numberTextures != 0) {
 				color = Q.retrieveTextureColor(intersection);
-
 			}else {
 				color = Q.color;
 			}
@@ -1253,8 +1265,6 @@
 			long double Fatt;
 			long double I = 0.0;
 			long double E = 0.0;
-
-
 				
 			for(k = 0; k < numberLights; k++){
 				struct Intersection obstacle;
@@ -1724,6 +1734,7 @@
 	            cilinder.height = cilinder.D2 - cilinder.D1;
 	            cilinder.normalVector = cilinderNormal;
 	            cilinder.intersectionFuncion = cilinderIntersection;
+	            cilinder.retrieveTextureColor = cylinderTexture;
 
 	            struct Color cilinderColor;
 	            cilinderColor.r = data[16];
@@ -1853,7 +1864,6 @@
 	            disco.x1y1z1= x1y1z1;
 	            disco.x2y2z2= x2y2z2;
 	            disco.x3y3z3= x3y3z3;
-
 
 	            disco.Xc = data[0];
 	            disco.Yc = data[1];
@@ -2147,7 +2157,7 @@
 	    // Token will point to "mapas/textura.jpg"
 	    token = strtok(NULL, search);
 	    strip(token);
-	    printf("%s \n", token);
+	    //printf("%s \n", token);
 	    return token;}
 
 	struct PlaneCut *readPlaneCuts(long int pos, int *numberPlanes, long int *posAfterReading){
@@ -2228,11 +2238,8 @@
 	                }else{
 	                    sscanf(&dump[0], "%i", vRes);
 	                }
-	                
-	                
 	            }
 	            //printf("%s \n", dump);
-
 	        }
 	        //printf("Textura en %s \n HRes: %i \n VRes: %i \n", pFile, *hRes, *vRes);
 	        temp =   malloc (sizeof(struct Color*)*(*hRes));
@@ -2626,7 +2633,7 @@
 	        case 7: //Elipses
 	        	if((*counterValueSegment >= 0 && *counterValueSegment <= 3) || (*counterValueSegment >= 12 && *counterValueSegment <= 15)){
 	        		//Lee foco1, foco2, normal, color y vertices del plano de la textura
-	        		printf("lineRead");
+	        		//printf("lineRead");
 	                long double *tripleta = obtainPointFromString(lineRead);
 	                values = malloc(sizeof(long double)*3);
 	                values[0] = tripleta[0];
@@ -2655,7 +2662,7 @@
 	        case 8: //CUadráticas
 	        	if((*counterValueSegment) == 18){
 	        		//Lee color
-	        		printf("lineRead");
+	        		//printf("lineRead");
 	                long double *tripleta = obtainPointFromString(lineRead);
 	                values = malloc(sizeof(long double)*3);
 	                values[0] = tripleta[0];
@@ -2904,7 +2911,7 @@
 	                free(valuesRead);
 	                valuesRead = malloc(sizeof(long double)*55);
 	                currentTypeObjectReading=6;
-	                printf("%s",temporalBuffer);
+	                //printf("%s",temporalBuffer);
 	                continue;
 	            }else if (strstr(temporalBuffer, "Elipse_Object")!=NULL){
 	                state = 7;
