@@ -46,4 +46,19 @@ Background = 0.6392, 0.6588, 0.6509
         c3 = 0.0
         Ip = 0.7
 
-
+    Disc_Object asd
+        Punto Central = 200, 175, 1000
+        Normal = 0,0,1
+        Color = 1,0,0
+        Radio = 40
+        o1 = 1
+        o2 = 0
+        o3 = 0           
+        Kd: %LF \n", data[13]);
+        Ka: %LF \n", data[14]);
+        Kn: %LF \n", data[15]);
+        Ks: %LF \n", data[16]);
+        x0y0z0 = 150, 75, 1000
+        x0y0z0 = 250, 75, 1000
+        x0y0z0 = 250, 275, 1000
+        x0y0z0 = 150, 275, 1000 
