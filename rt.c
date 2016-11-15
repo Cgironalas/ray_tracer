@@ -1236,188 +1236,242 @@
 
 
 // Textures ======================================================
-	long double uRectangle (struct Vector x0y0z0, struct Vector x1y1z1, struct Vector xiyizi) {
-		struct Vector U;
-		U.x = x1y1z1.x - x0y0z0.x;
-		U.y = x1y1z1.y - x0y0z0.y;
-		U.z = x1y1z1.z - x0y0z0.z;
-		
-		struct Vector i0;
-		i0.x = xiyizi.x - x0y0z0.x;
-		i0.y = xiyizi.y - x0y0z0.y;
-		i0.z = xiyizi.z - x0y0z0.z;
+	// Figuras planas ============================================ 
+		long double uRectangle (struct Vector x0y0z0, struct Vector x1y1z1, struct Vector xiyizi) {
+			struct Vector U;
+			U.x = x1y1z1.x - x0y0z0.x;
+			U.y = x1y1z1.y - x0y0z0.y;
+			U.z = x1y1z1.z - x0y0z0.z;
+			
+			struct Vector i0;
+			i0.x = xiyizi.x - x0y0z0.x;
+			i0.y = xiyizi.y - x0y0z0.y;
+			i0.z = xiyizi.z - x0y0z0.z;
 
-		long double H = getNorm(U);
-		U = normalize(U);
+			long double H = getNorm(U);
+			U = normalize(U);
 
-		return pointProduct(i0,U)/H; 
-	}
-
-	long double vRectangle (struct Vector x0y0z0, struct Vector x3y3z3, struct Vector xiyizi) {
-		struct Vector V;
-		V.x = x3y3z3.x - x0y0z0.x;
-		V.y = x3y3z3.y - x0y0z0.y;
-		V.z = x3y3z3.z - x0y0z0.z;
-		
-		struct Vector i0;
-		i0.x = xiyizi.x - x0y0z0.x;
-		i0.y = xiyizi.y - x0y0z0.y;
-		i0.z = xiyizi.z - x0y0z0.z;
-
-		long double L = getNorm(V);
-		V = normalize(V);
-
-		return pointProduct(i0,V)/L; 
-	}
-
-	struct Color planeTexture (struct Intersection in, struct Vector normal) { 
-		struct Object object = in.object;	//No se usa la normal en los polígonos
-		struct Vector ipoint;
-		
-		ipoint.x = in.Xi;
-		ipoint.y = in.Yi;
-		ipoint.z = in.Zi;
-
-		long double u = uRectangle(object.x0y0z0,object.x1y1z1,ipoint);
-		long double v = vRectangle(object.x0y0z0,object.x3y3z3,ipoint);
-
-		struct Color color;
-		for (int i = 0; i < object.numberTextures; i++){
-
-			int xs = object.textures[i].hRes*u;
-			int ys = object.textures[i].vRes*v;
-			color = object.textures[i].textureMap[xs][ys];
+			return pointProduct(i0,U)/H; 
 		}
 
-		return color;
-	}
+		long double vRectangle (struct Vector x0y0z0, struct Vector x3y3z3, struct Vector xiyizi) {
+			struct Vector V;
+			V.x = x3y3z3.x - x0y0z0.x;
+			V.y = x3y3z3.y - x0y0z0.y;
+			V.z = x3y3z3.z - x0y0z0.z;
+			
+			struct Vector i0;
+			i0.x = xiyizi.x - x0y0z0.x;
+			i0.y = xiyizi.y - x0y0z0.y;
+			i0.z = xiyizi.z - x0y0z0.z;
 
-	long double uCylinder (struct Vector anchor, struct Vector Q, struct Vector normal, struct Vector greenwich, struct Vector xiyizi) {
-		long double tempu = acos(pointProduct(normal, greenwich))/(2*PI);
+			long double L = getNorm(V);
+			V = normalize(V);
 
-		struct Vector darkSide = crossProduct(Q, greenwich);
-		
-		long double d = whatsTheDGeneral(darkSide, anchor);
-		long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
-
-		if (test < 0) {
-			tempu = 1- tempu;
-		}
-		return tempu;
-	}
-
-	long double vCylinder (struct Vector anchor, struct Vector Q, struct Vector xiyizi, long double den) {
-		struct Vector i0;
-		i0.x = xiyizi.x - anchor.x;
-		i0.y = xiyizi.y - anchor.y;
-		i0.z = xiyizi.z - anchor.z;
-
-		return pointProduct(Q, i0)/den;
-	}
-
-	struct Color cylinderTexture (struct Intersection in, struct Vector normal) {
-		struct Object object = in.object;	//No se usa la normal en los polígonos
-		struct Vector gw = object.textures[0].greenwich;
-
-		struct Vector ipoint;
-		ipoint.x = in.Xi;
-		ipoint.y = in.Yi;
-		ipoint.z = in.Zi;
-
-		struct Vector anchor;
-		anchor.x = object.Xc;
-		anchor.y = object.Yc;
-		anchor.z = object.Zc;
-
-		long double u = uCylinder(anchor, object.directionVector, normal, gw, ipoint);
-		long double v = vCylinder(anchor, object.directionVector, ipoint, object.D2 - object.D1);
-
-		struct Color color;
-		for (int i = 0; i < object.numberTextures; i++){
-
-			int xs = object.textures[i].hRes*u;
-			int ys = object.textures[i].vRes*v;
-			color = object.textures[i].textureMap[xs][ys];
+			return pointProduct(i0,V)/L; 
 		}
 
-		return color;
-	}
+		struct Color planeTexture (struct Intersection in, struct Vector normal) { 
+			struct Object object = in.object;	//No se usa la normal en los polígonos
+			struct Vector ipoint;
+			
+			ipoint.x = in.Xi;
+			ipoint.y = in.Yi;
+			ipoint.z = in.Zi;
 
+			long double u = uRectangle(object.x0y0z0,object.x1y1z1,ipoint);
+			long double v = vRectangle(object.x0y0z0,object.x3y3z3,ipoint);
 
-	long double uSphere (struct Vector center, struct Vector north, long double radius, struct Vector xiyizi, struct Vector greenwich) {
-		struct Vector ic;
-		ic.x = xiyizi.x - center.x;
-		ic.y = xiyizi.y - center.y;
-		ic.z = xiyizi.z - center.z;
+			struct Color color;
+			for (int i = 0; i < object.numberTextures; i++){
 
-		long double icnorth = pointProduct(north, ic);
-		struct Vector inprime;
-		inprime.x = xiyizi.x - north.x*icnorth;
-		inprime.y = xiyizi.y - north.y*icnorth;
-		inprime.z = xiyizi.z - north.z*icnorth;
+				int xs = object.textures[i].hRes*u;
+				int ys = object.textures[i].vRes*v;
+				color = object.textures[i].textureMap[xs][ys];
+			}
 
-		struct Vector nprime;
-		nprime.x = inprime.x - center.x;
-		nprime.y = inprime.y - center.y;
-		nprime.z = inprime.z - center.z;
-
-		nprime = normalize(nprime);
-
-		long double tempu = acos(pointProduct(nprime, greenwich))/(2*PI);
-
-		struct Vector darkSide = crossProduct(north, greenwich);
-		
-		long double d = whatsTheDGeneral(darkSide, center);
-		long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
-
-		if (test < 0) {
-			tempu = 1- tempu;
+			return color;
 		}
-		return tempu;
-	}
+	// ===========================================================
+	
+	// Cilindros =================================================
+		long double uCylinder (struct Vector anchor, struct Vector Q, struct Vector normal, struct Vector greenwich, struct Vector xiyizi) {
+			long double tempu = acos(pointProduct(normal, greenwich))/(2*PI);
 
-	long double vSphere (struct Vector center, struct Vector north, long double radius, struct Vector xiyizi) {
-		struct Vector south;
-		south.x = center.x - radius*north.x;
-		south.y = center.y - radius*north.y;
-		south.z = center.z - radius*north.z;
+			struct Vector darkSide = crossProduct(Q, greenwich);
+			
+			long double d = whatsTheDGeneral(darkSide, anchor);
+			long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
 
-		struct Vector i0;
-		i0.x = xiyizi.x - south.x;
-		i0.y = xiyizi.y - south.y;
-		i0.z = xiyizi.z - south.z;
-
-		return pointProduct(north, i0)/(2*radius);
-	}
-
-	struct Color sphereTexture (struct Intersection in, struct Vector normal) {
-		struct Object object = in.object;	//No se usa la normal en los polígonos
-		struct Vector gw = object.textures[0].greenwich;
-		struct Vector north = object.textures[0].north;
-
-		struct Vector ipoint;
-		ipoint.x = in.Xi;
-		ipoint.y = in.Yi;
-		ipoint.z = in.Zi;
-
-		struct Vector center;
-		center.x = object.Xc;
-		center.y = object.Yc;
-		center.z = object.Zc;
-
-		long double u = uSphere(center, north, object.other, ipoint, gw);
-		long double v = vSphere(center, north, object.other, ipoint);
-
-		struct Color color;
-		for (int i = 0; i < object.numberTextures; i++){
-
-			int xs = object.textures[i].hRes*u;
-			int ys = object.textures[i].vRes*v;
-			color = object.textures[i].textureMap[xs][ys];
+			if (test < 0) {
+				tempu = 1- tempu;
+			}
+			return tempu;
 		}
 
-		return color;
-	}
+		long double vCylinder (struct Vector anchor, struct Vector Q, struct Vector xiyizi, long double den) {
+			struct Vector i0;
+			i0.x = xiyizi.x - anchor.x;
+			i0.y = xiyizi.y - anchor.y;
+			i0.z = xiyizi.z - anchor.z;
+
+			return pointProduct(Q, i0)/den;
+		}
+
+		struct Color cylinderTexture (struct Intersection in, struct Vector normal) {
+			struct Object object = in.object;	//No se usa la normal en los polígonos
+			struct Vector gw = object.textures[0].greenwich;
+
+			struct Vector ipoint;
+			ipoint.x = in.Xi;
+			ipoint.y = in.Yi;
+			ipoint.z = in.Zi;
+
+			struct Vector anchor;
+			anchor.x = object.Xc;
+			anchor.y = object.Yc;
+			anchor.z = object.Zc;
+
+			long double u = uCylinder(anchor, object.directionVector, normal, gw, ipoint);
+			long double v = vCylinder(anchor, object.directionVector, ipoint, object.D2 - object.D1);
+
+			struct Color color;
+			for (int i = 0; i < object.numberTextures; i++){
+
+				int xs = object.textures[i].hRes*u;
+				int ys = object.textures[i].vRes*v;
+				color = object.textures[i].textureMap[xs][ys];
+			}
+
+			return color;
+		}
+	// ===========================================================
+
+	// Esferas ===================================================
+		long double uSphere (struct Vector center, struct Vector north, long double radius, struct Vector xiyizi, struct Vector greenwich) {
+			struct Vector ic;
+			ic.x = xiyizi.x - center.x;
+			ic.y = xiyizi.y - center.y;
+			ic.z = xiyizi.z - center.z;
+
+			long double icnorth = pointProduct(north, ic);
+			struct Vector inprime;
+			inprime.x = xiyizi.x - north.x*icnorth;
+			inprime.y = xiyizi.y - north.y*icnorth;
+			inprime.z = xiyizi.z - north.z*icnorth;
+
+			struct Vector nprime;
+			nprime.x = inprime.x - center.x;
+			nprime.y = inprime.y - center.y;
+			nprime.z = inprime.z - center.z;
+
+			nprime = normalize(nprime);
+
+			long double tempu = acos(pointProduct(nprime, greenwich))/(2*PI);
+
+			struct Vector darkSide = crossProduct(north, greenwich);
+			
+			long double d = whatsTheDGeneral(darkSide, center);
+			long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
+
+			if (test < 0) {
+				tempu = 1- tempu;
+			}
+			return tempu;
+		}
+
+		long double vSphere (struct Vector center, struct Vector north, long double radius, struct Vector xiyizi) {
+			struct Vector south;
+			south.x = center.x - radius*north.x;
+			south.y = center.y - radius*north.y;
+			south.z = center.z - radius*north.z;
+
+			struct Vector i0;
+			i0.x = xiyizi.x - south.x;
+			i0.y = xiyizi.y - south.y;
+			i0.z = xiyizi.z - south.z;
+
+			return pointProduct(north, i0)/(2*radius);
+		}
+
+		struct Color sphereTexture (struct Intersection in, struct Vector normal) {
+			struct Object object = in.object;	//No se usa la normal en los polígonos
+			struct Vector gw = object.textures[0].greenwich;
+			struct Vector north = object.textures[0].north;
+
+			struct Vector ipoint;
+			ipoint.x = in.Xi;
+			ipoint.y = in.Yi;
+			ipoint.z = in.Zi;
+
+			struct Vector center;
+			center.x = object.Xc;
+			center.y = object.Yc;
+			center.z = object.Zc;
+
+			long double u = uSphere(center, north, object.other, ipoint, gw);
+			long double v = vSphere(center, north, object.other, ipoint);
+
+			struct Color color;
+			for (int i = 0; i < object.numberTextures; i++){
+
+				int xs = object.textures[i].hRes*u;
+				int ys = object.textures[i].vRes*v;
+				color = object.textures[i].textureMap[xs][ys];
+			}
+
+			return color;
+		}
+	// =========================================================== 
+	
+	// Conos =====================================================
+		long double uCone (struct Vector anchor, struct Vector Q, struct Vector normal, struct Vector greenwich, struct Vector xiyizi) {
+			struct Vector aux = crossProduct(normal, Q);
+			struct Vector nprime = crossProduct(aux, Q);
+
+			long double tempu = acos(pointProduct(nprime, greenwich))/(2*PI);
+
+			struct Vector darkSide = crossProduct(Q, greenwich);
+			
+			long double d = whatsTheDGeneral(darkSide, anchor);
+			long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
+
+			if (test < 0) {
+				tempu = 1- tempu;
+			}
+			return tempu;
+		}
+
+
+		struct Color coneTexture (struct Intersection in, struct Vector normal) {
+			struct Object object = in.object;	//No se usa la normal en los polígonos
+			struct Vector gw = object.textures[0].greenwich;
+
+			struct Vector ipoint;
+			ipoint.x = in.Xi;
+			ipoint.y = in.Yi;
+			ipoint.z = in.Zi;
+
+			struct Vector anchor;
+			anchor.x = object.Xc;
+			anchor.y = object.Yc;
+			anchor.z = object.Zc;
+
+			long double u = uCone(anchor, object.directionVector, normal, gw, ipoint);
+			long double v = vCylinder(anchor, object.directionVector, ipoint, object.D2 - object.D1);
+
+			struct Color color;
+			for (int i = 0; i < object.numberTextures; i++){
+
+				int xs = object.textures[i].hRes*u;
+				int ys = object.textures[i].vRes*v;
+				color = object.textures[i].textureMap[xs][ys];
+			}
+
+			return color;
+		}
+	// ===========================================================	
+
 // ===============================================================
 
 // Ray Tracer base ===============================================
@@ -2064,6 +2118,7 @@
 	            cone.Kn = data[15];
 	            cone.Ks = data[16];
 	            cone.intersectionFuncion = coneIntersection;
+	            cone.retrieveTextureColor = coneTexture;
 	            cone.normalVector = coneNormal;
 
 	            struct Color coneColor;
