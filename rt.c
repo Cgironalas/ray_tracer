@@ -4,6 +4,7 @@
 #include <math.h>
 #include "malloc.h"
 #include <time.h>
+#define PI 3.14159265
 
 // Constants and data types: =====================================
 	//Image resolution
@@ -1158,8 +1159,8 @@
 		return pointProduct(i0,V)/L; 
 	}
 
-	struct Color planeTexture (struct Intersection in) {
-		struct Object object = in.object;
+	struct Color planeTexture (struct Intersection in, struct Vector normal) { 
+		struct Object object = in.object;	//No se usa la normal en los polígonos
 		struct Vector ipoint;
 		
 		ipoint.x = in.Xi;
@@ -1180,16 +1181,55 @@
 		return color;
 	}
 
-	long double uCylinder () {
+	long double uCylinder (struct Vector anchor, struct Vector Q, struct Vector normal, struct Vector greenwich, struct Vector xiyizi) {
+		long double tempu = acos(pointProduct(normal, greenwich))/(2*PI);
 
+		struct Vector darkSide = crossProduct(Q, greenwich);
+		
+		long double d = whatsTheDGeneral(darkSide, anchor);
+		long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
+
+		if (test < 0) {
+			tempu = 1- tempu;
+		}
+		return tempu;
 	}
 
-	long double vCylinder () {
+	long double vCylinder (struct Vector anchor, struct Vector Q, struct Vector xiyizi, long double den) {
+		struct Vector i0;
+		i0.x = xiyizi.x - anchor.x;
+		i0.y = xiyizi.y - anchor.y;
+		i0.z = xiyizi.z - anchor.z;
 
+		return pointProduct(Q, i0)/den;
 	}
 
-	struct Color cylinderTexture (struct Intersection in) {
+	struct Color cylinderTexture (struct Intersection in, struct Vector normal) {
+		struct Object object = in.object;	//No se usa la normal en los polígonos
+		struct Vector gw = object.textures[0].greenwich;
 
+		struct Vector ipoint;
+		ipoint.x = in.Xi;
+		ipoint.y = in.Yi;
+		ipoint.z = in.Zi;
+
+		struct Vector anchor;
+		anchor.x = object.Xc;
+		anchor.y = object.Yc;
+		anchor.z = object.Zc;
+
+		long double u = uCylinder(anchor, object.directionVector, normal, gw, ipoint);
+		long double v = vCylinder(anchor, object.directionVector, ipoint, object.D2 - object.D1);
+
+		struct Color color;
+		for (int i = 0; i < object.numberTextures; i++){
+
+			int xs = object.textures[i].hRes*u;
+			int ys = object.textures[i].vRes*v;
+			color = object.textures[i].textureMap[xs][ys];
+		}
+
+		return color;
 	}
 // ===============================================================
 
@@ -1244,13 +1284,6 @@
 			int lightsAmount = numberLights;
 			
 			struct Object Q = intersection.object;
-			
-			if (Q.numberTextures != 0) {
-				color = Q.retrieveTextureColor(intersection);
-			}else {
-				color = Q.color;
-			}
-			
 			struct Vector L;
 			struct Vector intersectVector = {intersection.Xi, intersection.Yi, intersection.Zi};
 			struct Vector N = normalize(Q.normalVector(Q, intersectVector));
@@ -1295,11 +1328,15 @@
 					}
 				}
 			}
+			
+			if (Q.numberTextures != 0) { color = Q.retrieveTextureColor(intersection, N); }
+			else { color = Q.color; }
+			if (isnan(color.r)) { color = Q.color; }
+
 			I = I + Ia * Q.Ka;
 			I = min(1.0, I);
 			color = difusseColor(I, color);
 
-			
 			E = min(1.0, E);
 			color = specularHighlight(E, color);
 
