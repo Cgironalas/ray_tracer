@@ -111,11 +111,12 @@
 	  	struct Point3D *points3D;
 	  	struct Vector (*normalVector)();
 	  	struct Intersection (*intersectionFuncion)();
+	  	struct Color (*retrieveTextureColor)();
 	  	
-	  	struct Vector leftLowerCorner; //Usadas para evaluar el plano de texturas en objetos referentes en un pano
-	  	struct Vector rightLowerCorner;
-	  	struct Vector rightUpperCorner;
-	  	struct Vector leftUpperCorner;
+	  	struct Vector x0y0z0; //Usadas para evaluar el plano de texturas en objetos referentes en un pano
+	  	struct Vector x1y1z1;
+	  	struct Vector x2y2z2;
+	  	struct Vector x3y3z3;
 	  	
 	  	int numberPlaneCuts;
 	  	int numberTextures;
@@ -127,27 +128,27 @@
 	};
 
 	struct PlaneCut{
-	  struct Vector normal;
-	  struct Vector point;
-	  long double d;
+	  	struct Vector normal;
+	  	struct Vector point;
+	  	long double d;
 	};
 
 	struct Texture{
-	  char* filename;
-	  struct Color **textureMap;
-	  int vRes;
-  	int hRes;
-	  struct Vector greenwich; //No asignado en polígonos 
-	  struct Vector north;
+	  	char* filename;
+	  	struct Color **textureMap;
+	  	int vRes;
+  		int hRes;
+	  	struct Vector greenwich; //No asignado en polígonos 
+	  	struct Vector north;
 	};
 
 	struct DraftPlane{ //Plano de calado
-	  char* Filename;
-	  int ***textureMap;
-	  int vRes;
+	  	char* Filename;
+	  	int ***textureMap;
+	  	int vRes;
  		int hRes;
-	  struct Vector greenwich; //No asignado en polígonos 
-	  struct Vector north;
+	  	struct Vector greenwich; //No asignado en polígonos 
+	  	struct Vector north;
 	};
 
 	struct Intersection {
@@ -1122,8 +1123,67 @@
 	}
 // ===============================================================
 
+// Textures ======================================================
+	long double uRectangle (struct Vector x0y0z0, struct Vector x1y1z1, struct Vector xiyizi) {
+		struct Vector U;
+		U.x = x1y1z1.x - x0y0z0.x;
+		U.y = x1y1z1.y - x0y0z0.y;
+		U.z = x1y1z1.z - x0y0z0.z;
+		
+		struct Vector i0;
+		i0.x = xiyizi.x - x0y0z0.x;
+		i0.y = xiyizi.y - x0y0z0.y;
+		i0.z = xiyizi.z - x0y0z0.z;
+
+		long double H = getNorm(U);
+		U = normalize(U);
+
+		return pointProduct(i0,U)/H; 
+	}
+
+	long double vRectangle (struct Vector x0y0z0, struct Vector x3y3z3, struct Vector xiyizi) {
+		struct Vector V;
+		V.x = x3y3z3.x - x0y0z0.x;
+		V.y = x3y3z3.y - x0y0z0.y;
+		V.z = x3y3z3.z - x0y0z0.z;
+		
+		struct Vector i0;
+		i0.x = xiyizi.x - x0y0z0.x;
+		i0.y = xiyizi.y - x0y0z0.y;
+		i0.z = xiyizi.z - x0y0z0.z;
+
+		long double L = getNorm(V);
+		V = normalize(V);
+
+		return pointProduct(i0,V)/L; 
+	}
+
+	struct Color planeTexture (struct Intersection in) {
+		struct Object object = in.object;
+		struct Vector ipoint;
+		
+		ipoint.x = in.Xi;
+		ipoint.y = in.Yi;
+		ipoint.z = in.Zi;
+
+		long double u = uRectangle(object.x0y0z0,object.x1y1z1,ipoint);
+		long double v = vRectangle(object.x0y0z0,object.x3y3z3,ipoint);
+
+		struct Color color;
+		for (int i = 0; i < object.numberTextures; i++){
+
+			int xs = object.textures[i].hRes*u;
+			int ys = object.textures[i].vRes*v;
+			return color = object.textures[i].textureMap[xs][ys];
+		}
+
+		return color;
+	}
+// ===============================================================
+
 // Ray Tracer base ===============================================
 	struct Intersection getFirstIntersection(struct Vector anchor, struct Vector direction){
+		rays +=1;
 		int k;
 		int objectsAmount = numberObjects;
 
@@ -1172,7 +1232,13 @@
 			int lightsAmount = numberLights;
 			
 			struct Object Q = intersection.object;
+			if (Q.numberTextures != 0) {
+				color = Q.retrieveTextureColor(intersection);
 
+			}else {
+				color = Q.color;
+			}
+			
 			struct Vector L;
 			struct Vector intersectVector = {intersection.Xi, intersection.Yi, intersection.Zi};
 			struct Vector N = normalize(Q.normalVector(Q, intersectVector));
@@ -1221,7 +1287,7 @@
 			}
 			I = I + Ia * Q.Ka;
 			I = min(1.0, I);
-			color = difusseColor(I, Q.color);
+			color = difusseColor(I, color);
 
 			
 			E = min(1.0, E);
@@ -1276,7 +1342,6 @@
 	            printf("\t Punto base: %LF, %LF, %LF \n\n", punto.x, punto.y, punto.z);
 	        }
 	    }
-
 	}
 
 	void printTextures(struct Object objeto, int currentTypeObjectReading){
@@ -1298,7 +1363,7 @@
 	            printf("Último texel de la textura: (%LF, %LF, %LF)", objeto.textures[i].textureMap[lastX][lastY].r*255,objeto.textures[i].textureMap[lastX][lastY].g*255, objeto.textures[i].textureMap[lastX][lastY].b*255);
 
 	            for (int f = 0; f<objeto.textures[i].hRes; f++ ){
-	            	for (int j = 0; j<objeto.textures[i].vRes-100; j++ ){
+	            	for (int j = 0; j<objeto.textures[i].vRes; j++ ){
 	            		printf("Texel [%i][%i]de la textura: (%LF, %LF, %LF) \n", f, j, objeto.textures[i].textureMap[f][j].r*255,objeto.textures[i].textureMap[f][j].g*255, objeto.textures[i].textureMap[f][j].b*255);
 
 	            	}
@@ -1315,7 +1380,6 @@
 	            }
 	        }
 	    }
-
 	}
 
 	void createObjectFromData(long double *data, int whichObjectCreate, int quantityData, struct PlaneCut* planeCutsFound, struct Texture* texturesFound, struct DraftPlane *draftPlanesFound, int numberPlaneCuts, int numberTextures, int numberDraftPlanes){
@@ -1483,22 +1547,22 @@
 	            struct Object temp;
 	            
 	            
-	            struct Vector leftLowerCorner;
-	            leftLowerCorner.x = data[inicioPlano];
-	            leftLowerCorner.y = data[inicioPlano+1];
-	            leftLowerCorner.z = data[inicioPlano+2];
-			  	struct Vector rightLowerCorner;
-			  	rightLowerCorner.x = data[inicioPlano+3];
-	            rightLowerCorner.y = data[inicioPlano+4];
-	            rightLowerCorner.z = data[inicioPlano+5];
-			  	struct Vector rightUpperCorner;
-			  	rightUpperCorner.x = data[inicioPlano+6];
-	            rightUpperCorner.y = data[inicioPlano+7];
-	            rightUpperCorner.z = data[inicioPlano+8];
-			  	struct Vector leftUpperCorner;
-			  	leftUpperCorner.x = data[inicioPlano+9];
-	            leftUpperCorner.y = data[inicioPlano+10];
-	            leftUpperCorner.z = data[inicioPlano+11];
+	            struct Vector x0y0z0;
+	            x0y0z0.x = data[inicioPlano];
+	            x0y0z0.y = data[inicioPlano+1];
+	            x0y0z0.z = data[inicioPlano+2];
+			  	struct Vector x1y1z1;
+			  	x1y1z1.x = data[inicioPlano+3];
+	            x1y1z1.y = data[inicioPlano+4];
+	            x1y1z1.z = data[inicioPlano+5];
+			  	struct Vector x2y2z2;
+			  	x2y2z2.x = data[inicioPlano+6];
+	            x2y2z2.y = data[inicioPlano+7];
+	            x2y2z2.z = data[inicioPlano+8];
+			  	struct Vector x3y3z3;
+			  	x3y3z3.x = data[inicioPlano+9];
+	            x3y3z3.y = data[inicioPlano+10];
+	            x3y3z3.z = data[inicioPlano+11];
 
 	            temp.points3D = malloc(sizeof(struct Point3D)*3);
 	    
@@ -1549,6 +1613,7 @@
 	            polygon.pointAmount = numVertexesPolygon;
 	            polygon.normalVector = polygonNormal;
 	            polygon.intersectionFuncion = polygonIntersection;
+	            polygon.retrieveTextureColor = planeTexture;
 	            
 	            long double u;
 	            long double v;
@@ -1603,10 +1668,10 @@
 	            polygon.textures = texturesFound;
 	            polygon.numberTextures = numberTextures;
 
-	            polygon.leftLowerCorner = leftLowerCorner;
-	            polygon.rightLowerCorner = rightLowerCorner;
-	            polygon.rightUpperCorner = rightUpperCorner;
-	            polygon.leftUpperCorner = leftUpperCorner;
+	            polygon.x0y0z0 = x0y0z0;
+	            polygon.x1y1z1 = x1y1z1;
+	            polygon.x2y2z2 = x2y2z2;
+	            polygon.x3y3z3 = x3y3z3;
 
 
 	            Objects[objectIndex] = polygon;
@@ -1747,9 +1812,7 @@
 	            //printf("Cone processed.\n \n");
 	            return;
 	            }
-
-	        case 6:{
-	        	//Discos
+	        case 6: { //Discos
 	        	if (debug == 1) {
 	                printf("Insertando disco...");
 
@@ -1773,22 +1836,22 @@
 	            struct Object disco;
 	            
 	            
-	            struct Vector leftLowerCorner;
-	            leftLowerCorner.x = data[17];
-	            leftLowerCorner.y = data[18];
-	            leftLowerCorner.z = data[19];
-			  	struct Vector rightLowerCorner;
-			  	rightLowerCorner.x = data[20];
-	            rightLowerCorner.y = data[21];
-	            rightLowerCorner.z = data[22];
-			  	struct Vector rightUpperCorner;
-			  	rightUpperCorner.x = data[23];
-	            rightUpperCorner.y = data[24];
-	            rightUpperCorner.z = data[25];
-			  	struct Vector leftUpperCorner;
-			  	leftUpperCorner.x = data[26];
-	            leftUpperCorner.y = data[27];
-	            leftUpperCorner.z = data[28];
+	            struct Vector x0y0z0;
+	            x0y0z0.x = data[17];
+	            x0y0z0.y = data[18];
+	            x0y0z0.z = data[19];
+			  	struct Vector x1y1z1;
+			  	x1y1z1.x = data[20];
+	            x1y1z1.y = data[21];
+	            x1y1z1.z = data[22];
+			  	struct Vector x2y2z2;
+			  	x2y2z2.x = data[23];
+	            x2y2z2.y = data[24];
+	            x2y2z2.z = data[25];
+			  	struct Vector x3y3z3;
+			  	x3y3z3.x = data[26];
+	            x3y3z3.y = data[27];
+	            x3y3z3.z = data[28];
 
 
 	            disco.Xc = data[0];
@@ -1797,6 +1860,7 @@
 
 	            disco.intersectionFuncion = discIntersection;
 	            disco.normalVector = discNormal;
+	            disco.retrieveTextureColor = planeTexture;
 
 	            struct Vector puntoCentral;
 	            puntoCentral.x = data[0];
@@ -1841,13 +1905,12 @@
 	            objectIndex++;
 	            return;
 	            }
-	        case 7:{
-	        	//ELipses
+	        case 7: { //Elipses
 	        	if (debug == 1) {
 	                printf("Insertando Elipses...");
 
 	                printf("Foco 1: (%LF, %LF, %LF) \n", data[0], data[1],data[2]);
-	                 printf("Foco 2: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
+	                printf("Foco 2: (%LF, %LF, %LF) \n", data[3], data[4],data[5]);
 	                printf("Normal no normalizada: (%LF, %LF, %LF) \n", data[6], data[7],data[8]);
 	                printf("Color: (%LF, %LF, %LF) \n", data[9], data[8],data[9]);
 	                
@@ -1867,27 +1930,28 @@
 	            struct Object elipse;
 	            
 	            
-	            struct Vector leftLowerCorner;
-	            leftLowerCorner.x = data[20];
-	            leftLowerCorner.y = data[21];
-	            leftLowerCorner.z = data[22];
-			  	struct Vector rightLowerCorner;
-			  	rightLowerCorner.x = data[23];
-	            rightLowerCorner.y = data[24];
-	            rightLowerCorner.z = data[25];
-			  	struct Vector rightUpperCorner;
-			  	rightUpperCorner.x = data[26];
-	            rightUpperCorner.y = data[27];
-	            rightUpperCorner.z = data[28];
-			  	struct Vector leftUpperCorner;
-			  	leftUpperCorner.x = data[29];
-	            leftUpperCorner.y = data[30];
-	            leftUpperCorner.z = data[31];
+	            struct Vector x0y0z0;
+	            x0y0z0.x = data[20];
+	            x0y0z0.y = data[21];
+	            x0y0z0.z = data[22];
+			  	struct Vector x1y1z1;
+			  	x1y1z1.x = data[23];
+	            x1y1z1.y = data[24];
+	            x1y1z1.z = data[25];
+			  	struct Vector x2y2z2;
+			  	x2y2z2.x = data[26];
+	            x2y2z2.y = data[27];
+	            x2y2z2.z = data[28];
+			  	struct Vector x3y3z3;
+			  	x3y3z3.x = data[29];
+	            x3y3z3.y = data[30];
+	            x3y3z3.z = data[31];
 
 
 
 	            elipse.intersectionFuncion = elipseIntersection;
 	            elipse.normalVector = elipseNormal;
+	            elipse.retrieveTextureColor = planeTexture;
 
 	            //Se crea un punto para obtener el D de la normal
 	            struct Vector foco1;
@@ -1943,8 +2007,7 @@
 	            objectIndex++;
 	            return;
 	        	}
-	        case 8:{
-	        	//CUadráticas
+	        case 8: { //Cuadráticas
 
 
 	        	if (debug == 1) {
@@ -2015,7 +2078,7 @@
 	            objectIndex++;
 	            return;
 	        	}
-	    }
+	    	}
 		}
 
 
@@ -2057,7 +2120,6 @@
 	    }
 	    return pointDimensions;
 	}
-
 
 	//Quita el salto de línea de un string.
 	void strip(char *s) {
@@ -2141,55 +2203,8 @@
 	            }
 	        continue;
 	        }
-	    }}
-
-
-	//FUnciones para memoria
-	void free_data(struct Color ***data, size_t xlen, size_t ylen){
-	    size_t i, j;
-
-	    for (i=0; i < xlen; ++i) {
-	        if (data[i] != NULL) {
-	            for (j=0; j < ylen; ++j)
-	                free(data[i][j]);
-	            free(data[i]);
-	        }
 	    }
-	    free(data);}
-	//FUnciones para memoria
-
-	struct Color **alloc_data(size_t xlen, size_t ylen){
-	    struct Color ***p;
-	    size_t i, j;
-
-	    if ((p = malloc(xlen * sizeof *p)) == NULL) {
-	        perror("malloc 1");
-	        return NULL;
-	    }
-
-	    for (i=0; i < xlen; ++i)
-	        p[i] = NULL;
-
-	    for (i=0; i < xlen; ++i)
-	        if ((p[i] = malloc(ylen * sizeof *p[i])) == NULL) {
-	            perror("malloc 2");
-	            free_data(p, xlen, ylen);
-	            return NULL;
-	        }
-
-	    for (i=0; i < xlen; ++i)
-	        for (j=0; j < ylen; ++j)
-	            p[i][j] = NULL;
-
-	    for (i=0; i < xlen; ++i)
-	        for (j=0; j < ylen; ++j)
-	            if (p[i][j] = malloc(sizeof(struct Color)) == NULL) {
-	                perror("malloc 3");
-	                free_data(p, xlen, ylen);
-	                return NULL;
-	            }
-
-	    return p;}
+	}
 
 	struct Color **getTexels(char* pFile, int* hRes, int* vRes){
 	    int counter, x, y, i, j;
@@ -2216,12 +2231,15 @@
 
 	        }
 	        //printf("Textura en %s \n HRes: %i \n VRes: %i \n", pFile, *hRes, *vRes);
-	        temp =   alloc_data(*hRes, *vRes);
+	        temp =   malloc (sizeof(struct Color*)*(*hRes));
+	       	for (int r = 0; r < (*hRes);r++){
+	       		temp[r] = malloc(sizeof(struct Color)*(*vRes));
+	       	}
 	        if (temp==NULL){
 	            printf("Devolvió NULL \n");
 	        }
 	        char temporalBuffer[2000];
-	        int i = 0,x = 0, y = 0;
+	        int i = 0,x = 0, y = 0, counter = 0;
 	        while (fgets(temporalBuffer, 200, file)!=NULL){ //Mientras el archivo siga teniendo algo
 	        	//strip(temporalBuffer);
 	        	if (temporalBuffer[0] == '\n'){
@@ -2232,17 +2250,14 @@
 	            sscanf(temporalBuffer, "%LF", &number);
 	            
 	            //strip(temporalBuffer);
-	            if (x==127 && y<129 ){
-	            	//printf("String: %s \n", temporalBuffer);
-	            	//printf("número: %LF \n", number);	
-	            }
-	            
+	
+	            int xs = *hRes - x - 1;
 	            if (i == 0){
-	                temp[x][y].r = (number)/255;
+	                temp[y][xs].r = (number)/255;
 	            }else if(i == 1){
-	                temp[x][y].g = (number)/255;
+	                temp[y][xs].g = (number)/255;
 	            }else if(i == 2){
-	                temp[x][y].b = (number)/255;
+	                temp[y][xs].b = (number)/255;
 	            }
 	            i = (i+1)%3;
 	            if (i==0){
@@ -2255,9 +2270,9 @@
 	                        break;
 	                    }
 	                }
-	            }     
+	            }
+	            counter=1;     
 	        }
-	        int counter = 0;
 	        y = 0;
 	        x = 0;
 	            while (counter !=5){
@@ -2270,19 +2285,22 @@
 	    else {
 	    	(*vRes) = 128;
 	        (*hRes) = 128;
-	        temp =   alloc_data(128, 128);
+	        temp =   malloc (sizeof(struct Color*)*128);
+	       	for (int r = 0; r < (*hRes);r++){
+	       		temp[r] = malloc(sizeof(struct Color)*128);
+	       	}
 	        if (temp==NULL){
 	            printf("Devolvió NULL \n");
 	        }
 	        printf("La textura de %s no pudo abrirse. Se sustituirá por estática\n", pFile);
 	        for(x = 0; x < 128; x++){
 	            for (y = 0; y < 128; y++){
+	            	//int xs = 128 - x - 1;
 	                struct Color estatica;
-	                estatica.r = (rand() % 255);///255;
-	                estatica.g = (rand() % 255);///255;
-	                estatica.b = (rand() % 255);///255;
-	                temp[128 - x -1][y] = estatica;
-	                //printf("Color leído: (%LF, %LF, %LF) \n",estatica.r, estatica.g, estatica.b);
+	                estatica.r = ((long double)(rand() % 255))/255;
+	                estatica.g = ((long double)(rand() % 255))/255;
+	                estatica.b = ((long double)(rand() % 255))/255;
+	                temp[x][y] = estatica;
 	            }
 	        }
 	    }
@@ -2291,7 +2309,7 @@
 
 	struct Texture *readTextures(int currentTypeReading, long int pos, int *numberTextures, long int *posAfterReading){
 	    //Para este punto ya leyó Textures: 
-	    //ENtonces comenzamos con numberTextyres
+	    //ENtonces comenzamos con numberTextures
 	    //Se lee el número de planos
 	    char temporalBuffer[300]; //Aquí se guardará lo leído cada línea
 	    struct Texture *texturesFound = NULL;
@@ -2328,6 +2346,13 @@
 	                int hRes, vRes;
 	                texturesFound[indexTexture].filename = filename;
 	                struct Color **textureMap=getTexels(texturesFound[indexTexture].filename, &hRes, &vRes);
+
+	                /*for(int x = 0; x < 128; x++){
+	            		for ( int y = 0; y < 128; y++){
+	                		printf("Color leído fuera:(%LF, %LF, %LF) \n",textureMap[x][y].r, textureMap[x][y].g, textureMap[x][y].b);
+	                	}
+	                }*/
+
 	                texturesFound[indexTexture].textureMap = textureMap;
 	                texturesFound[indexTexture].hRes = hRes;
 					texturesFound[indexTexture].vRes = vRes;
@@ -2366,14 +2391,6 @@
 	            }
 	        continue;
 	        }
-	        /*  Si está en 1, crea luces
-	        Si está en 2, crea esferas
-	        Si está en 3, crea polígonos, 
-	        Si está en 4, crea cilindros
-	        Si está en 5, crea conos.
-	        SI éstá en 6, crea discos.
-	        SI está en 7, crea elipses.
-	        Si está en 8, crea cuadráticas.  */
 	    }
 	}
 
@@ -2659,7 +2676,6 @@
 	    }
 	}
 
-
 	int plainCutsFound(long int pos){
 	    //Retorna 1 si encuentra que al objeto le siguen planos de corte
 	    char temporalBuffer[300]; //Aquí se guardará lo leído cada línea
@@ -2774,7 +2790,7 @@
 	    }
 	    return 0;
 	}
-// ==============================================================
+// ===============================================================
 
 // Leer archivos con la escena ===================================
 	void getSceneObjects(){
@@ -2800,15 +2816,6 @@
 	    struct PlaneCut *arrayPlaneCuts = NULL;
 	    struct Texture *arrayTextures = NULL;
 	    struct DraftPlane *arrayDraftPlanes = NULL;
-	    
-	    /*  Si está en 1, crea luces
-	        Si está en 2, crea esferas
-	        Si está en 3, crea polígonos, 
-	        Si está en 4, crea cilindros
-	        Si está en 5, crea conos.
-	        SI éstá en 6, crea discos.
-	        SI está en 7, crea elipses.
-	        Si está en 8, crea cuadráticas.  */
 
 	    FILE* file; //archivo
 	    if (file = fopen(escenaFile, "r")){
@@ -3019,11 +3026,10 @@
 	    Objects = malloc(sizeof(struct Object)*numberObjects);
 	    Lights= malloc(sizeof(struct Light)*numberLights);
 	}
-// ==============================================================
+// ===============================================================
 
 // Anti-aliasing =================================================
 	struct Vector throwRay(long double x, long double y){
-		rays +=1;
 		struct Vector direction;
 		long double Xw, Yw;
 		
@@ -3116,33 +3122,33 @@
 
 // OP main: ======================================================
 	int main(int argc, char *arcgv[]){
-	howManyObjectsLights();
-	printf("Lights: %i \n", numberLights);
-	printf("Objects: %i \n", numberObjects);
-	getSceneObjects();
-	int i, j;
-	
-	struct Color color;
-	struct Vector direction;
-	
-	Xdif = Xmax - Xmin;
-	Ydif = Ymax - Ymin;
-	similar = sqrt(3)/32;
+		howManyObjectsLights();
+		printf("Lights: %i \n", numberLights);
+		printf("Objects: %i \n", numberObjects);
+		getSceneObjects();
+		int i, j;
+		
+		struct Color color;
+		struct Vector direction;
+		
+		Xdif = Xmax - Xmin;
+		Ydif = Ymax - Ymin;
+		similar = sqrt(3)/32;
 
-	printf("\nRay Tracing\n...\n...\n");
-	for (i = 0; i < Vres; i++){	
-		for (j = 0; j < Hres; j++){
-			//printf("[%i, %i]\n", j+1, i+1);
-			color = getAAColor((long double) j, (long double) i, 0);
-			Framebuffer[i][j] = color;
+		printf("\nRay Tracing\n...\n...\n");
+		for (i = 0; i < Vres; i++){	
+			for (j = 0; j < Hres; j++){
+				//printf("[%i, %i]\n", j+1, i+1);
+				color = getAAColor((long double) j, (long double) i, 0);
+				Framebuffer[i][j] = color;
+			}
 		}
-	}
 
-	printf("Rays Thrown: %LF\n", rays);
-	saveFile();
-	free(Objects);
-	free(Lights);
-	free(Framebuffer);
-	printf("\nDONE.\n");
+		printf("Rays: %LF\n", rays);
+		saveFile();
+		free(Objects);
+		free(Lights);
+		free(Framebuffer);
+		printf("\nDONE.\n");
 	}
 // ===============================================================
