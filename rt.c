@@ -1342,6 +1342,82 @@
 
 		return color;
 	}
+
+
+	long double uSphere (struct Vector center, struct Vector north, long double radius, struct Vector xiyizi, struct Vector greenwich) {
+		struct Vector ic;
+		ic.x = xiyizi.x - center.x;
+		ic.y = xiyizi.y - center.y;
+		ic.z = xiyizi.z - center.z;
+
+		long double icnorth = pointProduct(north, ic);
+		struct Vector inprime;
+		inprime.x = xiyizi.x - north.x*icnorth;
+		inprime.y = xiyizi.y - north.y*icnorth;
+		inprime.z = xiyizi.z - north.z*icnorth;
+
+		struct Vector nprime;
+		nprime.x = inprime.x - center.x;
+		nprime.y = inprime.y - center.y;
+		nprime.z = inprime.z - center.z;
+
+		nprime = normalize(nprime);
+
+		long double tempu = acos(pointProduct(nprime, greenwich))/(2*PI);
+
+		struct Vector darkSide = crossProduct(north, greenwich);
+		
+		long double d = whatsTheDGeneral(darkSide, center);
+		long double test = darkSide.x*xiyizi.x + darkSide.y*xiyizi.y + darkSide.z*xiyizi.z + d;
+
+		if (test < 0) {
+			tempu = 1- tempu;
+		}
+		return tempu;
+	}
+
+	long double vSphere (struct Vector center, struct Vector north, long double radius, struct Vector xiyizi) {
+		struct Vector south;
+		south.x = center.x - radius*north.x;
+		south.y = center.y - radius*north.y;
+		south.z = center.z - radius*north.z;
+
+		struct Vector i0;
+		i0.x = xiyizi.x - south.x;
+		i0.y = xiyizi.y - south.y;
+		i0.z = xiyizi.z - south.z;
+
+		return pointProduct(north, i0)/(2*radius);
+	}
+
+	struct Color sphereTexture (struct Intersection in, struct Vector normal) {
+		struct Object object = in.object;	//No se usa la normal en los polígonos
+		struct Vector gw = object.textures[0].greenwich;
+		struct Vector north = object.textures[0].north;
+
+		struct Vector ipoint;
+		ipoint.x = in.Xi;
+		ipoint.y = in.Yi;
+		ipoint.z = in.Zi;
+
+		struct Vector center;
+		center.x = object.Xc;
+		center.y = object.Yc;
+		center.z = object.Zc;
+
+		long double u = uSphere(center, north, object.other, ipoint, gw);
+		long double v = vSphere(center, north, object.other, ipoint);
+
+		struct Color color;
+		for (int i = 0; i < object.numberTextures; i++){
+
+			int xs = object.textures[i].hRes*u;
+			int ys = object.textures[i].vRes*v;
+			color = object.textures[i].textureMap[xs][ys];
+		}
+
+		return color;
+	}
 // ===============================================================
 
 // Ray Tracer base ===============================================
@@ -1689,6 +1765,7 @@
 	            esfera.Ks=data[10];
 	            esfera.normalVector = sphereNormal;
 	            esfera.intersectionFuncion = sphereIntersection;
+	            esfera.retrieveTextureColor = sphereTexture;
 	            struct Color colorSphere;
 	            colorSphere.r = data[11];
 	            colorSphere.g = data[12];

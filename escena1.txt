@@ -40,15 +40,12 @@ Background = 0.6392, 0.6588, 0.6509
         x2y2z2 = 600, 375, 1000
         x3y3z3 = 200, 375, 1000
         
-    Cylinder_Object lower head
-        Position = 400, 300, 600
-        Q = 0, -1, 0.4
-        o1 = 1
+    Sphere_Object shoulder-upper_arm joint
+        Posicion = 400, 200, 600
+        o1 = 0.9
         o2 = 0
         o3 = 0
-        Radio = 50.0
-        d1 = 0
-        d2 = 100.0
+        Radio = 100
         Kd = 0.7
         Ka = 0.5
         Kn = 20
@@ -59,4 +56,5 @@ Background = 0.6392, 0.6588, 0.6509
             Texture_1:
                 Filename =textures/sea_monster.ppm
                 Greenwich = -1, 0, 0
+                Norte = 0,1,0
         END_Textures
