@@ -319,6 +319,106 @@
 	}
 // ===============================================================
 
+// Texturas y calado de figuras planas ===========================
+
+		// Figuras planas ============================================ 
+		long double uRectangle (struct Vector x0y0z0, struct Vector x1y1z1, struct Vector xiyizi) {
+			struct Vector U;
+			U.x = x1y1z1.x - x0y0z0.x;
+			U.y = x1y1z1.y - x0y0z0.y;
+			U.z = x1y1z1.z - x0y0z0.z;
+			
+			struct Vector i0;
+			i0.x = xiyizi.x - x0y0z0.x;
+			i0.y = xiyizi.y - x0y0z0.y;
+			i0.z = xiyizi.z - x0y0z0.z;
+
+			long double H = getNorm(U);
+			U = normalize(U);
+
+			return pointProduct(i0,U)/H; 
+		}
+
+		long double vRectangle (struct Vector x0y0z0, struct Vector x3y3z3, struct Vector xiyizi) {
+			struct Vector V;
+			V.x = x3y3z3.x - x0y0z0.x;
+			V.y = x3y3z3.y - x0y0z0.y;
+			V.z = x3y3z3.z - x0y0z0.z;
+			
+			struct Vector i0;
+			i0.x = xiyizi.x - x0y0z0.x;
+			i0.y = xiyizi.y - x0y0z0.y;
+			i0.z = xiyizi.z - x0y0z0.z;
+
+			long double L = getNorm(V);
+			V = normalize(V);
+
+			return pointProduct(i0,V)/L; 
+		}
+
+		struct Color planeTexture (struct Intersection in, struct Vector normal) { 
+			struct Object object = in.object;	//No se usa la normal en los polígonos
+			struct Vector ipoint;
+			
+			ipoint.x = in.Xi;
+			ipoint.y = in.Yi;
+			ipoint.z = in.Zi;
+
+			long double u = uRectangle(object.x0y0z0,object.x1y1z1,ipoint);
+			long double v = vRectangle(object.x0y0z0,object.x3y3z3,ipoint);
+
+			struct Color color;
+			for (int i = 0; i < object.numberTextures; i++){
+
+				int xs = object.textures[i].hRes*u;
+				int ys = object.textures[i].vRes*v;
+				color = object.textures[i].textureMap[xs][ys];
+			}
+
+			return color;
+		}
+
+		int  isInsideCalado (struct Intersection in) { 
+			//Devuelve 1 si se debe cortar, 0 si no. 
+			struct Object object = in.object;	//No se usa la normal en los polígonos
+			struct Vector ipoint;
+			
+			ipoint.x = in.Xi;
+			ipoint.y = in.Yi;
+			ipoint.z = in.Zi;
+
+
+			long double u = uRectangle(object.x0y0z0,object.x1y1z1,ipoint);
+			long double v = vRectangle(object.x0y0z0,object.x3y3z3,ipoint);
+
+			//printf("\n U V MOTHO%LF, %LF\n", u, v );
+			//printf("\n X0 %LF, %LF, %LF\n", object.x1y1z1.x,object.x1y1z1.y, object.x1y1z1.z );
+
+
+			struct Color color;
+			for (int i = 0; i < object.numberDraftPlanes; i++){
+
+				int xs = object.draftPlanes[i].hRes*u;
+				int ys = object.draftPlanes[i].vRes*v;
+				color = object.draftPlanes[i].textureMap[xs][ys];
+			}
+			int insideCalado = 0;
+			if ((color.r *255.0) < 21.0 && (color.g * 255.0) < 21.0 && (color.b * 255.0) < 21.0 ){
+				//printf("%LF %LF %LF \n", (color.r * 255.0), (color.g * 255.0), (color.b * 255.0) );
+				insideCalado = 1; //se corta
+				return insideCalado;
+			}else if ((color.r * 255.0) > 234.0 && (color.g*255.0) > 234.0 && (color.b * 255.0) > 234.0){
+				insideCalado = 0; //no se corta
+				return insideCalado;
+			}
+			//printf("%LF %LF %LF \n", (color.r * 255.0), (color.g * 255.0), (color.b * 255.0) );
+			//printf("Plano de calado no cuenta con valores rgb apropiados \n");
+			return insideCalado;
+		}
+
+// ===============================================================
+
+
 // RAY TRACER ====================================================
 
 // Spheres: ======================================================
@@ -499,6 +599,18 @@
 			int accept = testIntersection(tempIntersect.Xi, tempIntersect.Yi, tempIntersect.Zi, object);
 			if(accept == 0){
 				tempIntersect.null = 1;
+			}
+			else {
+				if (tempIntersect.null == 0) {
+					if (object.numberDraftPlanes!=0){
+					//struct Object temp = object;
+						int insideCalado = isInsideCalado(tempIntersect );
+						if(insideCalado == 1){ //1 se debe cortar
+					//printf("SE ")
+							tempIntersect.null = 1;
+						}
+					}
+				}
 			}
 
 			free(points2DArrayTemp);
@@ -1238,63 +1350,6 @@
 
 
 // Textures ======================================================
-	// Figuras planas ============================================ 
-		long double uRectangle (struct Vector x0y0z0, struct Vector x1y1z1, struct Vector xiyizi) {
-			struct Vector U;
-			U.x = x1y1z1.x - x0y0z0.x;
-			U.y = x1y1z1.y - x0y0z0.y;
-			U.z = x1y1z1.z - x0y0z0.z;
-			
-			struct Vector i0;
-			i0.x = xiyizi.x - x0y0z0.x;
-			i0.y = xiyizi.y - x0y0z0.y;
-			i0.z = xiyizi.z - x0y0z0.z;
-
-			long double H = getNorm(U);
-			U = normalize(U);
-
-			return pointProduct(i0,U)/H; 
-		}
-
-		long double vRectangle (struct Vector x0y0z0, struct Vector x3y3z3, struct Vector xiyizi) {
-			struct Vector V;
-			V.x = x3y3z3.x - x0y0z0.x;
-			V.y = x3y3z3.y - x0y0z0.y;
-			V.z = x3y3z3.z - x0y0z0.z;
-			
-			struct Vector i0;
-			i0.x = xiyizi.x - x0y0z0.x;
-			i0.y = xiyizi.y - x0y0z0.y;
-			i0.z = xiyizi.z - x0y0z0.z;
-
-			long double L = getNorm(V);
-			V = normalize(V);
-
-			return pointProduct(i0,V)/L; 
-		}
-
-		struct Color planeTexture (struct Intersection in, struct Vector normal) { 
-			struct Object object = in.object;	//No se usa la normal en los polígonos
-			struct Vector ipoint;
-			
-			ipoint.x = in.Xi;
-			ipoint.y = in.Yi;
-			ipoint.z = in.Zi;
-
-			long double u = uRectangle(object.x0y0z0,object.x1y1z1,ipoint);
-			long double v = vRectangle(object.x0y0z0,object.x3y3z3,ipoint);
-
-			struct Color color;
-			for (int i = 0; i < object.numberTextures; i++){
-
-				int xs = object.textures[i].hRes*u;
-				int ys = object.textures[i].vRes*v;
-				color = object.textures[i].textureMap[xs][ys];
-			}
-
-			return color;
-		}
-	// ===========================================================
 	
 	// Cilindros =================================================
 		long double uCylinder (struct Vector anchor, struct Vector Q, struct Vector normal, struct Vector greenwich, struct Vector xiyizi) {
@@ -1337,11 +1392,20 @@
 			long double u = uCylinder(anchor, object.directionVector, normal, gw, ipoint);
 			long double v = vCylinder(anchor, object.directionVector, ipoint, object.D2 - object.D1);
 
+			if (u<0||u>1){ u = 1; }
+			if (v<0){ v = 1; }
+			if (v>1){ v = v-1;}
 			struct Color color;
 			for (int i = 0; i < object.numberTextures; i++){
 
 				int xs = object.textures[i].hRes*u;
 				int ys = object.textures[i].vRes*v;
+				if  (xs == object.textures[i].hRes) {
+          			xs -=1;
+        		}
+        		if  (ys == object.textures[i].vRes) {
+          			ys -=1;
+        		}
 				color = object.textures[i].textureMap[xs][ys];
 			}
 
@@ -1414,6 +1478,9 @@
 			long double u = uSphere(center, north, object.other, ipoint, gw);
 			long double v = vSphere(center, north, object.other, ipoint);
 
+			if (u<0||u>1){ u = 1; }
+			if (v<0||v>1){ v = 1; }
+
 			struct Color color;
 			for (int i = 0; i < object.numberTextures; i++){
 
@@ -1461,12 +1528,22 @@
 
 			long double u = uCone(anchor, object.directionVector, normal, gw, ipoint);
 			long double v = vCylinder(anchor, object.directionVector, ipoint, object.D2 - object.D1);
-
+			
+			if (u<0 || u>1){ u = 1; }
+			if (v<0){ v = 1; }
+			if (v>1){ v = v-1; }
+	
 			struct Color color;
 			for (int i = 0; i < object.numberTextures; i++){
 
 				int xs = object.textures[i].hRes*u;
 				int ys = object.textures[i].vRes*v;
+				if  (xs == object.textures[i].hRes) {
+          			xs -=1;
+        		}
+        		if  (ys == object.textures[i].vRes) {
+          			ys -=1;
+        		}
 				color = object.textures[i].textureMap[xs][ys];
 			}
 
@@ -1512,7 +1589,7 @@
 		return color;
 	}
 
-	struct Color getColor(struct Vector anchor, struct Vector direction, struct Vector V, int rLevel){
+	struct Color getColor(struct Vector anchor, struct Vector direction, struct Vector V, int rLevel, int tLevel){
 		struct Color color;
 		struct Intersection intersection;
 		struct Intersection *tempIntersection;
@@ -1584,26 +1661,24 @@
 			color = specularHighlight(E, color);
 
 			
-			if(rLevel > 0){
+			if(rLevel > 0 && intersection.object.o2 > 0){
 				long double pNV = pointProduct(N, V);
 				R.x = (2 * N.x * pNV) - V.x;
 				R.y = (2 * N.y * pNV) - V.y;
 				R.z = (2 * N.z * pNV) - V.z;
 				R = normalize(R);
 				struct Vector otherV = {-R.x, -R.y, -R.z};
-				struct Color reflectionColor = getColor(intersectVector, R, otherV, rLevel - 1);
+				struct Color reflectionColor = getColor(intersectVector, R, otherV, rLevel - 1, tLevel);
 				color = ponderColor(color, reflectionColor, Q.o1, Q.o2);
 			}
 
 			struct Color transparencyColor = background;
-			int levelsAllowed = maxTransparency;
-			while (levelsAllowed > 0 && intersection.object.o3 > 0) {
-				transparencyColor = getColor(intersectVector, direction, V, maxReflection);
-				levelsAllowed--;
-				if (transparencyColor.r == background.r && transparencyColor.g == background.g && transparencyColor.b == background.b){
-					break;
-				}
+			if (tLevel > 0 && intersection.object.o3 > 0) {
+				transparencyColor = getColor(intersectVector, direction, V, maxReflection, tLevel - 1);
 			} 
+			if (transparencyColor.r == background.r && transparencyColor.g == background.g && transparencyColor.b == background.b){
+				tLevel = 0;
+			}
 			color = ponderColor(color, transparencyColor, 1, intersection.object.o3);
 		}
 		
@@ -1708,6 +1783,7 @@
 	            }
 	        }
 	 }
+
 
 
 	void createObjectFromData(long double *data, int whichObjectCreate, int quantityData, struct PlaneCut* planeCutsFound, struct Texture* texturesFound, struct DraftPlane *draftPlanesFound, int numberPlaneCuts, int numberTextures, int numberDraftPlanes){
@@ -1996,6 +2072,8 @@
 	            polygon.numberPlaneCuts = numberPlaneCuts;
 	            polygon.textures = texturesFound;
 	            polygon.numberTextures = numberTextures;
+	             polygon.numberDraftPlanes = numberDraftPlanes;
+	            polygon.draftPlanes = draftPlanesFound;
 
 	            polygon.x0y0z0 = x0y0z0;
 	            polygon.x1y1z1 = x1y1z1;
@@ -3577,25 +3655,25 @@
 		V.x = -direction.x;
 		V.y = -direction.y;
 		V.z = -direction.z;
-		color1 = getColor(eye, direction, V, maxReflection);
+		color1 = getColor(eye, direction, V, maxReflection, maxTransparency);
 
 		direction = throwRay(x, y + sum);
 		V.x = -direction.x;
 		V.y = -direction.y;
 		V.z = -direction.z;
-		color2 = getColor(eye, direction, V, maxReflection);
+		color2 = getColor(eye, direction, V, maxReflection, maxTransparency);
 
 		direction = throwRay(x + sum, y);
 		V.x = -direction.x;
 		V.y = -direction.y;
 		V.z = -direction.z;
-		color3 = getColor(eye, direction, V, maxReflection);
+		color3 = getColor(eye, direction, V, maxReflection, maxTransparency);
 
 		direction = throwRay(x + sum, y + sum);
 		V.x = -direction.x;
 		V.y = -direction.y;
 		V.z = -direction.z;
-		color4 = getColor(eye, direction, V, maxReflection);
+		color4 = getColor(eye, direction, V, maxReflection, maxTransparency);
 
 		areOK = theyOK(color1, color2, color3, color4);
 		
@@ -3618,8 +3696,9 @@ void *runRT(void *x){
 	struct Color color;
 	i = *((int *) x);
 	printf("%i\n", i);
-	for(i; i < Vres; i += 4){
+	for(i; i < Vres; i += 8){
 		for(j = 0; j < Hres; j++){
+			printf("%i, %i\n", i, j);
 			color = getAAColor((long double) j, (long double) i, 0);
 			Framebuffer[i][j] = color;
 		}
@@ -3636,18 +3715,18 @@ void *runRT(void *x){
 		getSceneObjects();
 		
 		int i;
-		pthread_t threads[4];
+		pthread_t threads[8];
 		
 		Xdif = Xmax - Xmin;
 		Ydif = Ymax - Ymin;
 		similar = sqrt(3)/32;
 
 		printf("\nRay Tracing\n...\n...\n");
-		for(i = 0; i < 4; i++){
+		for(i = 0; i < 8; i++){
 			pthread_create(&(threads[i]), NULL, &runRT, &i);
 			sleep(1);
 		}
-		for(i = 0; i < 4; i++){
+		for(i = 0; i < 8; i++){
 			pthread_join(threads[i], NULL);
 		}
 
