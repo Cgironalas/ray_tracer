@@ -1,0 +1,553 @@
+Scene_Data
+# Datos de la escena
+Max_AA = 0
+MaxReflects = 0
+MaxTransparency = 0
+Ia = 0.5
+Xmin = 0.0
+Ymin = 0.0
+Xmax = 800.0
+Ymax = 450.0
+Hres = 1600.0
+Vres = 900.0
+Epsilon = 0.00005
+Eye = 400, 275, -5000
+Background = 0.6392, 0.6588, 0.6509
+
+    Light_Object flashlight light
+        Posicion = 400, 200, -220
+        c1 = 0.0
+        c2 = 0.001
+        c3 = 0.0
+        Ip = 0.7
+
+    Light_Object Luz de prueba
+        Posicion = 400, 500, 1000
+        c1 = 0.0
+        c2 = 0.001
+        c3 = 0.0
+        Ip = 0.7
+
+     Cone_Object flashlight
+        Ancla = 400, 200, -300
+        Q = 0,0,1
+        o1 = 0
+        o2 = 0
+        o3 = 1
+        k1 = 5
+        k2 = 1
+        d1 = 0
+        d2 = 20
+        Kd = 0.9
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.5
+        Color = 0.7843, 0.4588, 0.2
+
+    Polygon_Object shadow
+        Color del fondo = 0,0,0
+        o1 = 0 
+        o2 = 0 
+        o3 = 1 
+        Kd = 0.7
+        Ka = 0.5 
+        Kn = 20
+        Ks = 0.2 
+        Vertice = 398, 198, -200
+        Vertice = 402, 198, -200
+        Vertice = 402, 202, -200
+        Vertice = 398, 202, -200
+        END_Vertices 
+        x0y0z0 = 398, 198, -200
+        x1y1z1 = 402, 198, -200
+        x2y2z2 = 402, 202, -200
+        x3y3z3 = 398, 202, -200
+        Planos_Calado:
+            NumberPlanosCalado = 1
+            Plano_Calado_
+                Filename =textures/calado.ppm
+                Greenwich = -1, 0, 0
+        END_Planos_Calado
+
+    Polygon_Object floor
+        Color del fondo = 1,0,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice = -400, 10, -5000
+        Vertice = -400, 10, 10000
+        Vertice = 1200, 10, 10000
+        Vertice = 1200, 10, -5000
+        END_Vertices 
+        x0y0z0 = -400, 10, -5000
+        x1y1z1 = -400, 10, 10000
+        x2y2z2 = 1200, 10, 10000
+        x3y3z3 = 1200, 10, -5000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/floor.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Cylinder_Object leftaltarwall
+        Position = 400, 25, 3000
+        Q = 0, 1, -0.1
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 400.0
+        d1 = 0
+        d2 = 400.0
+        Kd = 1
+        Ka = 0.3
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Planos_Corte:
+            NumberPlanes = 2
+            Plano_1
+                Punto = 200, 25, 3000
+                Normal = 1, 0, 0
+            Plano_2
+                Punto = 400, 25, 3000
+                Normal = 0, 0, -1
+            END_Planos
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Cylinder_Object rightaltarwall
+        Position = 400, 25, 3000
+        Q = 0, 1, -0.1
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 400.0
+        d1 = 0
+        d2 = 400.0
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Planos_Corte:
+            NumberPlanes = 2
+            Plano_1
+                Punto = 600, 25, 3000
+                Normal = -1, 0, 0
+            Plano_2
+                Punto = 400, 25, 3000
+                Normal = 0, 0, -1
+            END_Planos
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Polygon_Object back wall
+        Color del fondo = 0.8078431373, 0.8117647059, 0.7921568627
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.7
+        Ka = 0.5 
+        Kn = 20
+        Ks = 0.2 
+        Vertice = 0, 25, 3333
+        Vertice = 800, 25, 3333
+        Vertice = 800, 425, 3100
+        Vertice = 0, 425, 3100
+        END_Vertices 
+        x0y0z0 = 0, 25, 3333
+        x1y1z1 = 800, 25, 3333
+        x2y2z2 = 800, 425, 3100
+        x3y3z3 = 0, 425, 3100
+        Planos_Corte:
+            NumberPlanes = 2
+            Plano_1
+                Punto = 600, 25, 3000
+                Normal = 1, 0, 0
+            Plano_2
+                Punto = 200, 25, 3000
+                Normal = -1, 0, 0
+        END_Planos
+        Textures:
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+# Lado izquierdo 
+    Polygon_Object leftwall
+        Color del fondo = 1,0,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice = 0, 10, 3000
+        Vertice = -220, 10, 3000
+        Vertice = -220, 200, 3000
+        Vertice = 0, 200, 3000
+        END_Vertices 
+        x0y0z0 = -220,  10, 3000
+        x1y1z1 =    0,  10, 3000
+        x2y2z2 =    0, 200, 3000
+        x3y3z3 = -220, 200, 3000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Polygon_Object upperleftwall
+        Color del fondo = 1,0,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice = 0, 200, 3000
+        Vertice = -40, 200, 3000
+        Vertice = -40, 420, 3000
+        Vertice = -180, 420, 3000
+        Vertice = -180, 200, 3000
+        Vertice = -220, 200, 3000
+        Vertice = -220, 450, 3000
+        Vertice = 0, 450, 3000
+        END_Vertices 
+        x0y0z0 = -220, 200, 3000
+        x1y1z1 =    0, 200, 3000
+        x2y2z2 =    0, 450, 3000
+        x3y3z3 = -220, 450, 3000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Polygon_Object left window
+        Color del fondo = 0,1,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice =  -40, 200, 3000
+        Vertice =  -40, 420, 3000
+        Vertice = -180, 420, 3000
+        Vertice = -180, 200, 3000
+        END_Vertices 
+        x0y0z0 = -180, 200, 3000
+        x1y1z1 =  -40, 200, 3000
+        x2y2z2 =  -40, 420, 3000
+        x3y3z3 = -180, 420, 3000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/vitral1.ppm
+                Greenwich = 1, 0, 0
+        END_Textures
+    
+    Cylinder_Object leftpillar
+        Position = 0, 25, 3000
+        Q = 0, 1, -0.1
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 30.0
+        d1 = 0
+        d2 = 400.0
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/pillarmar.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Sphere_Object leftpillarSupport
+        Posicion = 0, 25, 3000
+        o1 = 0.9
+        o2 = 0
+        o3 = 0
+        Radio = 40
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+               Filename =textures/pilar-base.ppm
+                Greenwich = -1, 0, 0
+                Norte = -0.4, 1, -0.3
+        END_Textures
+
+    Cylinder_Object leftmostpillar
+        Position = -220, 25, 3000
+        Q = 0, 1, -0.1
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 30.0
+        d1 = 0
+        d2 = 400.0
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/pillarmar.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Sphere_Object leftmostpillarSupport
+        Posicion = -220, 25, 3000
+        o1 = 0.9
+        o2 = 0
+        o3 = 0
+        Radio = 40
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+               Filename =textures/pilar-base.ppm
+                Greenwich = -1, 0, 0
+                Norte = -0.4, 1, -0.3
+        END_Textures
+
+# Lado derecho 
+    Polygon_Object rightwall
+        Color del fondo = 1,0,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice = 1020, 10, 3000
+        Vertice = 800, 10, 3000
+        Vertice = 800, 200, 3000
+        Vertice = 1020, 200, 3000
+        END_Vertices 
+        x0y0z0 =  800,  10, 3000
+        x1y1z1 = 1020,  10, 3000
+        x2y2z2 = 1020, 200, 3000
+        x3y3z3 =  800, 200, 3000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Polygon_Object upperrightwall
+        Color del fondo = 1,0,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice = 1020, 200, 3000
+        Vertice = 980, 200, 3000
+        Vertice = 980, 420, 3000
+        Vertice = 840, 420, 3000
+        Vertice = 840, 200, 3000
+        Vertice = 800, 200, 3000
+        Vertice = 800, 450, 3000
+        Vertice = 1020, 450, 3000
+        END_Vertices 
+        x0y0z0 =  800, 200, 3000
+        x1y1z1 = 1020, 200, 3000
+        x2y2z2 = 1020, 450, 3000
+        x3y3z3 =  800, 450, 3000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/wall2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Polygon_Object upperrightwall
+        Color del fondo = 0,1,0
+        o1 = 1 
+        o2 = 0 
+        o3 = 0 
+        Kd = 0.8 
+        Ka = 0.7 
+        Kn = 30.0
+        Ks = 0 
+        Vertice = 980, 200, 3000
+        Vertice = 980, 420, 3000
+        Vertice = 840, 420, 3000
+        Vertice = 840, 200, 3000
+        END_Vertices 
+        x0y0z0 = 840, 200, 3000
+        x1y1z1 = 840, 420, 3000
+        x2y2z2 = 980, 420, 3000
+        x3y3z3 = 980, 200, 3000
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/vitral2.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Cylinder_Object rightpillar
+        Position = 800, 25, 3000
+        Q = 0, 1, -0.1
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 30.0
+        d1 = 0
+        d2 = 400.0
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/pillarmar.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Sphere_Object rightpillarSupport
+        Posicion = 800, 25, 3000
+        o1 = 0.9
+        o2 = 0
+        o3 = 0
+        Radio = 40
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+               Filename =textures/pilar-base.ppm
+                Greenwich = -1, 0, 0
+                Norte = -0.4, 1, -0.3
+        END_Textures
+
+    Cylinder_Object rightmostpillar
+        Position = 1020, 25, 3000
+        Q = 0, 1, -0.1
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        Radio = 30.0
+        d1 = 0
+        d2 = 400.0
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/pillarmar.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Sphere_Object rightmostpillarSupport
+        Posicion = 1020, 25, 3000
+        o1 = 0.9
+        o2 = 0
+        o3 = 0
+        Radio = 40
+        Kd = 0.7
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.2
+        Color = 0.8078431373, 0.8117647059, 0.7921568627
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+               Filename =textures/pilar-base.ppm
+                Greenwich = -1, 0, 0
+                Norte = -0.4, 1, -0.3
+        END_Textures
+
+    Cone_Object altarleft
+        Ancla = 200, 500, 3000
+        Q = 0, -1, 0
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        k1 = 4
+        k2 = 1
+        d1 = 0
+        d2 = 200
+        Kd = 0.9
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.5
+        Color = 0.7843, 0.4588, 0.2
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/texturaCono.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
+
+    Cone_Object altarright
+        Ancla = 600, 500, 3000
+        Q = 0, -1, 0
+        o1 = 1
+        o2 = 0
+        o3 = 0
+        k1 = 4
+        k2 = 1
+        d1 = 0
+        d2 = 200
+        Kd = 0.9
+        Ka = 0.5
+        Kn = 20
+        Ks = 0.5
+        Color = 0.7843, 0.4588, 0.2
+        Textures: 
+            NumberTextures = 1
+            Texture_1:
+                Filename =textures/texturaCono.ppm
+                Greenwich = -1, 0, 0
+        END_Textures
